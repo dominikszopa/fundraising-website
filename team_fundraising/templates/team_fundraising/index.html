@@ -1,0 +1,14 @@
+<html>
+<body>
+
+{% block content %}
+    <h2>Fundraisers</h2>
+    <ul>
+        {% for fundraiser in fundraiser_list%}
+        <li>{{ fundraiser.name }} ${{ fundraiser.goal }} </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{{ fundraiser_list }}
+</body>
+</html>

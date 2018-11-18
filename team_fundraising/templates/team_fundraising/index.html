@@ -1,10 +1,11 @@
 <html>
 <body>
+<h1>{{ campaign.name }}</h1>
 
 {% block content %}
     <h2>Fundraisers</h2>
     <ul>
-        {% for fundraiser in fundraiser_list%}
+        {% for fundraiser in campaign.fundraiser_set.all %}
         <li>{{ fundraiser.name }} ${{ fundraiser.goal }} </li>
         {% endfor %}
     </ul>

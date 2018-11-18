@@ -6,6 +6,19 @@ from django.views import generic
 from .models import Campaign, Fundraiser, Donation
 
 # Create your views here.
+
+def index_view(request):
+    template = 'team_fundraising/index.html'
+
+    campaign = get_object_or_404(Campaign)
+
+    context = {
+        'campaign' : campaign,
+    }
+    
+    return render(request, template, context)
+
+
 class IndexView(generic.ListView):
     template_name = 'team_fundraising/index.html'
     model = Fundraiser
@@ -18,3 +31,5 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return Fundraiser.objects.order_by('-goal')
+
+

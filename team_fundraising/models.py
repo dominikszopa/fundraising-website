@@ -12,6 +12,17 @@ class Campaign(models.Model):
     def __str__(self):
         return self.name
 
+    def total_raised(self):
+        """
+        Get the total raised from all Fundraisers
+        """
+        total_donations = 0
+
+        for fundraiser in self.fundraiser_set.all():
+            total_donations += fundraiser.total_raised()
+
+        return total_donations
+
 class Fundraiser(models.Model):
     """
     An individual fundraiser that has a goal and collects donations to their 
@@ -22,8 +33,21 @@ class Fundraiser(models.Model):
     email = models.EmailField()
     goal = models.IntegerField(default=0)
     message = models.CharField(max_length=1000)
+
     def __str__(self):
         return self.name
+    
+    def total_raised(self):
+        """
+        Get the sum of Donations for this Fundraiser
+        """
+        total_donations = 0
+
+        for donations in self.donation_set.all():
+            total_donations += donations.amount
+        
+        return total_donations       
+
 
 class Donation(models.Model):
     """

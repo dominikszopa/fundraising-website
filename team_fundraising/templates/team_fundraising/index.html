@@ -1,17 +1,18 @@
+{% load humanize %}
 <html>
 <body>
 <h1>{{ campaign.name }}</h1>
 
-<h2>Total Raised ${{ campaign.total_raised }} of ${{ campaign.goal }}
+<h2>Total Raised ${{ campaign.total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
 
 {% block content %}
     <h2>Fundraisers</h2>
     <ul>
-        {% for fundraiser in campaign.fundraiser_set.all %}
-        <li>{{ fundraiser.name }} ${{ fundraiser.total_raised }}/${{ fundraiser.goal }} </li>
+        {% for fundraiser in fundraisers %}
+        <li>{{ fundraiser.name }} ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} </li>
         {% endfor %}
+
     </ul>
 {% endblock %}
-{{ fundraiser_list }}
 </body>
 </html>

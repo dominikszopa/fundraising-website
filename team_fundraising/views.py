@@ -12,10 +12,15 @@ def index_view(request):
 
     campaign = get_object_or_404(Campaign)
 
+    fundraisers = sorted(campaign.fundraiser_set.all(), key=lambda x: x.total_raised(), reverse=True)
+
     context = {
         'campaign' : campaign,
+        'fundraisers' : fundraisers,
     }
     
+
+
     return render(request, template, context)
 
 

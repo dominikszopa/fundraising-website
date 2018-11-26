@@ -9,15 +9,14 @@
     <h2>Recent Donations</h2>
     {{ fundraiser.Donation }}
     <ul>
-        {% for donation in fundraiser.Donation %}
+        {% for donation in fundraiser.donation_set.all %}
         <li>
-                {{ donation.name }} 
+                {{ donation.name }} ${{ donation.amount|floatformat:"2"|intcomma }}
             </a>
         </li>
         {% endfor %}
 
     </ul>
 {% endblock %}
-<pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre>
 </body>
 </html>

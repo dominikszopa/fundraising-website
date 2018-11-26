@@ -25,9 +25,12 @@ def fundraiser_view(request, fundraiser_id):
     template = 'team_fundraising/fundraiser.html'
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+    # donations = sorted(fundraiser.donation_set.all(), key=lambda x: x.name(), reverse = True)
+    donations = fundraiser.donation_set.all()
 
     context = {
         'fundraiser' : fundraiser,
+        'donations' : donations,
     }
 
     return render(request, template, context)

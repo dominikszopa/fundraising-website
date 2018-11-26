@@ -9,10 +9,16 @@
     <h2>Fundraisers</h2>
     <ul>
         {% for fundraiser in fundraisers %}
-        <li>{{ fundraiser.name }} ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} </li>
+        <li>
+            <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
+                {{ fundraiser.name }} 
+                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
+            </a>
+        </li>
         {% endfor %}
 
     </ul>
 {% endblock %}
+<pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre>
 </body>
 </html>

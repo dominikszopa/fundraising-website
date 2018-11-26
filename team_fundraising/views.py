@@ -19,7 +19,16 @@ def index_view(request):
         'fundraisers' : fundraisers,
     }
     
+    return render(request, template, context)
 
+def fundraiser_view(request, fundraiser_id):
+    template = 'team_fundraising/fundraiser.html'
+
+    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
+    context = {
+        'fundraiser' : fundraiser,
+    }
 
     return render(request, template, context)
 
@@ -36,5 +45,4 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         return Fundraiser.objects.order_by('-goal')
-
 

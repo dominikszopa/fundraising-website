@@ -1,0 +1,23 @@
+{% load humanize %}
+<html>
+<body>
+<h1>{{ fundraiser.name }}</h1>
+
+<h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}
+
+{% block content %}
+    <h2>Recent Donations</h2>
+    {{ fundraiser.Donation }}
+    <ul>
+        {% for donation in fundraiser.Donation %}
+        <li>
+                {{ donation.name }} 
+            </a>
+        </li>
+        {% endfor %}
+
+    </ul>
+{% endblock %}
+<pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre>
+</body>
+</html>

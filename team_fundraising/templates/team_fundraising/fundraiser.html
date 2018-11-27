@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load %}
 <html>
 <body>
 <h1>{{ fundraiser.name }}</h1>
@@ -9,7 +10,7 @@
     <h2>Recent Donations</h2>
     {{ fundraiser.Donation }}
     <ul>
-        {% for donation in fundraiser.donation_set.all %}
+        {% for donation in donations %}
         <li>
                 {{ donation.name }} ${{ donation.amount|floatformat:"2"|intcomma }}
             </a>

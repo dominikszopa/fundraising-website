@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 
@@ -61,6 +62,7 @@ class Donation(models.Model):
     anonymous = models.BooleanField(default=False)
     email = models.EmailField()
     message = models.CharField(max_length=1000)
+    date = models.DateTimeField(default=datetime.now())
     payment_method = models.CharField(max_length=50)
     def __str__(self):
         return self.name

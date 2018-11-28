@@ -34,6 +34,13 @@ def fundraiser_view(request, fundraiser_id):
 
     return render(request, template, context)
 
+def donate_view(request, fundraiser_id):
+    template = 'team_fundraising/donate.html'
+
+    context = {}
+
+    return render(request, template, context)
+
 
 class IndexView(generic.ListView):
     template_name = 'team_fundraising/index.html'

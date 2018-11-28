@@ -4,15 +4,21 @@
 <body>
 <h1>{{ fundraiser.name }}</h1>
 
-<h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}
+<h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h2>
+
+<form action="{% url 'team_fundraising:donate' fundraiser.id %}" method="get">
+    <input type="submit" name="donate" value="Donate">
+</form>
+
+<p>{{ fundraiser.message }}</p>
 
 {% block content %}
-    <h2>Recent Donations</h2>
+    <h3>Recent Donations</h3>
     {{ fundraiser.Donation }}
     <ul>
         {% for donation in donations %}
         <li>
-                {{ donation.name }} ${{ donation.amount|floatformat:"2"|intcomma }}
+                {{ donation.name }} - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
             </a>
         </li>
         {% endfor %}

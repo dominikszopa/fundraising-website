@@ -37,7 +37,11 @@ def fundraiser_view(request, fundraiser_id):
 def donate_view(request, fundraiser_id):
     template = 'team_fundraising/donate.html'
 
-    context = {}
+    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
+    context = {
+        'fundraiser' : fundraiser,
+    }
 
     return render(request, template, context)
 

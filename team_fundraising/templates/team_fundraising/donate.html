@@ -1,1 +1,55 @@
-This is the donation page.
+<html> 
+    <head>
+    </head>
+    <body>
+        <h1>Donation Page</h1>
+
+        <h3>Donate to {{ fundraiser.name }}'s cause</h3>
+
+        <form action-"" method="post">
+            {% csrf_token %}
+            <div>
+                <input type="radio" id="10" name="amount" value="10">
+                <label for="10">$10</label>
+            </div>
+            <div>
+                <input type="radio" id="25" name="amount" value="25">
+                <label for="25">$25</label>
+            </div>
+            <div>
+                <input type="radio" id="50" name="amount" value="50">
+                <label for="50">$50</label>
+            </div>
+            <div>
+                <input type="radio" id="100" name="amount" value="100">
+                <label for="100">$100</label>
+            </div>
+            <div>
+                <input type="radio" id="other" name="amount" value="other">
+                <label for="other">Other:</label>
+                <input type="text" id="other" name="amount" size="10">
+            </div>
+            <br/>
+            <div>
+                Your name: <input type="text" id="name" name="name" size="50" required>
+            </div>
+            <div>
+                <input type="checkbox" id="anonymous" name="anonymous">
+                <label for="anonymous">Donate anonymously</label> 
+                (your name will not appear on the site)
+            </div>
+            <br/>
+            <div>
+                <label for="message">Message:</label>
+                <input type="text" id="message" name="message" size="50">
+                <br/>
+                This will appear along with your donation.
+            </div>
+            </br>
+            <div>
+                <input type="submit" value="Donate now"
+            </div>
+        </form>
+
+    </body>
+</html>

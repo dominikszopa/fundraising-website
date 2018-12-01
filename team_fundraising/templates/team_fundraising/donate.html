@@ -6,7 +6,7 @@
 
         <h3>Donate to {{ fundraiser.name }}'s cause</h3>
 
-        <form action-"" method="post">
+        <form action="{% url 'team_fundraising:donate_post' fundraiser.id %}" method="post">
             {% csrf_token %}
             <div>
                 <input type="radio" id="10" name="amount" value="10">
@@ -27,14 +27,14 @@
             <div>
                 <input type="radio" id="other" name="amount" value="other">
                 <label for="other">Other:</label>
-                <input type="text" id="other" name="amount" size="10">
+                <input type="text" id="other" name="other_amount" size="10">
             </div>
             <br/>
             <div>
                 Your name: <input type="text" id="name" name="name" size="50" required>
             </div>
             <div>
-                <input type="checkbox" id="anonymous" name="anonymous">
+                <input type="checkbox" id="anonymous" name="anonymous" value="Yes">
                 <label for="anonymous">Donate anonymously</label> 
                 (your name will not appear on the site)
             </div>
@@ -47,7 +47,7 @@
             </div>
             </br>
             <div>
-                <input type="submit" value="Donate now"
+                <input type="submit" value="Donate now">
             </div>
         </form>
 

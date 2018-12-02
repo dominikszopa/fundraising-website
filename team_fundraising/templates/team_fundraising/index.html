@@ -1,23 +1,32 @@
 {% load humanize %}
-<html>
-<body>
-<h1>{{ campaign.name }}</h1>
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<h2>Total Raised ${{ campaign.total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>{{ campaign.name }}</h1>
 
-{% block content %}
-    <h2>Fundraisers</h2>
-    <ul>
-        {% for fundraiser in fundraisers %}
-        <li>
-            <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
-                {{ fundraiser.name }} 
-                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
-            </a>
-        </li>
-        {% endfor %}
+        <h2>Total Raised ${{ campaign.total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
 
-    </ul>
-{% endblock %}
-</body>
+        {% block content %}
+            <h2>Fundraisers</h2>
+            <ul>
+                {% for fundraiser in fundraisers %}
+                <li>
+                    <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
+                        {{ fundraiser.name }} 
+                        ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
+                    </a>
+                </li>
+                {% endfor %}
+
+            </ul>
+        {% endblock %}
+    </body>
 </html>

@@ -1,34 +1,41 @@
 {% load humanize %}
-{% load %}
-<html>
-<body>
-<h1>{{ fundraiser.name }}</h1>
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h2>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>{{ fundraiser.name }}</h1>
 
-<form action="{% url 'team_fundraising:donate' fundraiser.id %}" method="get">
-    <input type="submit" name="donate" value="Donate">
-</form>
+        <h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h2>
 
-<p>{{ fundraiser.message }}</p>
+        <form action="{% url 'team_fundraising:donate' fundraiser.id %}" method="get">
+            <input type="submit" name="donate" value="Donate">
+        </form>
 
-{% block content %}
-    <h3>Recent Donations</h3>
-    {{ fundraiser.Donation }}
-    <ul>
-        {% for donation in donations %}
-        <li>
-                {% if  donation.anonymous %}
-                    Anonymous
-                {% else %}
-                    {{ donation.name }}
-                {% endif %}
-                - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
-            </a>
-        </li>
-        {% endfor %}
+        <p>{{ fundraiser.message }}</p>
 
-    </ul>
-{% endblock %}
-</body>
+        {% block content %}
+            <h3>Recent Donations</h3>
+            {{ fundraiser.Donation }}
+            <ul>
+                {% for donation in donations %}
+                <li>
+                        {% if  donation.anonymous %}
+                            Anonymous
+                        {% else %}
+                            {{ donation.name }}
+                        {% endif %}
+                        - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endblock %}
+    </body>
 </html>

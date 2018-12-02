@@ -1,8 +1,12 @@
 <html>
 <head></head>
 <body>
-Thank you for your donation!
+{% if error_message %} 
+    <strong>{{ error_message }}</strong>
+{% else %}
+    <h2>Thank you for your donation!</h2>
+    <a href={% url 'team_fundraising:fundraiser' fundraiser.id %}>Return to {{ fundraiser.name }}'s page </a>
+{% endif %}
 
-<a href={% url 'team_fundraising:fundraiser' fundraiser.id  %}>Return to {{ fundraiser.name }}'s page </a>
 </body>
 </html>

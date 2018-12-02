@@ -18,7 +18,12 @@
     <ul>
         {% for donation in donations %}
         <li>
-                {{ donation.name }} - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
+                {% if  donation.anonymous %}
+                    Anonymous
+                {% else %}
+                    {{ donation.name }}
+                {% endif %}
+                - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
             </a>
         </li>
         {% endfor %}

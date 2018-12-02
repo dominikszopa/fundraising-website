@@ -48,28 +48,36 @@ def donate_view(request, fundraiser_id):
     return render(request, template, context)
 
 def donate_post(request, fundraiser_id):
-    """
-    Takes the submission of a donation form, and creates a new donation 
-    object to save to the model
-    """
+    """Takes the submission of a donation form, and creates a new donation object to save to the model."""
+
+    template = 'team_fundraising/donate_post.html'
+    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
     donation = Donation()
-
     donation.fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
-    donation.amount = float(request.POST['amount'])
     donation.name = request.POST['name']
     donation.message = request.POST['message']
 
+    # Use the amount or "other amount" from the form
+    if request.POST['amount'] == 'other' :
+        # [TODO] pull out just the number, in case they added a $
+        try:
+            donation.amount = float(request.POST['other_amount'])
+        except ValueError:
+            return render(request, template, {
+                'fundraiser' : fundraiser,
+                'error_message' : "The donation amount is not recognized"
+            })
+    else :
+        donation.amount = float(request.POST['amount'])
+
+    # flag if they want to be anonymous
     if 'anonymous' in request.POST.keys() :
         if request.POST['anonymous'] == "Yes" : 
-            donation.anonymous = True;
+            donation.anonymous = True
 
     donation.date = datetime.now()
     donation.save()
-
-    template = 'team_fundraising/donate_post.html'
-
-    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
     context = {
         'fundraiser' : fundraiser,

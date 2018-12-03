@@ -56,7 +56,7 @@ class Donation(models.Model):
     "Donater" object, as each donation is treated as unique.
     :TODO: Make it possible for a donation not be tied to a fundraiser (direct to the Campaign)
     """
-    fundraiser = models.ForeignKey(Fundraiser, on_delete=models.CASCADE)
+    fundraiser = models.ForeignKey(Fundraiser, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     amount = models.FloatField(default=0)
     anonymous = models.BooleanField(default=False)

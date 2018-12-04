@@ -14,10 +14,17 @@ def index_view(request):
     campaign = get_object_or_404(Campaign)
 
     fundraisers = sorted(campaign.fundraiser_set.all(), key=lambda x: x.total_raised(), reverse=True)
+    general_donations = Donation.objects.filter(fundraiser__isnull=True)
+    
+    total_raised = campaign.total_raised()
+    for donation in general_donations :
+        total_raised += donation.amount
+
 
     context = {
         'campaign' : campaign,
         'fundraisers' : fundraisers,
+        'total_raised' : total_raised,
     }
     
     return render(request, template, context)

@@ -13,7 +13,7 @@
         <div class="container">
             <h1>{{ campaign.name }}</h1>
 
-            <h2>Total Raised ${{ campaign.total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
+            <h2>Total Raised ${{ total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
 
             {% block content %}
                 <h3>Fundraisers</h3>

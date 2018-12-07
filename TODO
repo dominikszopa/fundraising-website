@@ -1,0 +1,11 @@
+[x] Ability to donate to the cause, not a particular fundraiser
+[x] Display total including non-fundraiser amounts
+[ ] Change donation form to Form or ModelForm
+[ ] Sign up for fundraising
+[ ] Fundraiser photo(s)
+[ ] Fundraiser login to manage
+[ ] Update donate page to donate to general cause
+[ ] Search for a fundraiser on the homepage
+[ ] Connect with Paypal
+[ ] Pull out just number from donation amount
+[ ] Create tests

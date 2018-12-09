@@ -1,7 +1,9 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django import forms
+from .forms import DonationForm
 from datetime import datetime
 
 from .models import Campaign, Fundraiser, Donation
@@ -16,6 +18,7 @@ def index_view(request):
     fundraisers = sorted(campaign.fundraiser_set.all(), key=lambda x: x.total_raised(), reverse=True)
     general_donations = Donation.objects.filter(fundraiser__isnull=True)
     
+    # get raised by fundraisers and add general donations
     total_raised = campaign.total_raised()
     for donation in general_donations :
         total_raised += donation.amount
@@ -91,6 +94,22 @@ def donate_post(request, fundraiser_id):
     }
 
     return render(request, template, context)
+
+
+def new_donation(request, fundraiser_id):
+
+    template = "team_fundraising/donation.html"
+
+    if request.method == "POST":
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            model_instance = form.save(commit=False)
+            model_instance.save()
+            return redirect('/')
+    else:
+        form = DonationForm()
+        return render(request, template, {'form': form})
+
 
 
 class IndexView(generic.ListView):

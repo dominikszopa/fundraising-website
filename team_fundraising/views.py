@@ -102,13 +102,24 @@ def new_donation(request, fundraiser_id):
 
     if request.method == "POST":
         form = DonationForm(request.POST)
+        fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
         if form.is_valid():
             model_instance = form.save(commit=False)
             model_instance.save()
-            return redirect('/')
+            return redirect('team_fundraising:fundraiser', fundraiser_id=fundraiser_id)
+
     else:
         form = DonationForm()
-        return render(request, template, {'form': form})
+        fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
+
+    context = {
+        'form': form,
+        'fundraiser' : fundraiser,
+    }
+    
+    return render(request, template, context)
 
 
 

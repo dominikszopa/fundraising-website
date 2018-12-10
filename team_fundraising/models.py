@@ -61,7 +61,7 @@ class Donation(models.Model):
     amount = models.FloatField(default=0)
     anonymous = models.BooleanField(default=False)
     email = models.EmailField()
-    message = models.CharField(max_length=1000)
+    message = models.CharField(max_length=280)
     date = models.DateTimeField(default=datetime.now())
     payment_method = models.CharField(max_length=50)
     def __str__(self):

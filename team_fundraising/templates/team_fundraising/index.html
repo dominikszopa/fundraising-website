@@ -3,11 +3,22 @@
 
 {% block content %}
 <h1>{{ campaign.name }}</h1>
-
+<br/>
 <h2>Total Raised ${{ total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
-
+<br/>
+<br/>
     <h3>Fundraisers</h3>
-    <ul>
+
+    <!-- Search form -->
+  
+    <form class="form-inline">
+        <div class="col-xs-4">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input id="search" class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search" onkeyup="filterList()">
+        </div>
+    </form>
+    <br/>
+    <ul id="fundraiserlist">
         {% for fundraiser in fundraisers %}
         <li>
             <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
@@ -18,4 +29,27 @@
         {% endfor %}
 
     </ul>
+
+<script>
+function filterList() {
+  // Declare variables
+  var input, filter, ul, li, a, i, txtValue;
+  input = document.getElementById('search');
+  filter = input.value.toUpperCase();
+  ul = document.getElementById("fundraiserlist");
+  li = ul.getElementsByTagName('li');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+</script>
+
 {% endblock %}

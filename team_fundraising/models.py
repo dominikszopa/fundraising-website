@@ -1,11 +1,15 @@
-from django.db import models
-from datetime import datetime
+""" Database models for the team_fundraising app
 
-# Create your models here.
+This module contains the models for the team_fundraising app, including a parent
+Campaign, with individual Fundraisers, and Donations that can be raised by the
+Fundraisers, or applied to the general Campaign.
+"""
+from datetime import datetime
+from django.db import models
 
 class Campaign(models.Model):
     """
-    The parent object that defines the campaign to which all Fundraisers 
+    The parent object that defines the campaign to which all Fundraisers
     and Donations belong.
     """
     name = models.CharField(max_length=50)
@@ -26,7 +30,7 @@ class Campaign(models.Model):
 
 class Fundraiser(models.Model):
     """
-    An individual fundraiser that has a goal and collects donations to their 
+    An individual fundraiser that has a goal and collects donations to their
     total and the campaigns.
     """
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
@@ -37,7 +41,7 @@ class Fundraiser(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def total_raised(self):
         """
         Get the sum of Donations for this Fundraiser
@@ -46,8 +50,8 @@ class Fundraiser(models.Model):
 
         for donations in self.donation_set.all():
             total_donations += donations.amount
-        
-        return total_donations       
+
+        return total_donations
 
 
 class Donation(models.Model):

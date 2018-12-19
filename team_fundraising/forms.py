@@ -1,22 +1,27 @@
 """ The forms for the team_fundraiser app
 """
-from django.forms import ModelForm, Textarea
+from django import forms
+from django.forms import Form, Textarea
 from .models import Donation, Fundraiser
 
-class DonationForm(ModelForm):
-    """ Form for the Donation model. Used to create a new donation. """
-    class Meta:
-        model = Donation
+class DonationForm(forms.Form):
+    """ Form for a new Donation, which can be tied to a specific fundraiser """
 
-        fields = ['name', 'amount', 'anonymous', 'email', 'message', 'fundraiser']
+    name = forms.CharField()
+    email = forms.EmailField()
 
-        widgets = {
-            'message': Textarea(attrs={'cols':80, 'rows':3}),
-        }
+    def clean(self):
+        # Use the amount or "other amount" from the form
+        cleaned_data = super(DonationForm, self).clean()
 
-class FundraiserForm(ModelForm):
-    """ Form for the Fundraiser model. Not currently used."""
-    class Meta:
-        model = Fundraiser
+        amount = cleaned_data.get("amount")
+        other_amount = cleaned_data.get("other_amount")
 
-        fields = '__all__'
+        if amount == -1:
+            #TODO pull out just the number, in case they added a $
+            try:
+                amount = float(other_amount)
+            except ValueError:
+                amount = 0
+
+

@@ -2,6 +2,8 @@
 [x] Display total including non-fundraiser amounts
 [x] Change donation form to Form or ModelForm
 [x] Search for a fundraiser on the homepage
+[ ] Switch to Form method for donation form
+[ ] Support typed-in donation amounts
 [ ] Add validation and check for new donation form
 [ ] Sign up for fundraising
 [ ] Fundraiser photo(s)

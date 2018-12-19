@@ -68,7 +68,7 @@ def donate_post(request, fundraiser_id):
 
     # Use the amount or "other amount" from the form
     if request.POST['amount'] == 'other':
-        # [TODO] pull out just the number, in case they added a $
+        #TODO pull out just the number, in case they added a $
         try:
             donation.amount = float(request.POST['other_amount'])
         except ValueError:
@@ -99,6 +99,7 @@ def new_donation(request, fundraiser_id):
     template = "team_fundraising/donation.html"
 
     if request.method == "POST":
+
         form = DonationForm(request.POST)
         fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 

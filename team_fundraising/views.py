@@ -104,9 +104,17 @@ def new_donation(request, fundraiser_id):
         fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
         if form.is_valid():
-            model_instance = form.save(commit=False)
-            model_instance.fundraiser = fundraiser
-            model_instance.save()
+            
+            # populate the model with form values
+            donation = Donation()
+            donation.fundraiser = fundraiser
+            donation.name = form.cleaned_data['name']
+            donation.amount = form.cleaned_data['amount']
+            donation.email = form.cleaned_data['email']
+            donation.anonymous = form.cleaned_data['anonymous']
+            donation.message = form.cleaned_data['message']
+            donation.save()
+
             return redirect('team_fundraising:fundraiser', fundraiser_id=fundraiser_id)
 
     else:

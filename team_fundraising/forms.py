@@ -3,6 +3,7 @@
 from django import forms
 from django.forms import Form, Textarea, BooleanField, NumberInput
 from .models import Donation, Fundraiser
+from django.contrib.auth.models import User
 
 class DonationForm(forms.Form):
     """ Form for a new Donation, which can be tied to a specific fundraiser """
@@ -39,4 +40,12 @@ class DonationForm(forms.Form):
             except ValueError:
                 raise forms.ValidationError("Amount is not a number")
     
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
 
+class FundraiserForm(forms.ModelForm):
+    class Meta:
+        model = Fundraiser
+        fields = ('goal', 'message')

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import DonationForm
+from .forms import DonationForm, UserForm, FundraiserForm
+from django.contrib.auth.decorators import login_required
 
 from .models import Campaign, Fundraiser, Donation
 
@@ -128,3 +129,17 @@ def new_donation(request, fundraiser_id):
     }
 
     return render(request, template, context)
+
+@login_required
+#@transaction_atomic
+def update_fundraiser(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+    else:
+        user_form = UserForm(instance=request.user)
+        fundraiser_form = FundraiserForm(instance=request.user.fundraiser)
+    return render(request, 'team_fundraising/update_fundraiser.html', {
+        'user_form': user_form,
+        'fundraiser_form': fundraiser_form,
+    })
+

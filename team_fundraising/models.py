@@ -6,6 +6,9 @@ Fundraisers, or applied to the general Campaign.
 """
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Campaign(models.Model):
     """
@@ -34,6 +37,7 @@ class Fundraiser(models.Model):
     total and the campaigns.
     """
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     email = models.EmailField()
     goal = models.IntegerField(default=0)
@@ -53,6 +57,15 @@ class Fundraiser(models.Model):
 
         return total_donations
 
+@receiver(post_save, sender=User)
+def create_fundraiser(sender, instance, created, **kwargs):
+    if created:
+        Fundraiser.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_fundraiser(sender, instance, **kwargs):
+    instance.fundraiser.save()
+    
 
 class Donation(models.Model):
     """

@@ -4,6 +4,7 @@ from django import forms
 from django.forms import Form, Textarea, BooleanField, NumberInput
 from .models import Donation, Fundraiser
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class DonationForm(forms.Form):
     """ Form for a new Donation, which can be tied to a specific fundraiser """
@@ -49,3 +50,9 @@ class FundraiserForm(forms.ModelForm):
     class Meta:
         model = Fundraiser
         fields = ('goal', 'message')
+
+class SignUpForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2')

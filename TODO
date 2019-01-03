@@ -8,7 +8,8 @@
 [ ] Add validation and check for new donation form
 [-] Sign up for fundraising
     [x] Add built-in login forms
-    [ ] Extend sign-up with custom fields
+    [x] Extend sign-up with custom fields
+    [ ] Add UserForm.save() method to prevent superuser creation
     [ ] Add ability to modify profile
 [ ] Remove and clean up old donation form
 [ ] Fundraiser photo(s)

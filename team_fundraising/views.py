@@ -132,11 +132,18 @@ def new_donation(request, fundraiser_id):
 
 def signup(request):
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        user_form = SignUpForm(request.POST, instance=request.user)
+        fundraiser_form = FundraiserForm(request.POST, instance=request.user.fundraiser) 
+        if user_form.is_valid() and fundraiser_form.is_valid():
+            user_form.save()
+            fundraiser_form.save()
+            return redirect('fundraiser')
     else:
-        form = SignUpForm()
+        user_form = SignUpForm()
+        fundraiser_form = FundraiserForm()
     return render(request, 'registration/signup.html', {
-        'form': form,
+        'user_form': user_form,
+        'fundraiser_form': fundraiser_form,
     })
 
 @login_required

@@ -46,13 +46,14 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email')
 
-class FundraiserForm(forms.ModelForm):
-    class Meta:
-        model = Fundraiser
-        fields = ('goal', 'message')
 
 class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')
+        fields = ('email', 'username', 'password1', 'password2')
+
+class FundraiserForm(forms.ModelForm):
+    class Meta:
+        model = Fundraiser
+        fields = ('name', 'goal', 'message')

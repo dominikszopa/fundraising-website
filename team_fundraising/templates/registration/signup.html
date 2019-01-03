@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<style>
+    th {
+      height: 50px;
+      vertical-align: top;
+    }
+</style>
+{% endblock head %}
+    
 
 {% block content %}
 <h2> Sign up</h2>
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    <table>
+    {{ fundraiser_form.as_table }}
+    {{ user_form.as_table }}
+    </table>
     <button type="submit">Sign up</button>
 </form>
 

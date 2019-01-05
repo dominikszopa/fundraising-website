@@ -5,13 +5,13 @@
 [x] Switch to Form method for donation form
 [x] Implement "other" amount
 [x] Support typed-in donation amounts
+[x] Remove and clean up old donation form
 [ ] Add validation and check for new donation form
 [-] Sign up for fundraising
     [x] Add built-in login forms
     [x] Extend sign-up with custom fields
     [ ] Add UserForm.save() method to prevent superuser creation
     [ ] Add ability to modify profile
-[ ] Remove and clean up old donation form
 [ ] Fundraiser photo(s)
 [ ] Fundraiser login to manage
 [ ] Update donate page to donate to general cause

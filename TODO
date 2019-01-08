@@ -10,7 +10,9 @@
 [-] Sign up for fundraising
     [x] Add built-in login forms
     [x] Extend sign-up with custom fields
-    [ ] Add UserForm.save() method to prevent superuser creation
+    [x] Fix bug with logged-in user being overwritten
+    [x] Add UserForm.save() method to prevent superuser creation
+    [ ] Make sure fundraiser is being properly created
     [ ] Add ability to modify profile
 [ ] Fundraiser photo(s)
 [ ] Fundraiser login to manage

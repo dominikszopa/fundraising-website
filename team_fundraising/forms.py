@@ -1,6 +1,7 @@
 """ The forms for the team_fundraiser app
 """
 from django import forms
+from datetime import datetime
 from django.forms import Form, Textarea, BooleanField, NumberInput
 from .models import Donation, Fundraiser
 from django.contrib.auth.models import User
@@ -14,6 +15,7 @@ class DonationForm(forms.Form):
     other_amount = forms.CharField(required=False)                              
     email = forms.EmailField()
     anonymous = forms.BooleanField(required=False)
+    date = datetime.now()
     
     message = forms.CharField(
         widget=forms.Textarea(
@@ -22,7 +24,7 @@ class DonationForm(forms.Form):
 
     
     def clean(self):
-        # Use the amount or "other amount" from the form
+    # Use the amount or "other amount" from the form
 
         try:
             amount = self.cleaned_data['amount']
@@ -37,7 +39,7 @@ class DonationForm(forms.Form):
         if amount == 'other' or amount == '':
             #TODO pull out just the number, in case they added a $
             try:
-                self.cleaned_data['amount'] = float(other_amount)
+                amount = float(other_amount)
             except ValueError:
                 raise forms.ValidationError("Amount is not a number")
     
@@ -53,7 +55,20 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'username', 'password1', 'password2')
 
+    def save(self, commit=True):
+        user = super(SignUpForm, self).save(commit=False)
+        user.username = self.cleaned_data["username"]
+        user.email = self.cleaned_data["email"]
+        user.is_staff = False
+        user.is_admin = False
+
+        if commit:
+            user.save()
+
+        return user
+    
+
 class FundraiserForm(forms.ModelForm):
     class Meta:
         model = Fundraiser
-        fields = ('name', 'goal', 'message')
+        fields = ('campaign', 'name', 'goal', 'message')

@@ -56,14 +56,16 @@ class Fundraiser(models.Model):
             total_donations += donations.amount
 
         return total_donations
-
+"""
 @receiver(post_save, sender=User)
 def create_fundraiser(sender, instance, created, **kwargs):
     if created:
         Fundraiser.objects.create(user=instance)
-
+"""
 @receiver(post_save, sender=User)
-def save_fundraiser(sender, instance, **kwargs):
+def save_fundraiser(sender, instance, created, **kwargs):
+    if created:
+        Fundraiser.objects.create(user=instance)
     instance.fundraiser.save()
     
 

@@ -2,6 +2,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 
 from .models import Campaign, Fundraiser, Donation
 
@@ -79,11 +80,17 @@ def new_donation(request, fundraiser_id):
 
 def signup(request):
     if request.method == "POST":
-        user_form = SignUpForm(request.POST, instance=request.user)
-        fundraiser_form = FundraiserForm(request.POST, instance=request.user.fundraiser) 
+        user_form = SignUpForm(request.POST)
+        fundraiser_form = FundraiserForm(request.POST) 
+
         if user_form.is_valid() and fundraiser_form.is_valid():
-            user_form.save()
+            user = user_form.save()
+            user.refresh_from_db()
+
+            fundraiser_form = FundraiserForm(request.POST, instance=user.profile)
+            fundraiser_form.full_clean()
             fundraiser_form.save()
+  
             return redirect('fundraiser')
     else:
         user_form = SignUpForm()
@@ -96,11 +103,30 @@ def signup(request):
 @login_required
 #@transaction_atomic
 def update_fundraiser(request):
+    """
+    Update the fundraiser's information, along with the user values
+    """
     if request.method == 'POST':
+
         user_form = UserForm(request.POST, instance=request.user)
+        fundraiser_form = FundraiserForm(request.POST, instance=request.user.fundraiser)
+
+        if user_form.is_valid() and fundraiser_form.is_valid():
+
+            user_form.save()
+            fundraiser_form.save()
+            # TODO: implement some type of success messaging and redirect somewhere logical
+            #messages.success(request, _("Your information was successfully updated!"))
+            return redirect('team_fundraising:update_fundraiser')
+
+        #TODO: implement messages when something is wrong
+        #else:
+            #messages.error(request, _("Please correct the information below"))
+
     else:
         user_form = UserForm(instance=request.user)
         fundraiser_form = FundraiserForm(instance=request.user.fundraiser)
+
     return render(request, 'team_fundraising/update_fundraiser.html', {
         'user_form': user_form,
         'fundraiser_form': fundraiser_form,

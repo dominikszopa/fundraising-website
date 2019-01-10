@@ -13,7 +13,8 @@
     [x] Fix bug with logged-in user being overwritten
     [x] Add UserForm.save() method to prevent superuser creation
     [ ] Make sure fundraiser is being properly created
-    [ ] Add ability to modify profile
+    [x] Add ability to modify profile
+[ ] Implement virtualenv / virtualenvwrapper
 [ ] Fundraiser photo(s)
 [ ] Fundraiser login to manage
 [ ] Update donate page to donate to general cause
@@ -21,3 +22,7 @@
 [ ] Connect with Paypal
 [ ] Pull out just number from donation amount
 [ ] Create tests
+
+Future:
+[ ] Switch to PostgreSQL
+[ ] Switch to cookiecutter template

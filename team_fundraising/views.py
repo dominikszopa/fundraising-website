@@ -1,12 +1,9 @@
-from datetime import datetime
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 
 from .models import Campaign, Fundraiser, Donation
+from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 
-# Create your views here.
 
 def index_view(request):
     template = 'team_fundraising/index.html'
@@ -14,7 +11,11 @@ def index_view(request):
     campaign = get_object_or_404(Campaign)
 
     fundraisers = sorted(
-        campaign.fundraiser_set.all(), key=lambda x: x.total_raised(), reverse=True)
+        campaign.fundraiser_set.all(),
+        key=lambda x: x.total_raised(),
+        reverse=True
+    )
+
     general_donations = Donation.objects.filter(fundraiser__isnull=True)
 
     # get raised by fundraisers and add general donations
@@ -23,12 +24,13 @@ def index_view(request):
         total_raised += donation.amount
 
     context = {
-        'campaign' : campaign,
-        'fundraisers' : fundraisers,
-        'total_raised' : total_raised,
+        'campaign': campaign,
+        'fundraisers': fundraisers,
+        'total_raised': total_raised,
     }
 
     return render(request, template, context)
+
 
 def fundraiser_view(request, fundraiser_id):
     template = 'team_fundraising/fundraiser.html'
@@ -37,11 +39,12 @@ def fundraiser_view(request, fundraiser_id):
     donations = fundraiser.donation_set.order_by('-date')
 
     context = {
-        'fundraiser' : fundraiser,
-        'donations' : donations,
+        'fundraiser': fundraiser,
+        'donations': donations,
     }
 
     return render(request, template, context)
+
 
 def new_donation(request, fundraiser_id):
 
@@ -53,7 +56,7 @@ def new_donation(request, fundraiser_id):
         fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
         if form.is_valid():
-            
+
             # populate the model with form values
             donation = Donation()
             donation.fundraiser = fundraiser
@@ -64,44 +67,52 @@ def new_donation(request, fundraiser_id):
             donation.message = form.cleaned_data['message']
             donation.save()
 
-            return redirect('team_fundraising:fundraiser', fundraiser_id=fundraiser_id)
+            return redirect(
+                'team_fundraising:fundraiser',
+                fundraiser_id=fundraiser_id
+            )
 
     else:
         form = DonationForm()
         fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
-
     context = {
         'form': form,
-        'fundraiser' : fundraiser,
+        'fundraiser': fundraiser,
     }
 
     return render(request, template, context)
 
+
 def signup(request):
     if request.method == "POST":
         user_form = SignUpForm(request.POST)
-        fundraiser_form = FundraiserForm(request.POST) 
+        fundraiser_form = FundraiserForm(request.POST)
 
         if user_form.is_valid() and fundraiser_form.is_valid():
             user = user_form.save()
             user.refresh_from_db()
 
-            fundraiser_form = FundraiserForm(request.POST, instance=user.profile)
+            fundraiser_form = FundraiserForm(
+                request.POST,
+                instance=user.profile
+            )
             fundraiser_form.full_clean()
             fundraiser_form.save()
-  
+
             return redirect('fundraiser')
     else:
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()
+
     return render(request, 'registration/signup.html', {
         'user_form': user_form,
         'fundraiser_form': fundraiser_form,
     })
 
+
 @login_required
-#@transaction_atomic
+# @transaction_atomic
 def update_fundraiser(request):
     """
     Update the fundraiser's information, along with the user values
@@ -109,26 +120,33 @@ def update_fundraiser(request):
     if request.method == 'POST':
 
         user_form = UserForm(request.POST, instance=request.user)
-        fundraiser_form = FundraiserForm(request.POST, instance=request.user.fundraiser)
+        fundraiser_form = FundraiserForm(
+            request.POST,
+            instance=request.user.fundraiser
+        )
 
         if user_form.is_valid() and fundraiser_form.is_valid():
 
             user_form.save()
             fundraiser_form.save()
-            # TODO: implement some type of success messaging and redirect somewhere logical
-            #messages.success(request, _("Your information was successfully updated!"))
+            # TODO: implement some type of success messaging and redirect
+            # somewhere logical
+            # messages.success(request, _("Your information was successfully
+            # updated!"))
             return redirect('team_fundraising:update_fundraiser')
 
-        #TODO: implement messages when something is wrong
-        #else:
-            #messages.error(request, _("Please correct the information below"))
+        # TODO: implement messages when something is wrong
+        # else:
+        # messages.error(request, _("Please correct the information below"))
 
     else:
         user_form = UserForm(instance=request.user)
         fundraiser_form = FundraiserForm(instance=request.user.fundraiser)
 
-    return render(request, 'team_fundraising/update_fundraiser.html', {
-        'user_form': user_form,
-        'fundraiser_form': fundraiser_form,
-    })
-
+    return render(
+        request, 'team_fundraising/update_fundraiser.html',
+        {
+            'user_form': user_form,
+            'fundraiser_form': fundraiser_form,
+        }
+    )

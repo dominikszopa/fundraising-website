@@ -84,23 +84,17 @@ def new_donation(request, fundraiser_id):
     return render(request, template, context)
 
 
-def signup(request):
+def signup(request, campaign_id):
     if request.method == "POST":
+
         user_form = SignUpForm(request.POST)
         fundraiser_form = FundraiserForm(request.POST)
 
         if user_form.is_valid() and fundraiser_form.is_valid():
-            user = user_form.save()
-            user.refresh_from_db()
-
-            fundraiser_form = FundraiserForm(
-                request.POST,
-                instance=user.profile
-            )
-            fundraiser_form.full_clean()
+            user_form.save()
             fundraiser_form.save()
 
-            return redirect('fundraiser')
+            return redirect('team_fundraising:fundraiser')
     else:
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()

@@ -12,8 +12,11 @@
     [x] Extend sign-up with custom fields
     [x] Fix bug with logged-in user being overwritten
     [x] Add UserForm.save() method to prevent superuser creation
-    [ ] Make sure fundraiser is being properly created
+    [x] Make sure fundraiser is being properly created
     [x] Add ability to modify profile
+    [ ] Fix redirect after creating fundraiser
+    [ ] Choose behaviour after fundraiser creation
+    [ ] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
 [ ] Fundraiser photo(s)
 [ ] Fundraiser login to manage

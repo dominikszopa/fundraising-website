@@ -7,8 +7,6 @@ by the Fundraisers, or applied to the general Campaign.
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 class Campaign(models.Model):
@@ -63,21 +61,6 @@ class Fundraiser(models.Model):
             total_donations += donations.amount
 
         return total_donations
-
-
-"""
-@receiver(post_save, sender=User)
-def create_fundraiser(sender, instance, created, **kwargs):
-    if created:
-        Fundraiser.objects.create(user=instance)
-"""
-
-
-@receiver(post_save, sender=User)
-def save_fundraiser(sender, instance, created, **kwargs):
-    if created:
-        Fundraiser.objects.create(user=instance)
-    instance.fundraiser.save()
 
 
 class Donation(models.Model):

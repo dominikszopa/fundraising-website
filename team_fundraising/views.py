@@ -85,16 +85,26 @@ def new_donation(request, fundraiser_id):
 
 
 def signup(request, campaign_id):
+    # Create both a fundraiser and a user, tied together
+
     if request.method == "POST":
 
         user_form = SignUpForm(request.POST)
         fundraiser_form = FundraiserForm(request.POST)
 
         if user_form.is_valid() and fundraiser_form.is_valid():
-            user_form.save()
-            fundraiser_form.save()
 
-            return redirect('team_fundraising:fundraiser')
+            user = user_form.save()
+            fundraiser = fundraiser_form.save()
+
+            # tie this user to the fundraiser and save the model again
+            fundraiser.user = user
+            fundraiser.save()
+
+            return redirect(
+                'team_fundraising:fundraiser',
+                fundraiser_id=fundraiser.id
+            )
     else:
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()

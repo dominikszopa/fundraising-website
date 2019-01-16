@@ -14,7 +14,8 @@
     [x] Add UserForm.save() method to prevent superuser creation
     [x] Make sure fundraiser is being properly created
     [x] Add ability to modify profile
-    [ ] Fix redirect after creating fundraiser
+    [x] Fix redirect after creating fundraiser
+    [ ] Fix signup auto redirects
     [ ] Choose behaviour after fundraiser creation
     [ ] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper

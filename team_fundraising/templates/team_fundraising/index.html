@@ -4,7 +4,8 @@
 {% block content %}
 <h1>{{ campaign.name }}</h1>
 <br/>
-<h2>Total Raised ${{ total_raised|floatformat:"0"|intcomma }} of ${{ campaign.goal|floatformat:"0"|intcomma }}
+<h2>Total Raised ${{ total_raised|floatformat:"0"|intcomma }} of 
+    ${{ campaign.goal|floatformat:"0"|intcomma }}
 <br/>
 <br/>
     <h3>Fundraisers</h3>
@@ -14,21 +15,32 @@
     <form class="form-inline">
         <div class="col-xs-4">
             <i class="fa fa-search" aria-hidden="true"></i>
-            <input id="search" class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search" onkeyup="filterList()">
+            <input id="search" class="form-control form-control-sm ml-3 w-75" 
+                type="text" placeholder="Search" aria-label="Search" 
+                onkeyup="filterList()">
         </div>
     </form>
     <br/>
-    <ul id="fundraiserlist">
+    <ul class="list-group" id="fundraiserlist">
         {% for fundraiser in fundraisers %}
-        <li>
+        <li class="list-group-item">
             <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
                 {{ fundraiser.name }} 
-                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
+                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / 
+                ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
             </a>
         </li>
         {% endfor %}
 
     </ul>
+
+    <br/>
+    <a class="btn btn-secondary" 
+        href="{% url 'team_fundraising:signup' campaign.id %}" 
+        role="button">Sign up to fundraise</a>
+    <a class="btn btn-secondary" 
+        href="{% url 'team_fundraising:login' %}" 
+        role="button">Login</a>
 
 <script>
 function filterList() {

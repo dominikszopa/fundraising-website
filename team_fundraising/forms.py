@@ -28,12 +28,12 @@ class DonationForm(forms.Form):
 
         try:
             amount = self.cleaned_data['amount']
-        except KeyError as e:
+        except KeyError:
             amount = ""
 
         try:
             other_amount = self.cleaned_data['other_amount']
-        except KeyError as e:
+        except KeyError:
             other_amount = ""
 
         if amount == 'other' or amount == '':
@@ -47,7 +47,7 @@ class DonationForm(forms.Form):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('email',)
 
 
 class SignUpForm(UserCreationForm):

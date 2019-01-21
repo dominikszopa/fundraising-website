@@ -11,15 +11,62 @@
     
 
 {% block content %}
-<h2> Sign up</h2>
-
+<h2> Join {{ campaign.name }}</h2>
+<br/>
 <form method="POST">
     {% csrf_token %}
-    <table>
-    {{ fundraiser_form.as_table }}
-    {{ user_form.as_table }}
-    </table>
-    <button type="submit">Sign up</button>
+    <input type="hidden" name="campaign" id="id_campaign" value="{{ campaign.id }}">
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ fundraiser_form.name.auto_id}}">{{ fundraiser_form.name.label }}:</label>
+        <div class="col-10">
+            {{ fundraiser_form.name }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ fundraiser_form.goal.auto_id}}">{{ fundraiser_form.goal.label }}:</label>
+        <div class="col-10">
+            {{ fundraiser_form.goal }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ fundraiser_form.message.auto_id}}">{{ fundraiser_form.message.label }}:</label>
+        <div class="col-10">
+            {{ fundraiser_form.message }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ user_form.email.auto_id}}">{{ user_form.email.label }}:</label>
+        <div class="col-10">
+            {{ user_form.email }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
+        <div class="col-10">
+            {{ user_form.username }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ user_form.password1.auto_id}}">{{ user_form.password1.label }}:</label>
+        <div class="col-10">
+            {{ user_form.password1 }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-2 col-form-label" for="{{ user_form.password2.auto_id}}">{{ user_form.password2.label }}:</label>
+        <div class="col-10">
+            {{ user_form.password2 }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Sign up</button>
 </form>
 
 {% endblock content %}

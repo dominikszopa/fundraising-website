@@ -56,6 +56,11 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'username', 'password1', 'password2')
 
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
         user.username = self.cleaned_data["username"]
@@ -73,3 +78,8 @@ class FundraiserForm(forms.ModelForm):
     class Meta:
         model = Fundraiser
         fields = ('campaign', 'name', 'goal', 'message')
+
+    def __init__(self, *args, **kwargs):
+        super(FundraiserForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

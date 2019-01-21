@@ -106,10 +106,12 @@ def signup(request, campaign_id):
                 fundraiser_id=fundraiser.id
             )
     else:
+        campaign = get_object_or_404(Campaign, pk=campaign_id)
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()
 
     return render(request, 'registration/signup.html', {
+        'campaign': campaign,
         'user_form': user_form,
         'fundraiser_form': fundraiser_form,
     })

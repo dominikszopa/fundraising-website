@@ -16,11 +16,13 @@
     [x] Add ability to modify profile
     [x] Fix redirect after creating fundraiser
     [x] Fix login auto redirects
-    [ ] Choose behaviour after fundraiser creation
+    [x] Choose behaviour after fundraiser creation
+    [ ] Add message after signing up
     [ ] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
-[ ] Fundraiser photo(s)
 [ ] Fundraiser login to manage
+[ ] Fundraiser photo(s)
+[ ] Fix up bootstrap forms
 [ ] Update donate page to donate to general cause
 [ ] Add address to donation for receipt
 [ ] Connect with Paypal

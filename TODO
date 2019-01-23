@@ -18,11 +18,11 @@
     [x] Fix login auto redirects
     [x] Choose behaviour after fundraiser creation
     [ ] Add message after signing up
-    [ ] Remove campaign dropdown from fundraiser creation form
+    [x] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
 [ ] Fundraiser login to manage
 [ ] Fundraiser photo(s)
-[ ] Fix up bootstrap forms
+[/] Fix up bootstrap forms - switch to crispy forms
 [ ] Update donate page to donate to general cause
 [ ] Add address to donation for receipt
 [ ] Connect with Paypal

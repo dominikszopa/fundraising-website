@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 
 
@@ -21,21 +23,18 @@
 <form method="post" action="{% url 'team_fundraising:login' %}">
     {% csrf_token %}
 
-    <table>
+    <div>
+        {{ form.username|as_crispy_field }}
+    </div>
+    <div>
 
-        <tr>
-          <td>{{ form.username.label_tag }}</td>
-          <td>{{ form.username }}</td>
-        </tr>
-        
-        <tr>
-          <td>{{ form.password.label_tag }}</td>
-          <td>{{ form.password }}</td>
-        </tr>
-        </table>
-
-        <input type="submit" value="login" />
+        {{ form.password|as_crispy_field }}
+    </div>
+    <div>
+        <input type="submit" class="btn btn-primary" value="login" />
         <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+
 </form>
 
 {% endblock content %}

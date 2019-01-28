@@ -20,9 +20,15 @@
     [ ] Add message after signing up
     [x] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
-[ ] Fundraiser login to manage
+[-] Fundraiser login to manage
+    [x] Remove campaign dropdown
+    [x] Save back to fundraiser page
+    [ ] Show "Edit", "Logout" when logged in
+[ ] Control size of fields
+[ ] Make some fields optional
 [ ] Fundraiser photo(s)
-[/] Fix up bootstrap forms - switch to crispy forms
+[-] Fix up bootstrap forms - switch to crispy forms
+[ ] Use bootstrap sizes properly
 [ ] Update donate page to donate to general cause
 [ ] Add address to donation for receipt
 [ ] Connect with Paypal

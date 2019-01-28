@@ -126,6 +126,7 @@ INTERNAL_IPS = ['127.0.0.1']
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/team_fundraising/accounts/login'
 LOGIN_REDIRECT_URL = '/team_fundraising/accounts/update_fundraiser/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -139,7 +139,10 @@ def update_fundraiser(request):
             # somewhere logical
             # messages.success(request, _("Your information was successfully
             # updated!"))
-            return redirect('team_fundraising:update_fundraiser')
+            return redirect(
+                'team_fundraising:fundraiser',
+                fundraiser_id=request.user.fundraiser.id
+            )
 
         # TODO: implement messages when something is wrong
         # else:

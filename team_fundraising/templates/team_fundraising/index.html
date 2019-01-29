@@ -35,12 +35,18 @@
     </ul>
 
     <br/>
-    <a class="btn btn-secondary" 
-        href="{% url 'team_fundraising:signup' campaign.id %}" 
-        role="button">Sign up to fundraise</a>
-    <a class="btn btn-secondary" 
-        href="{% url 'team_fundraising:login' %}" 
-        role="button">Login</a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-secondary" 
+        href="{% url 'team_fundraising:logout' %}" 
+        role="button">Logout</a>    
+    {% else %}
+        <a class="btn btn-secondary" 
+            href="{% url 'team_fundraising:signup' campaign.id %}" 
+            role="button">Sign up to fundraise</a>
+        <a class="btn btn-secondary" 
+            href="{% url 'team_fundraising:login' %}" 
+            role="button">Login</a>
+    {% endif %}
 
 <script>
 function filterList() {

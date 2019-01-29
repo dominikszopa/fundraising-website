@@ -27,5 +27,17 @@
             {% endfor %}
         </ul>
 
-        <a class="btn btn-secondary" href="{% url 'team_fundraising:login' %}" role="button">Login</a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-secondary" 
+            href="{% url 'team_fundraising:update_fundraiser' %}" 
+            role="button">Edit</a>    
+        <a class="btn btn-secondary" 
+            href="{% url 'team_fundraising:logout' %}" 
+            role="button">Logout</a>    
+    {% else %}
+        <a class="btn btn-secondary" 
+            href="{% url 'team_fundraising:login' %}" 
+            role="button">Login</a>
+    {% endif %}
+
     {% endblock %}

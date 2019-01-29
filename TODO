@@ -20,10 +20,11 @@
     [ ] Add message after signing up
     [x] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
-[-] Fundraiser login to manage
+[x] Fundraiser login to manage
     [x] Remove campaign dropdown
     [x] Save back to fundraiser page
-    [ ] Show "Edit", "Logout" when logged in
+    [x] Show "Edit", "Logout" when logged in
+[ ] Update logout page template
 [ ] Control size of fields
 [ ] Make some fields optional
 [ ] Fundraiser photo(s)

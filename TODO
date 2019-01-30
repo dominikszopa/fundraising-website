@@ -6,8 +6,7 @@
 [x] Implement "other" amount
 [x] Support typed-in donation amounts
 [x] Remove and clean up old donation form
-[ ] Add validation and check for new donation form
-[-] Sign up for fundraising
+[x] Sign up for fundraising
     [x] Add built-in login forms
     [x] Extend sign-up with custom fields
     [x] Fix bug with logged-in user being overwritten
@@ -17,13 +16,14 @@
     [x] Fix redirect after creating fundraiser
     [x] Fix login auto redirects
     [x] Choose behaviour after fundraiser creation
-    [ ] Add message after signing up
+    [x] Add message after signing up
     [x] Remove campaign dropdown from fundraiser creation form
 [x] Implement virtualenv / virtualenvwrapper
 [x] Fundraiser login to manage
     [x] Remove campaign dropdown
     [x] Save back to fundraiser page
     [x] Show "Edit", "Logout" when logged in
+[ ] Add validation and check for new donation form
 [ ] Update logout page template
 [ ] Control size of fields
 [ ] Make some fields optional

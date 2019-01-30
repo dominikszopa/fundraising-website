@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import Campaign, Fundraiser, Donation
@@ -101,14 +102,23 @@ def signup(request, campaign_id):
             fundraiser.user = user
             fundraiser.save()
 
+            messages.info(
+                request,
+                "Thank you for signing up. This is your fundraiser page. "
+                "Please share with your friends"
+            )
+
             return redirect(
                 'team_fundraising:fundraiser',
-                fundraiser_id=fundraiser.id
+                fundraiser_id=fundraiser.id,
             )
+
     else:
-        campaign = get_object_or_404(Campaign, pk=campaign_id)
+
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()
+
+    campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     return render(request, 'registration/signup.html', {
         'campaign': campaign,

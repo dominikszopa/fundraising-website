@@ -20,7 +20,8 @@ class DonationForm(forms.Form):
     message = forms.CharField(
         widget=forms.Textarea(
             attrs={'required': False, 'rows': 3}
-        )
+        ),
+        required=False
     )
 
     def clean(self):
@@ -78,7 +79,10 @@ class FundraiserForm(forms.ModelForm):
     class Meta:
         model = Fundraiser
         fields = ('campaign', 'name', 'goal', 'message')
-        widgets = {'campaign': forms.HiddenInput()}
+        widgets = {
+            'campaign': forms.HiddenInput(),
+            'message': forms.Textarea(attrs={'rows': 3, 'cols': 20}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(FundraiserForm, self).__init__(*args, **kwargs)

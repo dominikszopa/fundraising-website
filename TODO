@@ -23,10 +23,11 @@
     [x] Remove campaign dropdown
     [x] Save back to fundraiser page
     [x] Show "Edit", "Logout" when logged in
+[x] Make some fields optional
+[ ] Fix field validation of signup form
 [ ] Add validation and check for new donation form
 [ ] Update logout page template
 [ ] Control size of fields
-[ ] Make some fields optional
 [ ] Fundraiser photo(s)
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Use bootstrap sizes properly

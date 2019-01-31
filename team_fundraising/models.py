@@ -45,8 +45,8 @@ class Fundraiser(models.Model):
     )
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    goal = models.IntegerField(default=0)
-    message = models.CharField(max_length=1000)
+    goal = models.IntegerField(default=0, blank=True)
+    message = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
         return self.name
@@ -76,7 +76,7 @@ class Donation(models.Model):
     amount = models.FloatField(default=0)
     anonymous = models.BooleanField(default=False)
     email = models.EmailField()
-    message = models.CharField(max_length=280)
+    message = models.CharField(max_length=280, blank=True)
     date = models.DateTimeField(default=datetime.now)
     payment_method = models.CharField(max_length=50)
 

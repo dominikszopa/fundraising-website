@@ -25,24 +25,28 @@ class DonationForm(forms.Form):
     )
 
     def clean(self):
-        # Use the amount or "other amount" from the form
+        # if the user chooses "other amount", make that the amount
+
+        cleaned_data = super().clean()
 
         try:
-            amount = self.cleaned_data['amount']
+            amount = cleaned_data.get("amount")
         except KeyError:
             amount = ""
 
         try:
-            other_amount = self.cleaned_data['other_amount']
+            other_amount = cleaned_data.get("other_amount")
         except KeyError:
             other_amount = ""
 
         if amount == 'other' or amount == '':
             # TODO pull out just the number, in case they added a $
             try:
-                amount = float(other_amount)
+                cleaned_data['amount'] = float(other_amount)
             except ValueError:
                 raise forms.ValidationError("Amount is not a number")
+
+        return cleaned_data
 
 
 class UserForm(forms.ModelForm):

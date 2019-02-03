@@ -26,7 +26,7 @@
 [x] Make some fields optional
 [x] Update logout page template
 [ ] Fix field validation of signup form
-[ ] Pull out just number from donation amount
+[x] Pull out just number from donation amount
 [ ] Add validation and check for new donation form
 [ ] Control size of fields
 [ ] Fundraiser photo(s)

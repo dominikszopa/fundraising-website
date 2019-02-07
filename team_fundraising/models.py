@@ -46,6 +46,7 @@ class Fundraiser(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField()
     goal = models.IntegerField(default=0, blank=True)
+    photo = models.ImageField(upload_to='photos/', blank=True)
     message = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):

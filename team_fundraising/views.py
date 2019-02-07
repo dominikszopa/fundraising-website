@@ -65,6 +65,7 @@ def new_donation(request, fundraiser_id):
             donation.amount = form.cleaned_data['amount']
             donation.email = form.cleaned_data['email']
             donation.anonymous = form.cleaned_data['anonymous']
+            donation.photo = form.cleaned_data['photo']
             donation.message = form.cleaned_data['message']
             donation.save()
 
@@ -91,7 +92,7 @@ def signup(request, campaign_id):
     if request.method == "POST":
 
         user_form = SignUpForm(request.POST)
-        fundraiser_form = FundraiserForm(request.POST)
+        fundraiser_form = FundraiserForm(request.POST, request.FILES)
 
         if user_form.is_valid() and fundraiser_form.is_valid():
 

@@ -82,7 +82,7 @@ class SignUpForm(UserCreationForm):
 class FundraiserForm(forms.ModelForm):
     class Meta:
         model = Fundraiser
-        fields = ('campaign', 'name', 'goal', 'message')
+        fields = ('campaign', 'name', 'goal', 'photo', 'message')
         widgets = {
             'campaign': forms.HiddenInput(),
             'message': forms.Textarea(attrs={'rows': 3, 'cols': 20}),

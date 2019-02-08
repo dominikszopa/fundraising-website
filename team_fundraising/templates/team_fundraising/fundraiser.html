@@ -15,6 +15,11 @@
 
     <h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h2>
 
+    {% if fundraiser.photo %}
+        <img src="{{ fundraiser.photo.url }}" width="150">
+    {% endif %}
+    <br/><br/>
+
     <a class="btn btn-primary" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
     <br/><br/>
     <p>{{ fundraiser.message }}</p>

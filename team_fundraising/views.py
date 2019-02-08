@@ -139,6 +139,7 @@ def update_fundraiser(request):
         user_form = UserForm(request.POST, instance=request.user)
         fundraiser_form = FundraiserForm(
             request.POST,
+            request.FILES,
             instance=request.user.fundraiser
         )
 

@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from .models import Campaign, Fundraiser, Donation
@@ -102,6 +103,15 @@ def signup(request, campaign_id):
             # tie this user to the fundraiser and save the model again
             fundraiser.user = user
             fundraiser.save()
+
+            login_user = authenticate(
+                request,
+                username=request.POST['username'],
+                password=request.POST['password1']
+            )
+
+            if login_user is not None:
+                login(request, user)
 
             messages.info(
                 request,

@@ -31,21 +31,29 @@
         <div>
             <input type="radio" class="radio" id="other" name="amount" value="other">
             <label for="other" class="col-form-label">Other:</label>
-            $<input type="number" min="0" step="0.01" class="form-control" id="other" name="other_amount" size="10">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroupPrepend">$</span>
+                </div>
+                <input type="number" min="0" step="0.01" class="form-control" id="other" name="other_amount" size="10">
+            </div>
         </div>
     </div>
 
     <div>
         {{ form.name|as_crispy_field }}
     </div>
-    <div>
-        {{ form.anonymous|as_crispy_field }}
-        (your name will not appear on the site)
+    <div class="form-group">
+        <div id="div_id_anonymous" class="form-check">
+            <label for="id_anonymous" class="form-check-label">
+                <input type="checkbox" name="anonymous" class="checkboxinput form-check-input" id="id_anonymous">
+                Anonymous (your name will not appear on the site)
+            </label>
+        </div>
     </div>
     <div>
         {{ form.email|as_crispy_field }}
     </div>
-    <br/>
     <div>
         {{ form.message|as_crispy_field }}
         This will appear along with your donation.

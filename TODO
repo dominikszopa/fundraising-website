@@ -29,7 +29,7 @@
 [x] Fundraiser photo(s)
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Fix field validation of signup form
-[ ] Add validation and check for new donation form
+[ ] Add amount validation in new donation form
 [ ] Control size of fields
 [ ] Use bootstrap sizes properly
 [ ] Update donate page to donate to general cause

@@ -2,16 +2,16 @@
 {% load humanize %}
 
 {% block content %}
-<h1>{{ campaign.name }}</h1>
 <br/>
-<h2>Total Raised ${{ total_raised|floatformat:"0"|intcomma }} of 
-    ${{ campaign.goal|floatformat:"0"|intcomma }}
+<h2>{{ campaign.name }}</h2>
 <br/>
+<h3>Total Raised: <br/>
+    ${{ total_raised|floatformat:"0"|intcomma }} of 
+    ${{ campaign.goal|floatformat:"0"|intcomma }}</h3>
 <br/>
-    <h3>Fundraisers</h3>
+    <h4>Fundraisers</h4>
 
     <!-- Search form -->
-  
     <form class="form-inline">
         <div class="col-xs-4">
             <i class="fa fa-search" aria-hidden="true"></i>

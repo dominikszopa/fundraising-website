@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block content %}
-
+<br/>
     {% for message in messages %}
 
     <div class="alert alert-primary" role="alert">
@@ -11,9 +11,9 @@
 
     {% endfor %}
 
-    <h1>{{ fundraiser.name }}</h1>
+    <h2>{{ fundraiser.name }}</h2>
 
-    <h2>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h2>
+    <h3>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h3>
 
     {% if fundraiser.photo %}
         <img src="{{ fundraiser.photo.url }}" width="150">

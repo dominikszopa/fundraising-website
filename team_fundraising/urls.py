@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from .views import Paypal_donation
 
 app_name = 'team_fundraising'
 
@@ -12,6 +13,8 @@ urlpatterns = [
     ),
     path(
         'donation/<int:fundraiser_id>/', views.new_donation, name="donation"),
+    path('paypal_donation/<int:fundraiser_id>/', Paypal_donation.as_view()),
+    path('paypal', include('paypal.standard.ipn.urls')),
     path(
         'accounts/update_fundraiser/',
         views.update_fundraiser,

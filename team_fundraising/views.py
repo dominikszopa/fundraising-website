@@ -1,7 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views import View
+from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
@@ -85,6 +88,36 @@ def new_donation(request, fundraiser_id):
     }
 
     return render(request, template, context)
+
+
+class Paypal_donation(View):
+
+    template_name = 'team_fundraising/paypal_donation.html'
+
+    def get(self, request, fundraiser_id):
+
+        paypal_dict = {
+            # "bn": "TripleCrown_Donate_WPS_CA",
+            "business": "stephen@triplecrownforheart.com",
+            "amount": "50.00",
+            "item_name": "Donation",
+            "invoice": "unique-invoice-id",
+            "notify_url": request.build_absolute_uri(
+                reverse('team_fundraising:paypal-ipn')
+                ),
+            "return": request.build_absolute_uri(
+                reverse('team_fundraising:fundraiser', args=[fundraiser_id])
+                ),
+            # "cancel_return":
+            #    request.build_absolute_uri(reverse('your-cancel-view')),
+            "custom": "premium_plan",
+        }
+
+        # create the instance
+        form = PayPalPaymentsForm(initial=paypal_dict)
+        context = {"form": form}
+
+        return render(request, self.template_name, context)
 
 
 def signup(request, campaign_id):

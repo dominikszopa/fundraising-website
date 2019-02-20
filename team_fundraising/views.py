@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.views import View
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -98,8 +99,9 @@ class Paypal_donation(View):
 
         paypal_dict = {
             # "bn": "TripleCrown_Donate_WPS_CA",
-            "business": "stephen@triplecrownforheart.com",
+            "business": settings.PAYPAL_ACCOUNT,
             "amount": "50.00",
+            "currency_code": "CAD",
             "item_name": "Donation",
             "invoice": "unique-invoice-id",
             "notify_url": request.build_absolute_uri(
@@ -108,8 +110,9 @@ class Paypal_donation(View):
             "return": request.build_absolute_uri(
                 reverse('team_fundraising:fundraiser', args=[fundraiser_id])
                 ),
-            # "cancel_return":
-            #    request.build_absolute_uri(reverse('your-cancel-view')),
+            "cancel_return": request.build_absolute_uri(
+                reverse('team_fundraising:fundraiser', args=[fundraiser_id])
+                ),
             "custom": "premium_plan",
         }
 

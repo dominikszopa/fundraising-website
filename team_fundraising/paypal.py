@@ -1,4 +1,5 @@
 from paypal.standard.models import ST_PP_COMPLETED
+from django.conf import settings
 
 
 def process_paypal(sender, **kwargs):
@@ -11,7 +12,7 @@ def process_paypal(sender, **kwargs):
         # Check that the receiver email is the same we previously
         # set on the `business` field. (The user could tamper with
         # that fields on the payment form before it goes to PayPal)
-        if ipn_obj.receiver_email != "stephen@triplecrownforheart.com":
+        if ipn_obj.receiver_email != settings.PAYPAL_ACCOUNT:
             # Not a valid payment
             print('not a valid payment.')
             return

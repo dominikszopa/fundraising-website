@@ -1,10 +1,12 @@
 from paypal.standard.models import ST_PP_COMPLETED
+from django.shortcuts import get_object_or_404
 from django.conf import settings
+from .models import Donation
 
 
 def process_paypal(sender, **kwargs):
     ipn_obj = sender
-    print("received the signal...")
+    print("received the paypal signal...")
     print('ipn_obj.payment_status = ' + str(ipn_obj.payment_status))
 
     if ipn_obj.payment_status == ST_PP_COMPLETED:
@@ -24,13 +26,19 @@ def process_paypal(sender, **kwargs):
 
         print('ipn_obj.custom = ' + str(ipn_obj.custom))
 
+        donation = get_object_or_404(Donation, pk=ipn_obj.custom)
+
+        donation.payment_method = 'paypal'
+        donation.payment_status = 'paid'
+        donation.save()
+
         # Undertake some action depending upon `ipn_obj`.
         if ipn_obj.custom == "premium_plan":
             price = 0
         else:
             price = 1
 
-        if ipn_obj.mc_gross == price and ipn_obj.mc_currency == 'USD':
-            print('USD')
+        if ipn_obj.mc_gross == price and ipn_obj.mc_currency == 'CAD':
+            print(ipn_obj.mc_gross)
     else:
         print('not completed')

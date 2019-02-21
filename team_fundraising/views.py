@@ -54,8 +54,6 @@ def fundraiser_view(request, fundraiser_id):
 
 def new_donation(request, fundraiser_id):
 
-    template = "team_fundraising/donation.html"
-
     if request.method == "POST":
 
         form = DonationForm(request.POST)
@@ -70,18 +68,48 @@ def new_donation(request, fundraiser_id):
             donation.amount = form.cleaned_data['amount']
             donation.email = form.cleaned_data['email']
             donation.anonymous = form.cleaned_data['anonymous']
-            donation.photo = form.cleaned_data['photo']
             donation.message = form.cleaned_data['message']
+            donation.payment_method = 'paypal'
+            donation.payment_status = 'pending'
             donation.save()
 
-            return redirect(
-                'team_fundraising:fundraiser',
-                fundraiser_id=fundraiser_id
-            )
+            paypal_dict = {
+                "bn": "TripleCrown_Donate_WPS_CA",
+                "business": settings.PAYPAL_ACCOUNT,
+                "amount": donation.amount,
+                "currency_code": "CAD",
+                "item_name": "Donation",
+                "invoice": "TRIPLE_CROWN_"+str(donation.id),
+                "notify_url": request.build_absolute_uri(
+                    reverse('team_fundraising:paypal-ipn')
+                    ),
+                "return": request.build_absolute_uri(
+                    reverse(
+                        'team_fundraising:fundraiser', args=[fundraiser_id])
+                    ),
+                "cancel_return": request.build_absolute_uri(
+                    reverse(
+                        'team_fundraising:fundraiser', args=[fundraiser_id])
+                    ),
+                "custom": donation.id,
+            }
+
+            template_name = 'team_fundraising/paypal_donation.html'
+
+            # create the instance
+            form = PayPalPaymentsForm(
+                initial=paypal_dict, button_type="donate")
+
+            context = {"form": form, 'donation': donation}
+
+            return render(request, template_name, context)
 
     else:
+
         form = DonationForm()
         fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
+    template = "team_fundraising/donation.html"
 
     context = {
         'form': form,
@@ -98,7 +126,7 @@ class Paypal_donation(View):
     def get(self, request, fundraiser_id):
 
         paypal_dict = {
-            # "bn": "TripleCrown_Donate_WPS_CA",
+            "bn": "TripleCrown_Donate_WPS_CA",
             "business": settings.PAYPAL_ACCOUNT,
             "amount": "50.00",
             "currency_code": "CAD",
@@ -113,11 +141,11 @@ class Paypal_donation(View):
             "cancel_return": request.build_absolute_uri(
                 reverse('team_fundraising:fundraiser', args=[fundraiser_id])
                 ),
-            "custom": "premium_plan",
+            "custom": fundraiser_id,
         }
 
         # create the instance
-        form = PayPalPaymentsForm(initial=paypal_dict)
+        form = PayPalPaymentsForm(initial=paypal_dict, button_type="donate")
         context = {"form": form}
 
         return render(request, self.template_name, context)

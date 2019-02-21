@@ -79,7 +79,8 @@ class Donation(models.Model):
     email = models.EmailField()
     message = models.CharField(max_length=280, blank=True)
     date = models.DateTimeField(default=datetime.now)
-    payment_method = models.CharField(max_length=50)
+    payment_method = models.CharField(max_length=50, blank=True)
+    payment_status = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
         return self.name

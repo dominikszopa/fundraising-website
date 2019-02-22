@@ -58,8 +58,11 @@ class Fundraiser(models.Model):
         """
         total_donations = 0
 
-        for donations in self.donation_set.all():
-            total_donations += donations.amount
+        for donation in self.donation_set.all():
+            if (donation.payment_status == 'paid' or
+                    donation.payment_status == ''):
+
+                total_donations += donation.amount
 
         return total_donations
 

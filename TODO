@@ -35,7 +35,7 @@
 [ ] Update donate page to donate to general cause
 [ ] Add address to donation for receipt
 [-] Connect with Paypal
-    [ ] Add more detail to forwarding page
+    [x] Add more detail to forwarding page
     [ ] Remove "pending" transations from the total
 [ ] Add CAPTCHA for signup
 [ ] Create tests

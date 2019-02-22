@@ -3,7 +3,32 @@
 
 {% block content %}
 
-<h1>Show me the money!</h1>
+Please confirm your information:
+
+<br/><br/>
+<table class="table">
+    <tr>
+        <td>Name:</td>
+        <td>{{ donation.name }}</td>
+    </tr>
+    <tr>
+        <td>Amount:</td>
+        <td>${{ donation.amount }}</td>
+    </tr>
+    <tr>
+        <td>Email:</td>
+        <td> {{ donation.email }}</td>
+    </tr>
+    <tr>
+        <td>Message:</td>
+        <td>{{ donation.message }}</td>
+    </tr>
+</table>
+
+<br/>
+You will be redirected to Paypal to complete the payment.<br/>
+You can choose "Pay with a credit or Visa Debit card" at the bottom if you don't have a Paypal account.
+<br/><br/>
 <!-- writes out the form tag automatically -->
 {{ form.render }}
 {% endblock content %}

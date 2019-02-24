@@ -36,7 +36,8 @@
 [ ] Add address to donation for receipt
 [-] Connect with Paypal
     [x] Add more detail to forwarding page
-    [ ] Remove "pending" transations from the total
+    [x] Remove "pending" transations from the total
+    [ ] Add message to refresh when returning
 [ ] Add CAPTCHA for signup
 [ ] Create tests
 

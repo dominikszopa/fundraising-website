@@ -42,7 +42,8 @@ def fundraiser_view(request, fundraiser_id):
     template = 'team_fundraising/fundraiser.html'
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
-    donations = fundraiser.donation_set.order_by('-date')
+    donations = fundraiser.donation_set.filter(
+        payment_status__in=["paid", ""]).order_by('-date')
 
     context = {
         'fundraiser': fundraiser,

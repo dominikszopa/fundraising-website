@@ -37,7 +37,8 @@
 [-] Connect with Paypal
     [x] Add more detail to forwarding page
     [x] Remove "pending" transations from the total
-    [ ] Add message to refresh when returning
+    [x] Add message to refresh when returning
+    [ ] Add a refresh link to the returning message
 [ ] Add CAPTCHA for signup
 [ ] Create tests
 

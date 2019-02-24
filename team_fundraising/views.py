@@ -103,6 +103,14 @@ def new_donation(request, fundraiser_id):
 
             context = {"form": form, 'donation': donation}
 
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Thank you for your donation. \
+                You may need to refresh \
+                this page to see the donation."
+            )
+
             return render(request, template_name, context)
 
     else:

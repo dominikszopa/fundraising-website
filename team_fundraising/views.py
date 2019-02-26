@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -12,6 +13,8 @@ from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 
 
 def index_view(request):
+    # The home page, shows all fundraisers and total raised
+
     template = 'team_fundraising/index.html'
 
     campaign = get_object_or_404(Campaign)
@@ -39,6 +42,8 @@ def index_view(request):
 
 
 def fundraiser_view(request, fundraiser_id):
+    # An individual's fundraising page, including total and donations
+
     template = 'team_fundraising/fundraiser.html'
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
@@ -54,6 +59,7 @@ def fundraiser_view(request, fundraiser_id):
 
 
 def new_donation(request, fundraiser_id):
+    # Show donation page, on submit show confirmation and button to PayPal
 
     if request.method == "POST":
 
@@ -103,6 +109,8 @@ def new_donation(request, fundraiser_id):
 
             context = {"form": form, 'donation': donation}
 
+            # leave a message that the user will see on their return 
+            # from PayPal
             messages.add_message(
                 request,
                 messages.SUCCESS,
@@ -129,6 +137,7 @@ def new_donation(request, fundraiser_id):
 
 
 class Paypal_donation(View):
+    # initial test of the paypal donation - no longer used
 
     template_name = 'team_fundraising/paypal_donation.html'
 
@@ -161,7 +170,7 @@ class Paypal_donation(View):
 
 
 def signup(request, campaign_id):
-    # Create both a fundraiser and a user, tied together
+    # Create both a fundraiser and a user, tied together through a foreign key
 
     if request.method == "POST":
 
@@ -177,6 +186,18 @@ def signup(request, campaign_id):
             fundraiser.user = user
             fundraiser.save()
 
+            # send them an email that they have successfully signed up
+            send_mail(
+                'Welcome to fundraising for the Triple Crown for Heart!',
+                'Thanks for signing up to fundraise with us!\n'
+                'Your fundraising page can be found at:\n'
+                + request.get_host()
+                + reverse('team_fundraising:fundraiser', args=[fundraiser.id])
+                + "\n\n Post it to social media!\n",
+                'fundraising@triplecrownforheart.ca', [user.email, ]
+            )
+
+            # log in the user so they don't have to do it now
             login_user = authenticate(
                 request,
                 username=request.POST['username'],

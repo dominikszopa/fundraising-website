@@ -27,6 +27,9 @@
 [x] Update logout page template
 [x] Pull out just number from donation amount
 [x] Fundraiser photo(s)
+[x] Hook up email system
+    [x] Add domain name and url to welcome email
+    [x] Add donation receipt email
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Fix field validation of signup form
 [ ] Add amount validation in new donation form
@@ -39,6 +42,7 @@
     [x] Remove "pending" transations from the total
     [x] Add message to refresh when returning
     [ ] Add a refresh link to the returning message
+    [ ] Write to a file or db what the payment and received was
 [ ] Add CAPTCHA for signup
 [ ] Create tests
 

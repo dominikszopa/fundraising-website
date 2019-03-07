@@ -4,30 +4,33 @@
 {% block content %}
 <br/>
 <h2>{{ campaign.name }}</h2>
+Climbing three mountains to raise money for Children's Hospital!
+<br/><br/>
+<h3>
+    ${{ total_raised|floatformat:"0"|intcomma }} 
+    <small>of ${{ campaign.goal|floatformat:"0"|intcomma }} raised</small>
+</h3>
 <br/>
-<h3>Total Raised: <br/>
-    ${{ total_raised|floatformat:"0"|intcomma }} of 
-    ${{ campaign.goal|floatformat:"0"|intcomma }}</h3>
-<br/>
-    <h4>Fundraisers</h4>
 
     <!-- Search form -->
     <form class="form-inline">
         <div class="col-xs-4">
             <i class="fa fa-search" aria-hidden="true"></i>
-            <input id="search" class="form-control form-control-sm ml-3 w-75" 
-                type="text" placeholder="Search" aria-label="Search" 
+            <input id="search" class="form-control form-control-sm ml-3 w-85" 
+                type="text" placeholder="Search for a fundraiser" aria-label="Search" 
                 onkeyup="filterList()">
         </div>
     </form>
+    <br/>
+    Click on a fundraiser to donate:
     <br/>
     <ul class="list-group" id="fundraiserlist">
         {% for fundraiser in fundraisers %}
         <li class="list-group-item">
             <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
-                {{ fundraiser.name }} 
-                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} / 
-                ${{ fundraiser.goal|floatformat:"0"|intcomma }} 
+                {{ fundraiser.name }}: 
+                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+                <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} </small>
             </a>
         </li>
         {% endfor %}

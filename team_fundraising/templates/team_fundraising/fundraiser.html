@@ -13,17 +13,18 @@
 
     <h2>{{ fundraiser.name }}</h2>
 
-    <h3>Total Raised ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</h3>
-
     {% if fundraiser.photo %}
-        <img src="{{ fundraiser.photo.url }}" width="150">
+    <img src="{{ fundraiser.photo.url }}" width="150">
     {% endif %}
     <br/><br/>
 
-    <a class="btn btn-primary" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
-    <br/><br/>
+    <h3>${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+        <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} raised</small></h3>
+
     <p>{{ fundraiser.message }}</p>
 
+    <a class="btn btn-primary" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
+    <br/><br/>
 
         <h3>Recent Donations</h3>
         {{ fundraiser.Donation }}

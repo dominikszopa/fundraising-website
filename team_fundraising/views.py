@@ -109,7 +109,7 @@ def new_donation(request, fundraiser_id):
 
             context = {"form": form, 'donation': donation}
 
-            # leave a message that the user will see on their return 
+            # leave a message that the user will see on their return
             # from PayPal
             messages.add_message(
                 request,

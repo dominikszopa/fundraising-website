@@ -22,6 +22,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('team_fundraising/', include('team_fundraising.urls')),
     path('admin/', admin.site.urls),
+    # Had to add accounts here as well, as internal functions call it without
+    # a namespace
+    path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

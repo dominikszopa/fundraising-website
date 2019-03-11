@@ -169,7 +169,7 @@ class Paypal_donation(View):
         return render(request, self.template_name, context)
 
 
-def signup(request, campaign_id):
+def signup(request):
     # Create both a fundraiser and a user, tied together through a foreign key
 
     if request.method == "POST":
@@ -223,7 +223,8 @@ def signup(request, campaign_id):
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm()
 
-    campaign = get_object_or_404(Campaign, pk=campaign_id)
+    # Currently, this works with only the first campaign
+    campaign = get_object_or_404(Campaign)
 
     return render(request, 'registration/signup.html', {
         'campaign': campaign,

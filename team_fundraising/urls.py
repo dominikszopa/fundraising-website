@@ -21,5 +21,5 @@ urlpatterns = [
         name="update_fundraiser",
     ),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup/<int:campaign_id>/', views.signup, name="signup"),
+    path('accounts/signup/', views.signup, name="signup"),
 ]

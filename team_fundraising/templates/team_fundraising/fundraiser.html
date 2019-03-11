@@ -2,7 +2,6 @@
 {% load humanize %}
 
 {% block content %}
-<br/>
     {% for message in messages %}
 
     <div class="alert alert-primary" role="alert">
@@ -18,15 +17,15 @@
     {% endif %}
     <br/><br/>
 
-    <h3>${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
-        <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} raised</small></h3>
+    <h2>${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+        <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} raised</small></h2>
 
     <p>{{ fundraiser.message }}</p>
 
     <a class="btn btn-primary" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
     <br/><br/>
 
-        <h3>Recent Donations</h3>
+        <h4>Recent Donations</h4>
         {{ fundraiser.Donation }}
         <ul>
             {% for donation in donations %}

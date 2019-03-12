@@ -30,15 +30,17 @@
 [x] Hook up email system
     [x] Add domain name and url to welcome email
     [x] Add donation receipt email
-[-] Fix up bootstrap forms - switch to crispy forms
 [x] Add password recovery
-    [ ] Update buttons to bootstrap
+    [x] Update buttons to bootstrap
     [ ] Add username to password reset complete screen
 [-] Add navigation header
-    [X] Add brand image
-    [ ] Remove unnecessary buttons
+    [x] Add brand image
+    [x] Remove unnecessary buttons
     [ ] Fix collapsing
+[.] Fix field alignment of signup form
+[ ] Usability test
 [ ] Update Django 
+[-] Fix up bootstrap forms - switch to crispy forms
 [ ] Fix field validation of signup form
 [ ] Add amount validation in new donation form
 [ ] Control size of fields
@@ -49,6 +51,7 @@
     [x] Add more detail to forwarding page
     [x] Remove "pending" transations from the total
     [x] Add message to refresh when returning
+    [ ] Make the paypal button more modern
     [ ] Add a refresh link to the returning message
     [ ] Write to a file or db what the payment and received was
 [ ] Add CAPTCHA for signup

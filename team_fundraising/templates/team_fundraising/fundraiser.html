@@ -11,11 +11,16 @@
     {% endfor %}
 
     <h2>{{ fundraiser.name }}</h2>
-
+    
     {% if fundraiser.photo %}
     <img src="{{ fundraiser.photo.url }}" width="150">
     {% endif %}
-    <br/><br/>
+    <br/>
+    {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
+        <br/>
+        <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
+    {% endif %}
+    <br/>
 
     <h2>${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
         <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} raised</small></h2>
@@ -41,17 +46,5 @@
             {% endfor %}
         </ul>
 
-    {% if user.is_authenticated %}
-        <a class="btn btn-secondary" 
-            href="{% url 'team_fundraising:update_fundraiser' %}" 
-            role="button">Edit</a>    
-        <a class="btn btn-secondary" 
-            href="{% url 'team_fundraising:logout' %}" 
-            role="button">Logout</a>    
-    {% else %}
-        <a class="btn btn-secondary" 
-            href="{% url 'team_fundraising:login' %}" 
-            role="button">Login</a>
-    {% endif %}
 
     {% endblock %}

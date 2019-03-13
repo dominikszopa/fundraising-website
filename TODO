@@ -37,7 +37,7 @@
     [x] Add brand image
     [x] Remove unnecessary buttons
     [ ] Fix collapsing
-[.] Fix field alignment of signup form
+[x] Fix field alignment of signup form
 [ ] Usability test
 [ ] Update Django 
 [-] Fix up bootstrap forms - switch to crispy forms

@@ -38,8 +38,11 @@
     [x] Remove unnecessary buttons
     [ ] Fix collapsing
 [x] Fix field alignment of signup form
+[x] Add $ to currency fields
 [ ] Usability test
+[ ] Send email to fundraiser when someone donates
 [ ] Update Django 
+[ ] Fix iphone password recovery
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Fix field validation of signup form
 [ ] Add amount validation in new donation form

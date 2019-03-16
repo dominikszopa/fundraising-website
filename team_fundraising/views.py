@@ -221,7 +221,7 @@ def signup(request):
     else:
 
         user_form = SignUpForm()
-        fundraiser_form = FundraiserForm()
+        fundraiser_form = FundraiserForm(initial={'goal': 200})
 
     # Currently, this works with only the first campaign
     campaign = get_object_or_404(Campaign)

@@ -39,12 +39,18 @@
     [ ] Fix collapsing
 [x] Fix field alignment of signup form
 [x] Add $ to currency fields
-[ ] Usability test
+[x] Update Django 
+[x] Usability test
+[ ] Add spacing at bottom of pages [UT1 2.6]
+[ ] Add description to Join page [UT1 2.1]
+[ ] Add messsaging about password strength [UT1 2.3]
+[ ] Refresh after "return" link from logout [UT1 3.1]
+[ ] Retest password recovery on iphone [UT1 4.1]
 [ ] Send email to fundraiser when someone donates
-[ ] Update Django 
-[ ] Fix iphone password recovery
 [-] Fix up bootstrap forms - switch to crispy forms
+[ ] Add Javascript warning about low security password [UT1 2.3]
 [ ] Fix field validation of signup form
+[ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add amount validation in new donation form
 [ ] Control size of fields
 [ ] Use bootstrap sizes properly

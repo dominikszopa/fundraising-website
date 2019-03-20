@@ -63,6 +63,7 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.pop("autofocus", None)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 

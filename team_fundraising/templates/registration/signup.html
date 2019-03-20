@@ -14,7 +14,9 @@
 {% block content %}
 <br/>
 <h3> Join {{ campaign.name }}</h3>
-<br/>
+Sign up to create your own fundraising page to raise money for the 
+BC Children's Hospital Foundation and the Children's Heart Network.
+<br/><br/>
 <form method="POST"  enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|as_crispy_errors }}

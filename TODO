@@ -41,8 +41,9 @@
 [x] Add $ to currency fields
 [x] Update Django 
 [x] Usability test
-[ ] Add spacing at bottom of pages [UT1 2.6]
-[ ] Add description to Join page [UT1 2.1]
+[x] Add spacing at bottom of pages [UT1 2.6]
+[x] Add description to Join page [UT1 2.1]
+[x] Remove autofocus on username in join page
 [ ] Add messsaging about password strength [UT1 2.3]
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]

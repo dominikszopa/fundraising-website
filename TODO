@@ -44,10 +44,10 @@
 [x] Add spacing at bottom of pages [UT1 2.6]
 [x] Add description to Join page [UT1 2.1]
 [x] Remove autofocus on username in join page
-[ ] Add messsaging about password strength [UT1 2.3]
+[x] Add messsaging about password strength [UT1 2.3]
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]
-[ ] Send email to fundraiser when someone donates
+[x] Send email to fundraiser when someone donates
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [ ] Fix field validation of signup form

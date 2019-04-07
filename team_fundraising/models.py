@@ -52,6 +52,8 @@ class Fundraiser(models.Model):
     def __str__(self):
         return self.name
 
+    # TODO: combine and optimize total_raised() and total_donations
+    # and maybe add them to the initialization of the class
     def total_raised(self):
         """
         Get the sum of Donations for this Fundraiser
@@ -63,6 +65,17 @@ class Fundraiser(models.Model):
                     donation.payment_status == ''):
 
                 total_donations += donation.amount
+
+        return total_donations
+
+    def total_donations(self):
+        """
+        Get the total number of donators for this Fundraisers
+        """
+        total_donations = 0
+
+        for donations in self.donation_set.all():
+            total_donations += 1
 
         return total_donations
 

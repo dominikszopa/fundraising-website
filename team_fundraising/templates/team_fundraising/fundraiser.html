@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load humanize %}
 
@@ -11,19 +12,40 @@
     {% endfor %}
 
     <h2>{{ fundraiser.name }}</h2>
-    
+
     {% if fundraiser.photo %}
     <img src="{{ fundraiser.photo.url }}" width="150">
     {% endif %}
-    <br/>
+
+    <div id=countdown-wrap>
+      <div id="goal">${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>
+      <div id="glass">
+        <div id="progress">
+        </div>
+      </div>
+      <div class="goal-stat">
+        <span class="goal-number">{{ fundraiser.percent_raised|floatformat:"0" }}%</span>
+        <span class="goal-label">Funded</span>
+      </div>
+      <div class="goal-stat">
+        <span class="goal-number">${{ fundraiser.total_raised|floatformat:"0"|intcomma }}</span>
+        <span class="goal-label">Raised</span>
+      </div>
+      <div class="goal-stat">
+        <span class="goal-number">{{ fundraiser.total_donations }}</span>
+        <span class="goal-label">Donors</span>
+      </div>
+    </div>
+    <script>
+        document.getElementById("progress").style.width = "{{ fundraiser.percent_raised }}%";
+    </script>
+
+    <!--http://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
+
     {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
         <br/>
         <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
     {% endif %}
-    <br/>
-
-    <h2>${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
-        <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} raised</small></h2>
 
     <p>{{ fundraiser.message }}</p>
 

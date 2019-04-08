@@ -10,12 +10,13 @@
     </div>
 
     {% endfor %}
-
-    <h2>{{ fundraiser.name }}</h2>
+    <br/>
 
     {% if fundraiser.photo %}
-    <img src="{{ fundraiser.photo.url }}" width="150">
+    <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
     {% endif %}
+
+    <h2>{{ fundraiser.name }}</h2>
 
     <div id=countdown-wrap>
       <div id="goal">${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>

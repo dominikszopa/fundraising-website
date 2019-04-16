@@ -24,18 +24,31 @@ Climbing three mountains to raise money for Children's Hospital!
     <br/>
     Click on a fundraiser to donate:
     <br/>
-    <ul class="list-group" id="fundraiserlist">
-        {% for fundraiser in fundraisers %}
-        <li class="list-group-item">
-            <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
-                {{ fundraiser.name }}: 
-                ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
-                <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} </small>
-            </a>
-        </li>
-        {% endfor %}
 
-    </ul>
+    <div class="container">
+      <div class="row justify-content-around">
+        {% for fundraiser in fundraisers %}
+
+          <div class="col-sm-4">
+            <div class="card" style="width: 170px;"">
+              {% if fundraiser.photo %}
+                <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="150" height="150">
+              {% endif %}
+              <div class="card-body">
+                <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">
+                    {{ fundraiser.name }}<br> 
+                    ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+                    <small>of ${{ fundraiser.goal|floatformat:"0"|intcomma }} </small>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {% if forloop.counter|divisibleby:3 %} </div><div class="row justify-content-around"> {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
 
     <br/>
 

@@ -40,6 +40,7 @@
 [x] Fix field alignment of signup form
 [x] Add $ to currency fields
 [x] Update Django 
+[x] Send email to fundraiser when someone donates
 [x] Usability test
 [x] Add spacing at bottom of pages [UT1 2.6]
 [x] Add description to Join page [UT1 2.1]
@@ -49,13 +50,13 @@
 [ ] Add thermometer to home page
 [x] Make buttons red and rounded
 [x] Add circle images
-[ ] Add fundraiser cards
+[-] Add fundraiser cards
 [ ] Add donator cards
 [ ] Fix up layout of thermometer
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]
-[x] Send email to fundraiser when someone donates
+[ ] Fix fundraiser search
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [ ] Fix field validation of signup form

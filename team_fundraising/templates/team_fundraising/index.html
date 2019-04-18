@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block content %}
@@ -29,10 +30,12 @@ Climbing three mountains to raise money for Children's Hospital!
       <div class="row justify-content-around">
         {% for fundraiser in fundraisers %}
 
-          <div class="col-sm-4">
+          <div class="col-sm-6 col-md-4">
             <div class="card" style="width: 170px;"">
               {% if fundraiser.photo %}
                 <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="150" height="150">
+              {% else %}
+                <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="150" height="150">
               {% endif %}
               <div class="card-body">
                 <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}">

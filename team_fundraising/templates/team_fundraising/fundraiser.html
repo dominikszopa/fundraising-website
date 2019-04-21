@@ -18,23 +18,17 @@
 
     <h2>{{ fundraiser.name }}</h2>
 
-    <div id=countdown-wrap>
-      <div id="goal">${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>
+    <div id="countdown-wrap">
+      <div id="goal-stat">
+        <div id="raised"><strong>${{ fundraiser.total_raised|floatformat:"0"|intcomma }}</strong></div>
+        <div id="goal">Goal: ${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>
+      </div>
       <div id="glass">
         <div id="progress">
         </div>
       </div>
       <div class="goal-stat">
         <span class="goal-number">{{ fundraiser.percent_raised|floatformat:"0" }}%</span>
-        <span class="goal-label">Funded</span>
-      </div>
-      <div class="goal-stat">
-        <span class="goal-number">${{ fundraiser.total_raised|floatformat:"0"|intcomma }}</span>
-        <span class="goal-label">Raised</span>
-      </div>
-      <div class="goal-stat">
-        <span class="goal-number">{{ fundraiser.total_donations }}</span>
-        <span class="goal-label">Donors</span>
       </div>
     </div>
     <script>

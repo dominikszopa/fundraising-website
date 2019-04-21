@@ -51,8 +51,9 @@
 [x] Make buttons red and rounded
 [x] Add circle images
 [x] Add fundraiser cards
-[ ] Fix up layout of thermometer
+[x] Fix up layout of thermometer
 [x] Make entire card clickable
+[ ] Make better example data
 [ ] Make side-by-side layout in desktop
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]

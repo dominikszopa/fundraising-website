@@ -7,23 +7,17 @@
 <h3>{{ campaign.name }}</h3>
 Climbing three mountains to raise money for Children's Hospital!
 <br/>
-<div id=countdown-wrap>
-    <div id="goal">${{ campaign.goal|floatformat:"0"|intcomma }}</div>
+<div id="countdown-wrap">
+    <div id="goal-stat">
+      <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
+      <div id="goal">Goal: ${{ campaign.goal|floatformat:"0"|intcomma }}</div>
+    </div>
     <div id="glass">
       <div id="progress">
       </div>
     </div>
     <div class="goal-stat">
       <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
-      <span class="goal-label">Funded</span>
-    </div>
-    <div class="goal-stat">
-      <span class="goal-number">${{ total_raised|floatformat:"0"|intcomma }}</span>
-      <span class="goal-label">Raised</span>
-    </div>
-    <div class="goal-stat">
-      <span class="goal-number">{{ total_donations }}</span>
-      <span class="goal-label"></span>
     </div>
   </div>
   <script>

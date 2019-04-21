@@ -47,12 +47,13 @@
 [x] Remove autofocus on username in join page
 [x] Add messsaging about password strength [UT1 2.3]
 [x] Add thermometer
-[ ] Add thermometer to home page
+[x] Add thermometer to home page
 [x] Make buttons red and rounded
 [x] Add circle images
-[-] Add fundraiser cards
-[ ] Add donator cards
+[x] Add fundraiser cards
 [ ] Fix up layout of thermometer
+[ ] Make entire card clickable
+[ ] Make side-by-side layout in desktop
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]

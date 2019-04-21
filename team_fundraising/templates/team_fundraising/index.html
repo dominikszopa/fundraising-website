@@ -6,12 +6,29 @@
 <br/>
 <h3>{{ campaign.name }}</h3>
 Climbing three mountains to raise money for Children's Hospital!
-<br/><br/>
-<h3>
-    ${{ total_raised|floatformat:"0"|intcomma }} 
-    <small>of ${{ campaign.goal|floatformat:"0"|intcomma }} raised</small>
-</h3>
 <br/>
+<div id=countdown-wrap>
+    <div id="goal">${{ campaign.goal|floatformat:"0"|intcomma }}</div>
+    <div id="glass">
+      <div id="progress">
+      </div>
+    </div>
+    <div class="goal-stat">
+      <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
+      <span class="goal-label">Funded</span>
+    </div>
+    <div class="goal-stat">
+      <span class="goal-number">${{ total_raised|floatformat:"0"|intcomma }}</span>
+      <span class="goal-label">Raised</span>
+    </div>
+    <div class="goal-stat">
+      <span class="goal-number">{{ total_donations }}</span>
+      <span class="goal-label"></span>
+    </div>
+  </div>
+  <script>
+      document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
+  </script>
 
     <!-- Search form -->
     <form class="form-inline">

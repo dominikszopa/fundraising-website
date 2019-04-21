@@ -59,7 +59,7 @@ Climbing three mountains to raise money for Children's Hospital!
                 <p class="card-text">
                     ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
                     of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
-                <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="btn btn-primary stretched-link card-donate-button">Donate</a>
+                <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
               </div>
             </div>
         {% endfor %}

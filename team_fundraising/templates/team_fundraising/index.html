@@ -3,65 +3,72 @@
 {% load humanize %}
 
 {% block content %}
-<br/>
-<h3>{{ campaign.name }}</h3>
-Climbing three mountains to raise money for Children's Hospital!
-<br/>
-<div id="countdown-wrap">
-    <div id="goal-stat">
-      <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
-      <div id="goal">Goal: ${{ campaign.goal|floatformat:"0"|intcomma }}</div>
-    </div>
-    <div id="glass">
-      <div id="progress">
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <br/>
+      <h3>{{ campaign.name }}</h3> 
+      <img src="{% static "homepage.jpg" %}" width="100%"> 
+        Riders who are tackling the North Shore Mountains are fundraising for the BC Children's Hospital Foundation and the 
+        Children's Heart Network. All your donations will go directly to these charities. Donate to your favourite rider today!
+      <br/>
+      <div id="countdown-wrap">
+        <div id="goal-stat">
+          <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
+          <div id="goal">Goal: ${{ campaign.goal|floatformat:"0"|intcomma }}</div>
+        </div>
+        <div id="glass">
+          <div id="progress">
+          </div>
+        </div>
+        <div class="goal-stat">
+          <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
+        </div>
       </div>
+      <script>
+        document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
+      </script>
     </div>
-    <div class="goal-stat">
-      <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
+    <div class="col-lg-6">
+      <br/><br/>
+      <!-- Search form -->
+      <form class="form-inline">
+          <div class="col-xs-4">
+              <i class="fa fa-search" aria-hidden="true"></i>
+                Click on a fundraiser to donate:
+                <input id="search" class="form-control form-control-sm ml-3 w-85" 
+                  type="text" placeholder="Search for a fundraiser" aria-label="Search" 
+                  onkeyup="filterList()">
+          </div>
+      </form>
+      <br/>
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-start">
+          {% for fundraiser in fundraisers %}
+
+              <div class="card mt-3 mr-1" style="width: 160px;"">
+                {% if fundraiser.photo %}
+                  <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
+                {% else %}
+                  <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="140" height="140">
+                {% endif %}
+                <div class="card-body">
+                  <p class="card-title">
+                      {{ fundraiser.name }}</p> 
+                  <p class="card-text">
+                      ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+                      of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
+                  <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <br/>
     </div>
   </div>
-  <script>
-      document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
-  </script>
-
-    <!-- Search form -->
-    <form class="form-inline">
-        <div class="col-xs-4">
-            <i class="fa fa-search" aria-hidden="true"></i>
-            <input id="search" class="form-control form-control-sm ml-3 w-85" 
-                type="text" placeholder="Search for a fundraiser" aria-label="Search" 
-                onkeyup="filterList()">
-        </div>
-    </form>
-    <br/>
-    Click on a fundraiser to donate:
-    <br/>
-
-    <div class="container">
-      <div class="d-flex flex-wrap justify-content-start">
-        {% for fundraiser in fundraisers %}
-
-            <div class="card mt-3 mr-1" style="width: 160px;"">
-              {% if fundraiser.photo %}
-                <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
-              {% else %}
-                <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="140" height="140">
-              {% endif %}
-              <div class="card-body">
-                <p class="card-title">
-                    {{ fundraiser.name }}</p> 
-                <p class="card-text">
-                    ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
-                    of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
-                <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
-              </div>
-            </div>
-        {% endfor %}
-      </div>
-    </div>
-
-
-    <br/>
+</div>
 
 <script>
 function filterList() {

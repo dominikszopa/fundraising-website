@@ -12,56 +12,71 @@
     {% endfor %}
     <br/>
 
-    {% if fundraiser.photo %}
-    <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                {% if fundraiser.photo %}
+                <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
+                {% endif %}
 
-    <h2>{{ fundraiser.name }}</h2>
+                <h2>{{ fundraiser.name }}</h2>
+            </div>
+            <div class="col-lg-6">
 
-    <div id="countdown-wrap">
-      <div id="goal-stat">
-        <div id="raised"><strong>${{ fundraiser.total_raised|floatformat:"0"|intcomma }}</strong></div>
-        <div id="goal">Goal: ${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>
-      </div>
-      <div id="glass">
-        <div id="progress">
+                <div id="countdown-wrap">
+                <div id="goal-stat">
+                    <div id="raised"><strong>${{ fundraiser.total_raised|floatformat:"0"|intcomma }}</strong></div>
+                    <div id="goal">Goal: ${{ fundraiser.goal|floatformat:"0"|intcomma }}</div>
+                </div>
+                <div id="glass">
+                    <div id="progress">
+                    </div>
+                </div>
+                <div class="goal-stat">
+                    <span class="goal-number">{{ fundraiser.percent_raised|floatformat:"0" }}%</span>
+                </div>
+                </div>
+                <script>
+                    document.getElementById("progress").style.width = "{{ fundraiser.percent_raised }}%";
+                </script>
+
+                <!--http://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
+
+                {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
+                    <br/>
+                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
+                {% endif %}
+
+                
+                <a class="btn btn-primary donate-button" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
+                <br/>
+            </div>
         </div>
-      </div>
-      <div class="goal-stat">
-        <span class="goal-number">{{ fundraiser.percent_raised|floatformat:"0" }}%</span>
-      </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <br/>
+                <p>{{ fundraiser.message }}</p>
+            </div>
+            <div class="col-lg-6">
+
+                <h4>Recent Donations</h4>
+                {{ fundraiser.Donation }}
+                <ul>
+                    {% for donation in donations %}
+                    <li>
+                            {% if  donation.anonymous %}
+                                Anonymous
+                            {% else %}
+                                {{ donation.name }}
+                            {% endif %}
+                            - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-    <script>
-        document.getElementById("progress").style.width = "{{ fundraiser.percent_raised }}%";
-    </script>
-
-    <!--http://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
-
-    {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
-        <br/>
-        <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
-    {% endif %}
-
-    <p>{{ fundraiser.message }}</p>
-
-    <a class="btn btn-primary donate-button" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
-    <br/><br/>
-
-        <h4>Recent Donations</h4>
-        {{ fundraiser.Donation }}
-        <ul>
-            {% for donation in donations %}
-            <li>
-                    {% if  donation.anonymous %}
-                        Anonymous
-                    {% else %}
-                        {{ donation.name }}
-                    {% endif %}
-                    - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
 
 
     {% endblock %}

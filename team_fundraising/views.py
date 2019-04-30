@@ -48,8 +48,9 @@ def fundraiser_view(request, fundraiser_id):
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
-    fundraiser.percent_raised = int(
-        fundraiser.total_raised()) / fundraiser.goal * 100
+    if fundraiser.goal != 0:
+        fundraiser.percent_raised = int(
+            fundraiser.total_raised()) / fundraiser.goal * 100
 
     donations = fundraiser.donation_set.filter(
         payment_status__in=["paid", ""]).order_by('-date')

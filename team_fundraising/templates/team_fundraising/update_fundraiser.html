@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block head %}
+    <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
+{% endblock head %}
+
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -9,7 +13,9 @@
     {{ user_form|crispy }}
 
     <button class="btn btn-primary" type="submit"> Save Changes</button>
-
+    <script>
+        CKEDITOR.replace( 'message' );
+    </script>
 </form>
 
-{% endblock %}
+{% endblock content %}

@@ -54,8 +54,8 @@
 [x] Fix up layout of thermometer
 [x] Make entire card clickable
 [x] Make better example data
-[ ] Add HTML editor to message
-[ ] Make side-by-side layout in desktop
+[x] Add HTML editor to message
+[x] Make side-by-side layout in desktop
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]
@@ -65,6 +65,7 @@
 [ ] Fix field validation of signup form
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add amount validation in new donation form
+[ ] Fix mobile card layout - 2-wide on Iphone SE
 [ ] Control size of fields
 [ ] Use bootstrap sizes properly
 [ ] Update donate page to donate to general cause

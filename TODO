@@ -55,6 +55,7 @@
 [x] Make entire card clickable
 [x] Make better example data
 [x] Add HTML editor to message
+[x] Make CKEditor font consistent
 [x] Make side-by-side layout in desktop
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block head %}
@@ -14,7 +15,14 @@
 
     <button class="btn btn-primary" type="submit"> Save Changes</button>
     <script>
-        CKEDITOR.replace( 'message' );
+        CKEDITOR.replace( 'message', {
+        height: 260,
+      /* Default CKEditor styles are included as well to avoid copying default styles. */
+      contentsCss: [
+        'http://cdn.ckeditor.com/4.11.4/full-all/contents.css',
+        '{% static "ck_editor_override.css  " %}'
+      ]
+    } );
     </script>
 </form>
 

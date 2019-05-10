@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import IndexView
 
 
 urlpatterns = [
+    path('', IndexView.as_view()),
     path('team_fundraising/', include('team_fundraising.urls')),
     path('admin/', admin.site.urls),
     # Had to add accounts here as well, as internal functions call it without

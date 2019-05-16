@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 
-Meant to be imported by either dev.py or prod.py as 
+Meant to be imported by either dev.py or prod.py as
 the master settings file.
 
 """
@@ -105,22 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'America/Vancouver'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-INTERNAL_IPS = ['127.0.0.1']
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
-STATIC_URL = '/static/'
 
 LOGIN_URL = '/team_fundraising/accounts/login'
 LOGIN_REDIRECT_URL = '/team_fundraising/accounts/update_fundraiser/'

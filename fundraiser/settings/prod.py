@@ -1,1 +1,19 @@
 from .base import *
+import os
+
+# Debug must be off in production
+DEBUG = False
+
+# SECRET_KEY is read from environment variable for security
+SECRET_KEY = os.environ['SECRET_KEY']
+
+ALLOWED_HOSTS = [
+    'donations.triplecrownforheart.ca',
+    'fundraising.triplecrownforheart.ca',
+    'localhost'
+    ]
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+STATIC_URL = '/static/'

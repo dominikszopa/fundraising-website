@@ -11,6 +11,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Django debug toolbar
+# https://django-debug-toolbar.readthedocs.io/en/0.11.0/installation.html
+
 INSTALLED_APPS += [
     'debug_toolbar',
 ]
@@ -18,3 +21,5 @@ INSTALLED_APPS += [
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+INTERNAL_IPS = ['127.0.0.1']

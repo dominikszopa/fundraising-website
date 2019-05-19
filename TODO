@@ -58,7 +58,7 @@
 [x] Make CKEditor font consistent
 [x] Make side-by-side layout in desktop
 [x] Create blank homepage
-[-] Make unique settings file for production
+[x] Make unique settings file for production
 [ ] Fix fundraiser search
 [ ] Add about and bug reporting page
 [ ] Optimize total counts in Fundraiser class

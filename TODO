@@ -59,8 +59,15 @@
 [x] Make side-by-side layout in desktop
 [x] Create blank homepage
 [x] Make unique settings file for production
+[-] Fix image upload
+[ ] Move image upload to edit screen
+[ ] Check issues with mobile signup
+[ ] Add username to signup email
+[ ] Add CKEditor to signup
+[ ] Remove email password from production and settings file
 [ ] Fix fundraiser search
 [ ] Add about and bug reporting page
+[ ] Add Google Analytics
 [ ] Optimize total counts in Fundraiser class
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Retest password recovery on iphone [UT1 4.1]
@@ -71,7 +78,7 @@
 [ ] Add amount validation in new donation form
 [ ] Fix mobile card layout - 2-wide on Iphone SE
 [ ] Control size of fields
-[ ] Use bootstrap sizes properly
+[x] Use bootstrap sizes properly
 [ ] Update donate page to donate to general cause
 [ ] Add address to donation for receipt
 [-] Connect with Paypal

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import Paypal_donation
+from .views import Paypal_donation, About
 
 app_name = 'team_fundraising'
 
@@ -22,4 +22,5 @@ urlpatterns = [
     ),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', views.signup, name="signup"),
+    path('about/', About.as_view(), name="about"),
 ]

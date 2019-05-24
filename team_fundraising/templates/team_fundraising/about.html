@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Welcome to the Triple Crown for Heart donation site!</h3>
+
+<br/>
+
+<p>
+    The Triple Crown for Heart is an annual group ride up the three North Shore 
+    mountains in Vancouver, British Columbia.
+</p>
+<p>
+    We are also a fundraising ride for two worthwhile charities, the BC Children's
+    Hospital Foundation and the Children's Heart Network. As such, we are hoping
+    our riders take the time to raise some money for these worthwhile causes.
+</p>
+<p>
+If you are a rider, please click "<a href="{% url 'team_fundraising:signup' %}">Join</a>" to set up an account and begin
+fundraising.
+</p>
+<p>
+If you are someone supporting a rider, please find them in the Home screen,
+click on their page and then click "Donate."
+</p>
+{% endblock content %}

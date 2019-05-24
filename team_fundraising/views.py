@@ -281,3 +281,12 @@ def update_fundraiser(request):
             'fundraiser_form': fundraiser_form,
         }
     )
+
+
+class About(View):
+
+    template_name = 'team_fundraising/about.html'
+
+    def get(self, request):
+
+        return render(request, self.template_name)

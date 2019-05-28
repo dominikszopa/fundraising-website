@@ -61,14 +61,15 @@
 [x] Make unique settings file for production
 [x] Fix image upload
 [x] Use bootstrap sizes properly
-[-] Add about page
-[ ] Move image upload to edit screen
+[x] Add about page
 [x] Check issues with mobile signup
-[ ] Add username to signup email
+[x] Add username to signup email
+[ ] Move image upload to edit screen
 [ ] Add CKEditor to signup
 [ ] Remove email password from production and settings file
 [ ] Update donate page to donate to general cause
 [ ] Fix fundraiser search
+[ ] Update all notices and emails
 [ ] Fix password recovery on iphone [UT1 4.1]
 [ ] Add bug reporting page
 [ ] Add Google Analytics
@@ -76,7 +77,7 @@
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [-] Fix up bootstrap forms - switch to crispy forms
 [ ] Add Javascript warning about low security password [UT1 2.3]
-[ ] Fix field validation of signup form
+[ ] Fix field validation of signup form - duplicate username
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add amount validation in new donation form
 [ ] Fix mobile card layout - 2-wide on Iphone SE

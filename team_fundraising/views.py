@@ -197,7 +197,10 @@ def signup(request):
                 'Thanks for signing up to fundraise with us!\n'
                 'Your fundraising page can be found at:\n'
                 + request.get_host()
-                + reverse('team_fundraising:fundraiser', args=[fundraiser.id])
+                + reverse(
+                    'team_fundraising:fundraiser', args=[fundraiser.id]
+                )
+                + "\n\nYour username is: " + user.username
                 + "\n\n Post it to social media!\n",
                 'fundraising@triplecrownforheart.ca', [user.email, ]
             )

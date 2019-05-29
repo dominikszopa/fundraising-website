@@ -124,12 +124,3 @@ MEDIA_URL = '/media/'
 FILE_UPLOAD_PERMISSIONS = 0o644
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-PAYPAL_TEST = True
-PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
-
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'fundraising@triplecrownforheart.ca'
-EMAIL_HOST_PASSWORD = 'BzB73RfZ'
-EMAIL_USE_TLS = True

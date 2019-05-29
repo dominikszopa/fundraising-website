@@ -23,3 +23,12 @@ MIDDLEWARE += [
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'fundraising@triplecrownforheart.ca'
+EMAIL_HOST_PASSWORD = 'BzB73RfZ'
+EMAIL_USE_TLS = True
+
+PAYPAL_TEST = True
+PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'

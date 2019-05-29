@@ -27,3 +27,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 if (EMAIL_HOST_PASSWORD is None):
     print('You must set the EMAIL_PASSWORD environment variable')
     sys.exit()
+
+PAYPAL_TEST = True
+PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'

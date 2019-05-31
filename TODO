@@ -64,9 +64,9 @@
 [x] Add about page
 [x] Check issues with mobile signup
 [x] Add username to signup email
+[x] Remove email password from production and settings file
+[x] Add CKEditor to signup
 [ ] Move image upload to edit screen
-[ ] Add CKEditor to signup
-[ ] Remove email password from production and settings file
 [ ] Update donate page to donate to general cause
 [ ] Fix fundraiser search
 [ ] Update all notices and emails

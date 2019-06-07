@@ -10,6 +10,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
+from .text import Donation_text, Fundraiser_text
 
 
 def index_view(request):
@@ -119,9 +120,7 @@ def new_donation(request, fundraiser_id):
             messages.add_message(
                 request,
                 messages.SUCCESS,
-                "Thank you for your donation. \
-                You may need to refresh \
-                this page to see the donation."
+                Donation_text.thank_you
             )
 
             return render(request, template_name, context)
@@ -193,15 +192,14 @@ def signup(request):
 
             # send them an email that they have successfully signed up
             send_mail(
-                'Welcome to fundraising for the Triple Crown for Heart!',
-                'Thanks for signing up to fundraise with us!\n'
-                'Your fundraising page can be found at:\n'
+                Fundraiser_text.signup_email_subject,
+                Fundraiser_text.signup_email_opening
                 + request.get_host()
                 + reverse(
                     'team_fundraising:fundraiser', args=[fundraiser.id]
                 )
                 + "\n\nYour username is: " + user.username
-                + "\n\n Post it to social media!\n",
+                + Fundraiser_text.signup_email_closing,
                 'fundraising@triplecrownforheart.ca', [user.email, ]
             )
 
@@ -217,8 +215,7 @@ def signup(request):
 
             messages.info(
                 request,
-                "Thank you for signing up. This is your fundraiser page. "
-                "Please share with your friends"
+                Fundraiser_text.signup_return_message
             )
 
             return redirect(

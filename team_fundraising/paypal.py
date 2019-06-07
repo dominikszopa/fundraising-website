@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from .models import Donation
+from .text import Donation_text
 
 
 def process_paypal(sender, **kwargs):
@@ -41,11 +42,10 @@ def process_paypal(sender, **kwargs):
 
         # send the thank you email
         send_mail(
-            'Thank you for donating to the Triple Crown for Heart!',
-            'Thank you for your donation of '
+            Donation_text.email_confirmation_opening
             + '${:,.2f}'.format(donation.amount) + ' to '
             + donation.fundraiser.name
-            + '.\nYour PayPal receipt should arrive in a separate email.',
+            + Donation_text.email_confirmation_closing,
             'fundraising@triplecrownforheart.ca', [donation.email, ]
         )
 

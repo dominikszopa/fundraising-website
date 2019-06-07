@@ -8,9 +8,6 @@
       <br/>
       <h3>{{ campaign.name }}</h3> 
       <img src="{% static "homepage.jpg" %}" width="100%"> 
-        Riders who are tackling the North Shore Mountains are fundraising for the BC Children's Hospital Foundation and the 
-        Children's Heart Network. All your donations will go directly to these charities. Donate to your favourite rider today!
-      <br/>
       <div id="countdown-wrap">
         <div id="goal-stat">
           <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
@@ -24,6 +21,17 @@
           <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
         </div>
       </div>
+      Triple Crown For Heart is a fun road riding event that raises funds in support of the 
+      BC Children's Hospital Foundation and the Children's Heart Network!
+      <br/><br/>
+      This year marks our 10th anniversary ride, we are raising $10,000 to send families living with congenital 
+      or acquired heart disease to <a href="https://www.childrensheartnetwork.org/what-we-do/summer-camps/">Camp Zajac</a>, 
+      as well as providing the remaining funds to the BC Children's Heart Foundation programs. We are hoping to raise 
+      $30,000 this year. Read more in our <a href="http://triplecrownforheart.ca/the-cause/">announcement</a>. 
+      <br/><br/>
+      All your donations will go directly to these charities. Donate to your favourite rider today!
+      <br/>
+
       <script>
         document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
       </script>

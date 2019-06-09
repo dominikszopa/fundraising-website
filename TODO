@@ -66,6 +66,7 @@
 [x] Add username to signup email
 [x] Remove email password from production and settings file
 [x] Add CKEditor to signup
+[ ] Add address to donation for receipt
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause
 [ ] Fix fundraiser search
@@ -82,7 +83,6 @@
 [ ] Add amount validation in new donation form
 [ ] Fix mobile card layout - 2-wide on Iphone SE
 [ ] Control size of fields
-[ ] Add address to donation for receipt
 [-] Connect with Paypal
     [x] Add more detail to forwarding page
     [x] Remove "pending" transations from the total

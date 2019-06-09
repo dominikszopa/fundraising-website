@@ -42,6 +42,7 @@ def process_paypal(sender, **kwargs):
 
         # send the thank you email
         send_mail(
+            Donation_text.email_subject,
             Donation_text.email_confirmation_opening
             + '${:,.2f}'.format(donation.amount) + ' to '
             + donation.fundraiser.name

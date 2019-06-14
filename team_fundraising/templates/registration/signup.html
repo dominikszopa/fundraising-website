@@ -19,6 +19,15 @@
 Sign up to create your own fundraising page to raise money for the 
 BC Children's Hospital Foundation and the Children's Heart Network.
 <br/><br/>
+
+{% if user_form.errors %}
+    {% for error in use_form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <form method="POST"  enctype="multipart/form-data">
     {% csrf_token %}
     {{ form|as_crispy_errors }}
@@ -28,6 +37,11 @@ BC Children's Hospital Foundation and the Children's Heart Network.
         <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.name.auto_id}}">{{ fundraiser_form.name.label }}:</label>
         <div class="col-sm-8">
             {{ fundraiser_form.name }}
+            {% for error in fundraiser_form.name.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -38,6 +52,11 @@ BC Children's Hospital Foundation and the Children's Heart Network.
                 <span class="input-group-text">$</span>
             </div>
            {{ fundraiser_form.goal }}
+           {% for error in fundraiser_form.goal.errors %}
+           <div class="alert alert-danger">
+               <strong>{{ error|escape }}</strong>
+           </div>
+           {% endfor %}
         </div>
     </div>
 
@@ -62,6 +81,11 @@ Thanks for your consideration of support for this most worthy cause!
         <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.photo.auto_id}}">{{ fundraiser_form.photo.label }}:</label>
         <div class="col-sm-8">
             {{ fundraiser_form.photo }}
+            {% for error in fundraiser_form.photo.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -69,21 +93,36 @@ Thanks for your consideration of support for this most worthy cause!
         <label class="col-sm-4 col-form-label" for="{{ user_form.email.auto_id}}">{{ user_form.email.label }}:</label>
         <div class="col-sm-8">
             {{ user_form.email }}
+            {% for error in user_form.email.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
     <div class="form-group row">
+
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
             {{ user_form.username }}
-        </div>
+            {% for error in user_form.username.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
     </div>
+</div>
 
     <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ user_form.password1.auto_id}}">{{ user_form.password1.label }}:</label>
         <div class="col-sm-8">
             {{ user_form.password1 }}
-            <small id="hint_id_new_password1" class="form-text text-muted">
+            {% for error in user_form.password1.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}            <small id="hint_id_new_password1" class="form-text text-muted">
                 <ul>
                     <li>Your password can't be too similar to your other personal information.</li>
                     <li>Your password must contain at least 8 characters.</li>
@@ -98,6 +137,11 @@ Thanks for your consideration of support for this most worthy cause!
         <label class="col-sm-4 col-form-label" for="{{ user_form.password2.auto_id}}">{{ user_form.password2.label }}:</label>
         <div class="col-sm-8">
             {{ user_form.password2 }}
+            {% for error in user_form.password2.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
         </div>
     </div>
     

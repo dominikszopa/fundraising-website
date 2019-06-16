@@ -69,7 +69,7 @@
 [x] Show messages when errors on sign up page
 [x] Install HTTPS certificate using Let's Encrypt
 [x] Add address to donation for receipt
-[ ] Clear out users and donations
+[x] Clear out users and donations
 [ ] Add "Set up donation profile" button
 [x] Clicking on Other donation amount switches radio to Other
 [ ] Move image upload to edit screen

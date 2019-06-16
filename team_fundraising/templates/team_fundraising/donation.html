@@ -35,7 +35,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroupPrepend">$</span>
                 </div>
-                <input type="number" min="0" step="0.01" class="form-control" id="other" name="other_amount" size="10">
+                <input type="number" min="0" step="0.01" class="form-control" id="other" name="other_amount" size="10" onclick="document.getElementById('other').checked = true;">
             </div>
         </div>
     </div>
@@ -55,8 +55,31 @@
         {{ form.email|as_crispy_field }}
     </div>
     <div>
-        {{ form.message|as_crispy_field }}
-        This will appear along with your donation.
+        <div id="div_id_message" class="form-group">
+                <label for="id_message" class="col-form-label ">
+                    Message (This will appear along with your donation)
+                </label>
+                <div class="">
+                        <textarea name="message" cols="40" rows="3" class="textarea form-control" id="id_message"></textarea>
+                </div>
+        </div>
+    </div>
+    <hr>
+    <div>Please fill in the following information to receive a tax receipt for donations over $20:</div>
+    <div>
+        {{ form.address|as_crispy_field }}
+    </div>
+    <div>
+        {{ form.city|as_crispy_field }}
+    </div>
+    <div>
+        {{ form.province|as_crispy_field }}
+    </div>
+    <div>
+        {{ form.country|as_crispy_field }}
+    </div>
+    <div>
+        {{ form.postal_code|as_crispy_field }}
     </div>
     </br>
     <div>

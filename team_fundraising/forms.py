@@ -15,6 +15,11 @@ class DonationForm(forms.Form):
     other_amount = forms.CharField(required=False)
     email = forms.EmailField()
     anonymous = forms.BooleanField(required=False)
+    address = forms.CharField(max_length=100, required=False)
+    city = forms.CharField(max_length=50, required=False)
+    province = forms.CharField(max_length=50, required=False)
+    country = forms.CharField(max_length=25, required=False)
+    postal_code = forms.CharField(max_length=10, required=False)
     date = datetime.now()
 
     message = forms.CharField(

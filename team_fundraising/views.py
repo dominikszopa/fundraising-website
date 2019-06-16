@@ -82,6 +82,11 @@ def new_donation(request, fundraiser_id):
             donation.email = form.cleaned_data['email']
             donation.anonymous = form.cleaned_data['anonymous']
             donation.message = form.cleaned_data['message']
+            donation.address = form.cleaned_data['address']
+            donation.city = form.cleaned_data['city']
+            donation.province = form.cleaned_data['province']
+            donation.country = form.cleaned_data['country']
+            donation.postal_code = form.cleaned_data['postal_code']
             donation.payment_method = 'paypal'
             donation.payment_status = 'pending'
             donation.save()

@@ -67,10 +67,11 @@
 [x] Remove email password from production and settings file
 [x] Add CKEditor to signup
 [x] Show messages when errors on sign up page
-[ ] Add address to donation for receipt
-[ ] Install HTTPS certificate
+[x] Install HTTPS certificate using Let's Encrypt
+[x] Add address to donation for receipt
+[ ] Clear out users and donations
 [ ] Add "Set up donation profile" button
-[ ] Clicking on Other donation amount switches radio to Other
+[x] Clicking on Other donation amount switches radio to Other
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause
 [ ] Fix fundraiser search

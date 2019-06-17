@@ -51,7 +51,10 @@
       </form>
       <br/>
       -->
+      <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' %}">Create a fundraiser page</a>
         <div class="d-flex flex-wrap justify-content-start">
+          <br>
+          Click on a fundraiser to donate to their fundraising efforts:
           {% for fundraiser in fundraisers %}
 
               <div class="card mt-3 mr-1" style="width: 160px;"">

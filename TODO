@@ -73,13 +73,13 @@
 [x] Send email to fundraiser when there is a donation
 [x] Test switch to real paypal account
 [x] Clicking on Other donation amount switches radio to Other
-[ ] Add "Set up donation profile" button
+[x] Add "Set up donation profile" button
+[ ] Add bug reporting page
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause
 [ ] Fix fundraiser search
 [ ] Update all notices and emails
 [ ] Fix password recovery on iphone [UT1 4.1]
-[ ] Add bug reporting page
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add Google Analytics
 [ ] Optimize total counts in Fundraiser class

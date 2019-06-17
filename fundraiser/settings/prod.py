@@ -28,5 +28,10 @@ if (EMAIL_HOST_PASSWORD is None):
     print('You must set the EMAIL_PASSWORD environment variable')
     sys.exit()
 
-PAYPAL_TEST = True
-PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
+# Paypal configuration
+# To switch to the sandbox account, set PAYPAL_TEST = True
+# and set PAYPAL_ACCOUNT to 'stephen-facilitator@triplecrownforheart.com'
+
+PAYPAL_TEST = False
+# PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
+PAYPAL_ACCOUNT = 'stephen@triplecrownforheart.com'

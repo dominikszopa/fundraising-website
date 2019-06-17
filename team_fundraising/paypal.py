@@ -42,12 +42,22 @@ def process_paypal(sender, **kwargs):
 
         # send the thank you email
         send_mail(
-            Donation_text.email_subject,
-            Donation_text.email_confirmation_opening
+            Donation_text.confirmation_email_subject,
+            Donation_text.confirmation_email_opening
             + '${:,.2f}'.format(donation.amount) + ' to '
             + donation.fundraiser.name
-            + Donation_text.email_confirmation_closing,
+            + Donation_text.confirmation_email_closing,
             'fundraising@triplecrownforheart.ca', [donation.email, ]
+        )
+
+        # send the notification email to the fundraiser
+        send_mail(
+            Donation_text.notification_email_subject,
+            Donation_text.notification_email_opening
+            + '${:,.2f}'.format(donation.amount) + ' from '
+            + donation.name
+            + Donation_text.notification_email_closing,
+            'fundraising@triplecrownforheart.ca', [donation.fundraiser.email, ]
         )
 
     else:

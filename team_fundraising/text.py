@@ -8,22 +8,34 @@ class Donation_text:
         "You may need to refresh this page to see the donation."
     )
 
-    email_subject = (
+    confirmation_email_subject = (
         'Thank you for donating to the Triple Crown for Heart! '
     )
 
     # Start of the email sent confirming the paypal payment has gone through
     # used in paypal.py:process_paypal()
-    email_confirmation_opening = (
+    confirmation_email_opening = (
         'Thank you for your donation of '
     )
 
     # Closing of the email sent confirming the paypal payment has gone through
     # used in paypal.py:process_paypal()
-    email_confirmation_closing = (
+    confirmation_email_closing = (
         '.\n\nFor all donations over $20, you will receive a tax receipt for '
         'the 2019 tax year.'
         '\nYour PayPal receipt should arrive in a separate email.\n'
+    )
+
+    notification_email_subject = (
+        "You got a donation!"
+    )
+
+    notification_email_opening = (
+        "Great news! You've just received a donation of "
+    )
+
+    notification_email_closing = (
+        "\n\nAwesome work. It might be a good idea to send them a thank you."
     )
 
 

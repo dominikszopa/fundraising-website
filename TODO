@@ -70,7 +70,9 @@
 [x] Install HTTPS certificate using Let's Encrypt
 [x] Add address to donation for receipt
 [x] Clear out users and donations
+[x] Send email to fundraiser when there is a donation
 [ ] Add "Set up donation profile" button
+[ ] Switch to real paypal account
 [x] Clicking on Other donation amount switches radio to Other
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause

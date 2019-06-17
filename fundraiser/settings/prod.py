@@ -32,6 +32,6 @@ if (EMAIL_HOST_PASSWORD is None):
 # To switch to the sandbox account, set PAYPAL_TEST = True
 # and set PAYPAL_ACCOUNT to 'stephen-facilitator@triplecrownforheart.com'
 
-PAYPAL_TEST = False
-# PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
-PAYPAL_ACCOUNT = 'stephen@triplecrownforheart.com'
+PAYPAL_TEST = True
+PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
+# PAYPAL_ACCOUNT = 'stephen@triplecrownforheart.com'

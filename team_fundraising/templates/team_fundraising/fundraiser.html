@@ -3,8 +3,18 @@
 {% load humanize %}
 {% load static %}
 
+{% block head %}
+<meta property="og:url"         content="{{ request.build_absolute_uri }}" />
+<meta property="og:title"       content="Triple Crown for Heart Fundraising" />
+<meta property="og:description" content="I'm fundraising for the Triple Crown for Heart, raising money for the BC Children's Hospital and the Children's Heart Network." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{% static "nophoto.png" %}" />
+<meta property="fb:app_id" content="903165813185691" />
+
+{% endblock head %}
+
 {% block content %}
-    {% for message in messages %}
+{% for message in messages %}
 
     <div class="alert alert-primary" role="alert">
         {{ message }}

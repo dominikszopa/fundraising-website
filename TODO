@@ -76,7 +76,8 @@
 [x] Add "Set up donation profile" button
 [x] Add error messages to the top of forms
 [x] Remove redundant email address field
-[ ] Create social media outline
+[x] Create social media outline
+[ ] Add facebook share button
 [ ] Add bug reporting page
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause

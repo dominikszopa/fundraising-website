@@ -1,6 +1,7 @@
 
 {% extends "base.html" %}
 {% load humanize %}
+{% load static %}
 
 {% block content %}
     {% for message in messages %}
@@ -16,7 +17,9 @@
         <div class="row">
             <div class="col-lg-6">
                 {% if fundraiser.photo %}
-                <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
+                    <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
+                {% else %}
+                    <img  src="{% static "nophoto.png" %}" alt="Card image cap" width="200" height="200" class="circle-image">
                 {% endif %}
 
                 <h2>{{ fundraiser.name }}</h2>
@@ -42,11 +45,6 @@
 
                 <!--http://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
 
-                {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
-                    <br/>
-                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
-                {% endif %}
-
                 
                 <a class="btn btn-primary donate-button" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
                 <br/>
@@ -56,6 +54,10 @@
             <div class="col-lg-6">
                 <br/>
                 {{ fundraiser.message|safe }}
+                {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
+                    <br/>
+                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
+                {% endif %}
             </div>
             <div class="col-lg-6">
 

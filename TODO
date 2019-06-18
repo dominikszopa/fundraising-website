@@ -74,6 +74,9 @@
 [x] Test switch to real paypal account
 [x] Clicking on Other donation amount switches radio to Other
 [x] Add "Set up donation profile" button
+[x] Add error messages to the top of forms
+[ ] Remove redundant email address field
+[ ] Create social media outline
 [ ] Add bug reporting page
 [ ] Move image upload to edit screen
 [ ] Update donate page to donate to general cause

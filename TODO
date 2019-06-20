@@ -77,6 +77,7 @@
 [x] Add error messages to the top of forms
 [x] Remove redundant email address field
 [x] Create social media outline
+[ ] Add favicon
 [ ] Add facebook share button
 [ ] Add bug reporting page
 [ ] Move image upload to edit screen

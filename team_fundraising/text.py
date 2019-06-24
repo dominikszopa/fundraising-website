@@ -56,10 +56,12 @@ class Fundraiser_text:
     # Closing of the email sent when someone signs up
     # used in views.py:signup()
     signup_email_closing = (
-        '\n\nYou can change your information by using the "Login" at the top.'
-        '\n\nThe easiest way to start fundraising is to post on social media '
-        'or write a short email to your friends telling them about your ride.'
-        '\nDon\'t forget to include the url to your page!\n'
+        '\n\nYou can change your information by using the "Login" link at the '
+        'top of that page.'
+        '\n\nThe easiest way to start fundraising is to post the above link '
+        'on social media or write a short email to your friends telling them '
+        'about your ride.'
+        '\nDon\'t forget to include the link to your page!\n'
     )
 
     # Message show at the top of the fundraiser page after signing up

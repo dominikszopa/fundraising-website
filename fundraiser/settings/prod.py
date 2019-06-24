@@ -29,6 +29,10 @@ if (EMAIL_HOST_PASSWORD is None):
     print('You must set the EMAIL_PASSWORD environment variable')
     sys.exit()
 
+# Make links sent be HTTPS
+SECURE_SSL_REDIRECT = True # [1]
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Paypal configuration
 # To switch to the sandbox account, set PAYPAL_TEST = True
 # and set PAYPAL_ACCOUNT to 'stephen-facilitator@triplecrownforheart.com'

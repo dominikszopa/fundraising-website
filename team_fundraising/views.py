@@ -199,9 +199,10 @@ def signup(request):
             send_mail(
                 Fundraiser_text.signup_email_subject,
                 Fundraiser_text.signup_email_opening
-                + request.get_host()
-                + reverse(
-                    'team_fundraising:fundraiser', args=[fundraiser.id]
+                + request.build_absolute_uri(
+                    reverse(
+                        'team_fundraising:fundraiser', args=[fundraiser.id]
+                    )
                 )
                 + "\n\nYour username is: " + user.username
                 + Fundraiser_text.signup_email_closing,

@@ -30,9 +30,10 @@ if (EMAIL_HOST_PASSWORD is None):
     sys.exit()
 
 # Make links sent be HTTPS
-SECURE_SSL_REDIRECT = True # [1]
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 # Paypal configuration
 # To switch to the sandbox account, set PAYPAL_TEST = True
 # and set PAYPAL_ACCOUNT to 'stephen-facilitator@triplecrownforheart.com'

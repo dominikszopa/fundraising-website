@@ -12,7 +12,6 @@
 <meta property="og:image" content="https://{{ request.META.HTTP_HOST }}{% static "nophoto.png" %}" />
 <meta property="fb:app_id" content="903165813185691" />
 
-<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5d08a3eb4351e90012651173&product=inline-share-buttons' async='async'></script>
 {% endblock head %}
 
 {% block content %}
@@ -70,10 +69,8 @@
                     <br/>
                     <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
                 {% endif %}
-                <div class="sharethis-inline-share-buttons"></div>
             </div>
             <div class="col-lg-6">
-
                 <h4>Recent Donations</h4>
                 {{ fundraiser.Donation }}
                 <ul>
@@ -92,6 +89,4 @@
             </div>
         </div>
     </div>
-
-
-    {% endblock %}
+   {% endblock %}

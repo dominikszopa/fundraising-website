@@ -81,7 +81,10 @@
                             {% else %}
                                 {{ donation.name }}
                             {% endif %}
-                            - ${{ donation.amount|floatformat:"2"|intcomma }} - {{ donation.message }}
+                            - ${{ donation.amount|floatformat:"2"|intcomma }} 
+                            {% if donation.message %}
+                            - {{ donation.message }}
+                            {% endif %}
                         </a>
                     </li>
                     {% endfor %}

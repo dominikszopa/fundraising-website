@@ -20,11 +20,14 @@ def index_view(request):
 
     campaign = get_object_or_404(Campaign)
 
+    # get all fundraisers, sorted by most money raised
     fundraisers = sorted(
         campaign.fundraiser_set.all(),
         key=lambda x: x.total_raised(),
         reverse=True
     )
+
+    recent_donations = Donation.objects.all().order_by('-date')[:5]
 
     general_donations = Donation.objects.filter(fundraiser__isnull=True)
 
@@ -37,6 +40,7 @@ def index_view(request):
         'campaign': campaign,
         'fundraisers': fundraisers,
         'total_raised': total_raised,
+        'recent_donations': recent_donations,
     }
 
     return render(request, template, context)

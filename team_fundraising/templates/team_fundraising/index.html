@@ -34,8 +34,18 @@
       $30,000 this year. Read more in our <a href="http://triplecrownforheart.ca/the-cause/">announcement</a>. 
       <br/><br/>
       All your donations will go directly to these charities. Donate to your favourite rider today!
-      <br/>
-
+      <br/><br/>
+      <div>
+        <h4>Recent Donations</h4>
+        {% for donation in recent_donations %}
+          {% if  donation.anonymous %}
+            Anonymous
+          {% else %}
+            {{ donation.name }}
+          {% endif %}
+          donated ${{ donation.amount|floatformat:"2"|intcomma }} to {{donation.fundraiser.name }}<br/>
+        {% endfor %}
+      </div>
       <script>
         document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
       </script>

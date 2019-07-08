@@ -27,7 +27,10 @@ def index_view(request):
         reverse=True
     )
 
-    recent_donations = Donation.objects.all().order_by('-date')[:5]
+    # get 5 recent "paid" donations by newest date
+    recent_donations = Donation.objects.filter(
+        payment_status__in=["paid", ""]
+        ).order_by('-date')[:5]
 
     general_donations = Donation.objects.filter(fundraiser__isnull=True)
 

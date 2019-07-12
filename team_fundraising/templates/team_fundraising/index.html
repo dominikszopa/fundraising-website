@@ -4,6 +4,7 @@
 
 {% block head %}
 <title>Triple Crown for Heart Fundraising</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 {% endblock head %}
 
 {% block content %}
@@ -51,29 +52,21 @@
       </script>
     </div>
     <div class="col-lg-6">
-      <br/><br/>
-      <!-- Search form -->
-      <!--
-      <form class="form-inline">
-          <div class="col-xs-4">
-              <i class="fa fa-search" aria-hidden="true"></i>
-                Click on a fundraiser to donate:
-                <input id="search" class="form-control form-control-sm ml-3 w-85" 
-                  type="text" placeholder="Search for a fundraiser" aria-label="Search" 
-                  onkeyup="filterList()">
-          </div>
-      </form>
       <br/>
-      -->
       <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' %}">Create a fundraiser page</a>
       <br/>
       <div>
-        Click on a fundraiser to donate to their fundraising efforts:
+      <!-- Search form --></form>
+      <form class="form-inline">
+              <input id="search" class="form-control form-control-sm ml-3 w-85" 
+                type="text" placeholder="Search for a fundraiser" data-search />
+      </form>
       </div>
-      <div class="d-flex flex-wrap justify-content-around">
+    <br/>
+    <div class="d-flex flex-wrap justify-content-around">
 
           {% for fundraiser in fundraisers %}
-              <div class="card mt-3 mr-1" style="width: 160px;"">
+              <div class="card mt-3 mr-1" style="width: 160px;" data-filter-item data-filter-name="{{ fundraiser.name|lower }}">
                 {% if fundraiser.photo %}
                   <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
                 {% else %}
@@ -96,25 +89,28 @@
   </div>
 
 <script>
-function filterList() {
-  // Declare variables
-  var input, filter, ul, li, a, i, txtValue;
-  input = document.getElementById('search');
-  filter = input.value.toUpperCase();
-  ul = document.getElementById("fundraiserlist");
-  li = ul.getElementsByTagName('li');
+/*
+  https://codepen.io/alexerlandsson
 
-  // Loop through all list items, and hide those who don't match the search query
-  for (i = 0; i < li.length; i++) {
-    a = li[i].getElementsByTagName("a")[0];
-    txtValue = a.textContent || a.innerText;
-    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
-    } else {
-      li[i].style.display = "none";
-    }
-  }
-}
+	How to use:
+	1)	Copy this jQuery to your project
+	2)	Add [data-search] to search input
+	3)	Add [data-filter-item] to the items that should be filtered
+	4)	Add [data-filter-name="SEARCH TERM"] to the filter-items
+
+*/
+
+$('[data-search]').on('keyup', function() {
+	var searchVal = $(this).val();
+	var filterItems = $('[data-filter-item]');
+
+	if ( searchVal != '' ) {
+		filterItems.addClass('hidden');
+		$('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').removeClass('hidden');
+	} else {
+		filterItems.removeClass('hidden');
+	}
+});
 </script>
 
 {% endblock %}

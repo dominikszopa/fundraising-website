@@ -85,7 +85,7 @@
 [ ] Move image upload to edit screen
 [ ] Add bug reporting page
 [ ] Update donate page to donate to general cause
-[ ] Fix fundraiser search
+[x] Fix fundraiser search
 [ ] Update all notices and emails
 [ ] Fix password recovery on iphone [UT1 4.1]
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]

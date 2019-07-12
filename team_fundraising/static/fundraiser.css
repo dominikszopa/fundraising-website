@@ -62,3 +62,7 @@ h2 {
 .card-body {
     padding-bottom: 0px;
 }
+
+.hidden {
+    display: none;
+}

@@ -79,13 +79,19 @@
 [x] Create social media outline
 [x] Add favicon
 [x] Add titles to pages
+[x] Add recent donations
+[x] Fix fundraiser search
+[ ] Add message to donation notification
+[ ] Fix layout of search box
+[x] Add page about who made app
+[ ] Make open source
+    [x] Read about how
+    [ ] Add README
 [ ] Change email links to HTTPS
 [ ] Add facebook share button
-[x] Add recent donations
 [ ] Move image upload to edit screen
 [ ] Add bug reporting page
 [ ] Update donate page to donate to general cause
-[x] Fix fundraiser search
 [ ] Update all notices and emails
 [ ] Fix password recovery on iphone [UT1 4.1]
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]

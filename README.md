@@ -4,13 +4,41 @@ An event fundraising website where individuals can create personal pages, set go
 
 Built in Python/Django 2.2 and Bootstrap 4 for the [Triple Crown for Heart](https://triplecrownforheart.ca/) bike ride, because you shouldn't be charged for charity fundraising.
 
-Currently used at: https://donations.triplecrownforheart.ca/team_fundraising/. If you would like to use this platform for your charity fundraising event, please contact the [author](#authors).
+Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](https://donations.triplecrownforheart.ca/team_fundraising/). If you would like to use this platform for your charity fundraising event, please contact the [author](#authors).
 
 ## Getting Started
 
 ### Prerequisites
 
+* [Python 3.7](https://www.python.org/)
+* [git](https://git-scm.com/)
+
 ### Installing
+
+1. (optional) Create and activate a [virtualenv](https://virtualenv.pypa.io/) to have an isolated environment (you may want to use [virtualenvwrapper](http://virtualenvwrapper.readthedocs.org/)).
+
+2. Clone this repository:
+
+   `git clone https://github.com/dominikszopa/fundraising.git`
+   `cd fundraising`
+
+3. Install dependencies
+
+   `pip install -r requirements.txt`
+
+4. Create a database
+
+   `python3 ./manage.py migrate`
+
+5. Load test data into the database from fixtures:
+
+   `python3 ./manage.py loaddata`
+
+6. If everything has gone ok, you should be able to start the Django development server:
+
+   `python3 ./manage.py runserver localhost:8000`
+
+7. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
 
 ## Deployment
 
@@ -33,7 +61,7 @@ If you belong to a charity or non-profit event that has a fundraising component 
 
 If you are a Django/Python or CSS developer, we have a healthy list of features we would like to implement in the [TODO](TODO) file. I may move that to a ticket tracker if a few people join. The author will approve pull requests for the time being. I am also looking for designer help to clean up the design and make a nicer "thermometer".
 
-This project has adopted the [Contributor Covenant](https://www.contributor-covenant.org), version 1.4, available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+This project has adopted the [Contributor Covenant](https://www.contributor-covenant.org), version 1.4, available at [https://www.contributor-covenant.org/version/1/4/code-of-conduct.html](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html)
 
 ## Authors
 

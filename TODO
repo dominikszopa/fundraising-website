@@ -87,6 +87,8 @@
 [ ] Make open source
     [x] Read about how
     [-] Add README
+        [-] Create installation steps
+[ ] Create csv output of donations
 [ ] Change email links to HTTPS
 [ ] Add facebook share button
 [ ] Move image upload to edit screen

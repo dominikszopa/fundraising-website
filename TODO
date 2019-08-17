@@ -88,7 +88,16 @@
     [x] Read about how
     [-] Add README
         [-] Create installation steps
+    [x] Test fixtures
+    [ ] Make campaign message editable
+    [ ] Make default fundraiser message editable
+    [ ] Make campaign message generic, add to fixtures
+    [ ] Remove email address password, add instructions
+    [ ] Remove paypal credentials, add instructions
+        [ ] Information about serveo
+    [ ] Instructions about customizing
 [ ] Create csv output of donations
+[ ] Make default campaign message editable
 [ ] Change email links to HTTPS
 [ ] Add facebook share button
 [ ] Move image upload to edit screen

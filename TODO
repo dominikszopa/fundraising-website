@@ -91,6 +91,7 @@
     [x] Test fixtures
     [x] Make campaign message editable
     [x] Make default fundraiser message editable
+    [ ] Add .gitignore
     [ ] Make campaign message generic, add to fixtures
     [ ] Remove email address password, add instructions
     [ ] Remove paypal credentials, add instructions

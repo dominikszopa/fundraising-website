@@ -4,7 +4,9 @@
         "pk": 1,
         "fields": {
             "name": "Fundraising Campaign",
-            "goal": 10000
+            "goal": 10000,
+            "campaign_message": "This is the homepage of your fundraising campaign. Here you will want to add information about: <br><ul><li>What your event is about</li><li>What you are fundraising for</li><li>Any incentives to fundraise or donate</li></ul><br>You can customize this message by going to the <a href=\"/admin\">admin</a> section and logging in with your superuser account and editing the \"Campaign\".",
+            "default_fundraiser_message": "Welcome to my fundraising page!<br><br>This is the default message that new fundraisers will see when they sign up to fundraise.<br><br>It is helpful to create a starting message for people that describes what event they are doing and what they are fundraising for. You can customize this default message by going to the <a href=\"/admin\">admin</a> section and logging in with your superuser account and editing the \"Campaign\"."
         }
     },
     {
@@ -109,10 +111,34 @@
     },
     {
         "model": "sessions.session",
-        "pk": "loqxkjhzim4mav6a0b240m4x75d1kxby",
+        "pk": "1162772q4qund7zrrmucrvywavdhyaf8",
         "fields": {
-            "session_data": "OTNmYmRlODQ4MzI2YzFkNmJmMTM4YjFjMTJmOWUzOWQ2ZDYwOWEzMjp7Il9hdXRoX3VzZXJfaWQiOiIyIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIwOTVkODg4MTk3NGQyYTM3YTY5ZDlhMDQyMWRiY2ZiNWQ5ODc2MDkxIn0=",
-            "expire_date": "2019-08-30T15:43:41.247Z"
+            "session_data": "MmNmNDg3YjQ1NDU2MDgzY2RhODRiMzc3ZGFiZTExZGVhZDBkYjZjMDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5Y2U0YWM4NjJhNzk3MGQxOWI5ODMyYjBiYTkzMTY0NWE1MjBlMzFjIn0=",
+            "expire_date": "2019-09-02T07:13:59.971Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "2xr492o5qfqwy665dzgxui001jq73t0l",
+        "fields": {
+            "session_data": "MmNmNDg3YjQ1NDU2MDgzY2RhODRiMzc3ZGFiZTExZGVhZDBkYjZjMDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5Y2U0YWM4NjJhNzk3MGQxOWI5ODMyYjBiYTkzMTY0NWE1MjBlMzFjIn0=",
+            "expire_date": "2019-09-02T07:21:11.258Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "kvhyqr9ry7cxtzwgdjk2tbwypav1satk",
+        "fields": {
+            "session_data": "MmNmNDg3YjQ1NDU2MDgzY2RhODRiMzc3ZGFiZTExZGVhZDBkYjZjMDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5Y2U0YWM4NjJhNzk3MGQxOWI5ODMyYjBiYTkzMTY0NWE1MjBlMzFjIn0=",
+            "expire_date": "2019-08-31T23:26:48.044Z"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "vhisvfe885nw6kepag8vux4gv7b05egf",
+        "fields": {
+            "session_data": "MmNmNDg3YjQ1NDU2MDgzY2RhODRiMzc3ZGFiZTExZGVhZDBkYjZjMDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI5Y2U0YWM4NjJhNzk3MGQxOWI5ODMyYjBiYTkzMTY0NWE1MjBlMzFjIn0=",
+            "expire_date": "2019-09-02T07:10:48.731Z"
         }
     },
     {
@@ -647,7 +673,7 @@
             "name": "First Fundraiser",
             "goal": 200,
             "photo": "",
-            "message": "<p>This is the default fundraiser message, that the fundraiser can customize when the <a href=\"/team_fundraising/accounts/signup/\">sign up</a> or <a href=\"/team_fundraising/accounts/login/\">login</a>&nbsp;to edit.</p><p>You can edit the default message in the template ./team_fundraising/templates/signup.html.</p><p>If you would like to delete this user, you can do it through the <a href=\"/admin/\">admin </a>console.</p>"
+            "message": "Welcome to my fundraising page!<br><br>This is the default message that new fundraisers will see when they sign up to fundraise.<br><br>It is helpful to create a starting message for people that describes what event they are doing and what they are fundraising for. You can customize this default message by going to the <a href=\"/admin\">admin</a> section and logging in with your superuser account and editing the \"Campaign\".<br><br>If you would like to delete this user, you can do it through the <a href=\"/admin/\">admin </a>console."
         }
     }
 ]

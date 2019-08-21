@@ -1,5 +1,4 @@
 from .base import *
-import os
 import sys
 
 # Debug must be off in production
@@ -23,10 +22,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'fundraising@triplecrownforheart.ca'
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 if (EMAIL_HOST_PASSWORD is None):
-    print('You must set the EMAIL_PASSWORD environment variable')
+    print('You must set the EMAIL_HOST_PASSWORD environment variable')
     sys.exit()
 
 # Make links sent be HTTPS

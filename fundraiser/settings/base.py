@@ -16,6 +16,19 @@ the master settings file.
 
 import os
 
+
+# Convert strings from environment variables to boolean values
+def read_boolean(s):
+
+    if isinstance(s, str):
+        if s.upper() in ['TRUE', "ON", "YES", "1", "T"]:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(
     os.path.dirname(

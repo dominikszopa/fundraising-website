@@ -136,4 +136,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Visual Studio code config files
+.vscode
+
 # End of https://www.gitignore.io/api/django

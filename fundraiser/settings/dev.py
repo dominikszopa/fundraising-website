@@ -1,5 +1,6 @@
 from .base import *
 import sys
+import os
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -9,11 +10,11 @@ import sys
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 if (SECRET_KEY is None or SECRET_KEY == ''):
-    print('You must set the SECRET_KEY environment variable (or in .env) to a long string')
+    print('You must set the SECRET_KEY environment variable to a long string')
     sys.exit()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = read_boolean(os.getenv('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,10 +38,5 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 
-PAYPAL_TEST_STRING = os.getenv('PAYPAL_TEST')
-if PAYPAL_TEST_STRING.upper() == 'TRUE':
-    PAYPAL_TEST = True
-else:
-    PAYPAL_TEST = False
-
+PAYPAL_TEST = read_boolean(os.getenv('PAYPAL_TEST'))
 PAYPAL_ACCOUNT = os.getenv('PAYPAL_ACCOUNT')

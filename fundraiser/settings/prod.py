@@ -1,15 +1,17 @@
 from .base import *
 import sys
+import os
 
-# Debug must be off in production
-DEBUG = False
 
 # SECRET_KEY is read from environment variable for security
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 if (SECRET_KEY is None):
     print('You must set the SECRET_KEY environment variable to a long string')
     sys.exit()
+
+# Debug must be off in production, ignore the environment variable
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'donations.triplecrownforheart.ca',
@@ -17,12 +19,11 @@ ALLOWED_HOSTS = [
     'localhost'
     ]
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'fundraising@triplecrownforheart.ca'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 if (EMAIL_HOST_PASSWORD is None):
     print('You must set the EMAIL_HOST_PASSWORD environment variable')
@@ -37,6 +38,5 @@ if (EMAIL_HOST_PASSWORD is None):
 # To switch to the sandbox account, set PAYPAL_TEST = True
 # and set PAYPAL_ACCOUNT to 'stephen-facilitator@triplecrownforheart.com'
 
-PAYPAL_TEST = False
-# PAYPAL_ACCOUNT = 'stephen-facilitator@triplecrownforheart.com'
-PAYPAL_ACCOUNT = 'stephen@triplecrownforheart.com'
+PAYPAL_TEST = read_boolean(os.getenv('PAYPAL_TEST'))
+PAYPAL_ACCOUNT = os.getenv('PAYPAL_ACCOUNT')

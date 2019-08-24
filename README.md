@@ -26,27 +26,35 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
    `pip install -r requirements.txt`
 
-4. Create a database
+4. Copy .env.example to .env
+
+   `cp .env.example .env`
+
+5. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string 
+
+6. Create a database
 
    `python3 ./manage.py migrate`
 
-5. Create a superuser - please use a strong password
+7. Create a superuser - please use a strong password
 
    `python3 ./manage.py createsuperuser`
 
-6. Load test data into the database from fixtures:
+8. Load test data into the database from fixtures:
 
    `python3 ./manage.py loaddata startingdata`
 
-7. If everything installed, you should be able to start the Django development server:
+9. If everything installed, you should be able to start the Django development server:
 
    `python3 ./manage.py runserver localhost:8000`
 
-8. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+10. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
 
 ### Email
 
-### Paypal
+In order to send out emails when someone registers, makes a donation or receives a donation, you need to provide a mail server. A Gmail account can be used for this. Edit the .env file and add EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER and EMAIL_HOST_PASSWORD.
+
+### PayPal
 
 ## Deployment
 

@@ -93,10 +93,11 @@
     [x] Make default fundraiser message editable
     [x] Add .gitignore
     [x] Make campaign message generic, add to fixtures
-    [ ] Remove email address password, add instructions
+    [x] Remove email address password, add instructions
     [ ] Remove paypal credentials, add instructions
         [ ] Information about serveo
     [ ] Instructions about customizing
+    [ ] Add ALLOWED_HOSTS to environment variables
 [ ] Create csv output of donations
 [ ] Change email links to HTTPS
 [ ] Add facebook share button

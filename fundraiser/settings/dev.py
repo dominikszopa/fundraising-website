@@ -1,5 +1,4 @@
 from .base import *
-import sys
 import os
 
 # Quick-start development settings - unsuitable for production
@@ -7,14 +6,10 @@ import os
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # loaded from environment or .env file
-SECRET_KEY = os.getenv('SECRET_KEY')
-
-if (SECRET_KEY is None or SECRET_KEY == ''):
-    print('You must set the SECRET_KEY environment variable to a long string')
-    sys.exit()
+SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = read_boolean(os.getenv('DEBUG'))
+DEBUG = read_boolean(get_env_variable('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 

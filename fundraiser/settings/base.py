@@ -15,10 +15,25 @@ the master settings file.
 """
 
 import os
+from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
+
+# load environment variables from .env file if it exists
+load_dotenv()
 
 
-# Convert strings from environment variables to boolean values
+def get_env_variable(var_name):
+    # Get the variable from environment or .env file or return exception
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_message = "Set the {} variable in the environment "\
+            "or .env file".format(var_name)
+        raise ImproperlyConfigured(error_message)
+
+
 def read_boolean(s):
+    # Convert strings from environment variables to boolean values
 
     if isinstance(s, str):
         if s.upper() in ['TRUE', "ON", "YES", "1", "T"]:

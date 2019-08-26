@@ -22,21 +22,21 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
    `git clone https://github.com/dominikszopa/fundraising.git`
    `cd fundraising`
 
-3. Install dependencies
+3. Install dependencies:
 
    `pip install -r requirements.txt`
 
-4. Copy .env.example to .env
+4. Copy .env.example to .env:
 
    `cp .env.example .env`
 
-5. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string 
+5. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
 
-6. Create a database
+6. Create a database:
 
    `python3 ./manage.py migrate`
 
-7. Create a superuser - please use a strong password
+7. Create a superuser - please use a strong password:
 
    `python3 ./manage.py createsuperuser`
 
@@ -56,7 +56,27 @@ In order to send out emails when someone registers, makes a donation or receives
 
 ### PayPal
 
+The website uses [django-paypal](https://django-paypal.readthedocs.io/en/stable/) to process donations. To test PayPal without having to make payments each time, you can create a sandbox account from the [PayPal Developer Site](https://developer.paypal.com/developer/accounts/). You can then add the sandbox "business account" to PAYPAL_ACCOUNT in the .env file. You can use a sandbox "personal buyer account" to make test donations.
+
+Django-paypal uses [Instant Payment Notification](https://django-paypal.readthedocs.io/en/stable/standard/ipn.html) (IPN) meaning that PayPal will make a request to the app if a transaction is successful. For this to work on a development environment, you need to be using the system from a domain that accepts incoming connections. The easiest way to do this is using [serveo](https://serveo.net/) or [ngrok](https://ngrok.com/).
+
 ## Deployment
+
+I'll add more details later or when someone else wants to deploy the app, but the general steps are:
+
+* Get a server and domain through providers like [Digital Ocean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+
+* Follow steps 1-8 from [installing](#installing) above.
+
+* Add environment variables or edit the .env file for production settings.
+
+* Collect static files for production:
+
+  `python manage.py collectstatic`
+
+* Set up nginx, Gunicorn and supervisor as detailed in the [simple is better than complex](https://simpleisbetterthancomplex.com/tutorial/2016/10/14/how-to-deploy-to-digital-ocean.html) article.
+
+If you have difficulties, please feel free to contact the [#author](author).
 
 ## Support
 
@@ -91,3 +111,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 * [Horizontal Fundraising Thermometer](https://codepen.io/robotballoon/pen/Fjnyp) by [Robot Balloon](https://codepen.io/robotballoon)
 * [Simple jQuery Search Filter](https://codepen.io/alexerlandsson/pen/ZbyRoO) by [Alexander Erlandsson](https://codepen.io/alexerlandsson)
+* The many useful articles at [simple is better than complex](https://simpleisbetterthancomplex.com/) by [Vitor Freitas](https://simpleisbetterthancomplex.com/about/)

@@ -6,14 +6,30 @@ Built in Python/Django 2.2 and Bootstrap 4 for the [Triple Crown for Heart](http
 
 Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](https://donations.triplecrownforheart.ca/team_fundraising/). If you would like to use this platform for your charity fundraising event, please contact the [author](#authors).
 
-## Getting Started
+<img src="screenshot.png" alt="demo screenshot" />
+
+## Table of Contents
+
+* [Features](#features)
+* [Installing](#installling)
+* [Deployment](#Deployment)
+* [Support](#Support)
+* [Build with](#Built with)
+* [Contributing](#Contributing)
+* [Authors](#Authors)
+* [License](#License)
+* [Acknowledgments](#Acknowledgments)
+
+## Features
+
+## Installing
 
 ### Prerequisites
 
 * [Python 3.7](https://www.python.org/)
 * [git](https://git-scm.com/)
 
-### Installing
+### Development
 
 1. (optional) Create and activate a [virtualenv](https://virtualenv.pypa.io/) to have an isolated environment (you may want to use [virtualenvwrapper](http://virtualenvwrapper.readthedocs.org/)).
 

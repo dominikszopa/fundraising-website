@@ -14,13 +14,18 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 * [Installing](#installling)
 * [Deployment](#Deployment)
 * [Support](#Support)
-* [Build with](#Built with)
+* [Build with](#Built-with)
 * [Contributing](#Contributing)
 * [Authors](#Authors)
 * [License](#License)
 * [Acknowledgments](#Acknowledgments)
 
 ## Features
+
+* Fully responsive website that supports phones, tablets and computers
+* Integration with PayPal for donations
+* Individuals can create custom fundraising pages with a photo, message and fundraising goal
+* Email notifications to the fundraiser whenever a donation is received
 
 ## Installing
 

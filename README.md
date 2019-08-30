@@ -1,4 +1,4 @@
-# Event Fundraising
+# Event Fundraising Website
 
 An event fundraising website where individuals can create personal pages, set goals and raise money for the overall goal.
 
@@ -34,7 +34,7 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 * [Python 3.7](https://www.python.org/)
 * [git](https://git-scm.com/)
 
-### Development
+### Local installation
 
 1. (optional) Create and activate a [virtualenv](https://virtualenv.pypa.io/) to have an isolated environment (you may want to use [virtualenvwrapper](http://virtualenvwrapper.readthedocs.org/)).
 

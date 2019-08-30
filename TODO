@@ -81,7 +81,6 @@
 [x] Add titles to pages
 [x] Add recent donations
 [x] Fix fundraiser search
-[ ] Add message to donation notification
 [x] Fix layout of search box
 [x] Add page about who made app
 [-] Make open source
@@ -96,11 +95,12 @@
     [x] Remove email address password, add instructions
     [x] Remove paypal credentials, add instructions
         [x] Information about serveo
-    [ ] Update name
+    [x] Update name
     [ ] Instructions about customizing
     [ ] Add ALLOWED_HOSTS to environment variables
     [ ] More detailed deployment instructions
 [ ] Create csv output of donations
+[ ] Add message to donation notification
 [ ] Change email links to HTTPS
 [ ] Add facebook share button
 [ ] Move image upload to edit screen

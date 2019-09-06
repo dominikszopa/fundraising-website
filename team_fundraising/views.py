@@ -213,7 +213,10 @@ def signup(request):
                 )
                 + "\n\nYour username is: " + user.username
                 + Fundraiser_text.signup_email_closing,
-                'fundraising@triplecrownforheart.ca', [user.email, ]
+                'fundraising@triplecrownforheart.ca',
+                [user.email, ],
+                auth_user=settings.EMAIL_HOST_USER,
+                auth_password=settings.EMAIL_HOST_PASSWORD
             )
 
             # log in the user so they don't have to do it now

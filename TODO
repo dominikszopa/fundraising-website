@@ -102,7 +102,7 @@
     [ ] Add ALLOWED_HOSTS to environment variables
     [ ] More detailed deployment instructions
 [x] Fix email on production
-[ ] Create csv output of donations
+[-] Create csv output of donations
 [ ] Add message to donation notification
 [ ] Change email links to HTTPS
 [ ] Add facebook share button

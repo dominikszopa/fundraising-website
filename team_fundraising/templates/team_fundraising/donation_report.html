@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Donation Report</title>
+{% endblock head %}
+
+{% block content %}
+
+{% for donation in donations %}
+    {{ donation.name }}, {{donation.email }}, {{ donation.amount }}, {{ donation.date }}
+<br/>
+{% endfor %}
+
+
+{% endblock content %}

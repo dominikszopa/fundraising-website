@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
+from django.db.models import Sum
 from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation
@@ -306,3 +307,28 @@ class About(View):
     def get(self, request):
 
         return render(request, self.template_name)
+
+
+class Donation_Report(View):
+
+    """
+        Report that shows all the donations, grouped by email and name
+        so that a single person donating to multiple fundraisers will show
+        up once.
+    """
+
+    template_name = 'team_fundraising/donation_report.html'
+
+    def get(self, request, campaign_id):
+
+        # get all donations that are part of this campaign
+        # grouped by email
+        donations = Donation.objects.filter(
+            fundraiser__campaign__pk=campaign_id
+            ).values('name', 'email').annotate(amount=Sum('amount'))
+        donations = donations.order_by('-amount')
+
+        return render(
+            request, self.template_name,
+            {'donations': donations}
+        )

@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation
@@ -324,9 +324,21 @@ class Donation_Report(View):
         # get all donations that are part of this campaign
         # grouped by email
         donations = Donation.objects.filter(
-            fundraiser__campaign__pk=campaign_id
-            ).values('name', 'email').annotate(amount=Sum('amount'))
-        donations = donations.order_by('-amount')
+            # match to this campaign
+            fundraiser__campaign__pk=campaign_id).filter(
+                # filter out pending transactions
+                payment_status='paid'
+                # group by email
+                ).values(
+                    'email'
+                    # sum some fields
+                    ).annotate(
+                        amount=Sum('amount'),
+                        num_donations=Count('email')
+                    )
+
+        # sort by
+        donations = donations.order_by('-num_donations')
 
         return render(
             request, self.template_name,

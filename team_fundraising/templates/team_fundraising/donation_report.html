@@ -5,10 +5,16 @@
 
 {% block content %}
 
+<table>
 {% for donation in donations %}
-    {{ donation.name }}, {{donation.email }}, {{ donation.amount }}, {{ donation.date }}
-<br/>
+    <tr>
+        <td>{{ donation.name }}</td>
+        <td>{{ donation.email }}</td>
+        <td>{{ donation.num_donations }}</td>
+        <td>{{ donation.amount }}</td>
+        <td>{{ donation.date }}</td>
+    </tr>
 {% endfor %}
-
+</table>
 
 {% endblock content %}

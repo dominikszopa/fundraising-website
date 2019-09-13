@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import path
 from .models import Campaign, Fundraiser, Donation
 
 
@@ -21,3 +22,19 @@ class AuthorAdmin(admin.ModelAdmin):
         )
     search_fields = ('name', 'email')
     list_filter = ('payment_status', 'country')
+
+
+"""
+class DonationReport(admin.AdminSite):
+
+    def get_urls(self):
+        urls = super(DonationReport, self).get_urls()
+        custom_urls = [
+            path(
+                'donation_report',
+                self.admin_view(reports.donations),
+                name="donation_report"
+                ),
+        ]
+        return urls + custom_urls
+"""

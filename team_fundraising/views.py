@@ -310,7 +310,6 @@ class About(View):
 
 
 class Donation_Report(View):
-
     """
         Report that shows all the donations, grouped by email and name
         so that a single person donating to multiple fundraisers will show
@@ -322,14 +321,13 @@ class Donation_Report(View):
     def get(self, request, campaign_id):
 
         # get all donations that are part of this campaign
-        # grouped by email
+        # and have been fully paid through paypal
         donations = Donation.objects.filter(
-            # match to this campaign
-            fundraiser__campaign__pk=campaign_id).filter(
-                # filter out pending transactions
-                payment_status='paid'
-                # group by email
-                ).values(
+            fundraiser__campaign__pk=campaign_id,
+            payment_status='paid')
+
+        # group by email address
+        donations = donations.values(
                     'email'
                     # sum some fields
                     ).annotate(
@@ -337,7 +335,7 @@ class Donation_Report(View):
                         num_donations=Count('email')
                     )
 
-        # sort by
+        # sort by number of donations
         donations = donations.order_by('-num_donations')
 
         return render(

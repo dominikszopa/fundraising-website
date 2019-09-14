@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max
 from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation
@@ -328,15 +328,22 @@ class Donation_Report(View):
 
         # group by email address
         donations = donations.values(
-                    'email'
+                    'email',
+                    'name',
                     # sum some fields
                     ).annotate(
                         amount=Sum('amount'),
-                        num_donations=Count('email')
+                        num_donations=Count('email'),
+                        address=Max('address'),
+                        city=Max('city'),
+                        province=Max('province'),
+                        postal_code=Max('postal_code'),
+                        country=Max('country'),
+                        date=Max('date'),
                     )
 
         # sort by number of donations
-        donations = donations.order_by('-num_donations')
+        donations = donations.order_by('-amount')
 
         return render(
             request, self.template_name,

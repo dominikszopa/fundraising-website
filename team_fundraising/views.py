@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
+from django.http import HttpResponse
 from django.db.models import Sum, Count, Max
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -317,6 +318,7 @@ class Donation_Report(View):
     """
 
     template_name = 'team_fundraising/donation_report.html'
+    output_format = 'html'
 
     def get(self, request, campaign_id):
 
@@ -344,6 +346,15 @@ class Donation_Report(View):
 
         # sort by number of donations
         donations = donations.order_by('-amount')
+
+        if self.output_format == 'csv':
+            print(self.output_format)
+
+            self.template_name = 'team_fundraising/donation_report.csv'
+
+            # response = HttpResponse(content_type='text/csv')
+            # response['Content-Disposition'] = \
+            #    'attachment; filename="donations.csv"'
 
         return render(
             request, self.template_name,

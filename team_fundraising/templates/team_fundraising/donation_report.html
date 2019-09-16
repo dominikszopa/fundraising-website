@@ -6,20 +6,20 @@
 
 {% block content %}
 
-<table>
-{% for donation in donations %}
-    <tr>
-        <td>{{ donation.name }}</td>
-        <td>${{ donation.amount|floatformat:"2"|intcomma }}</td>
-        <td>{{ donation.email }}</td>
-        <td>{{ donation.address}}</td>
-        <td>{{ donation.city}}</td>
-        <td>{{ donation.province}}</td>
-        <td>{{ donation.postal_code}}</td>
-        <td>{{ donation.country}}</td>
-        <td>{{ donation.date }}</td>
-    </tr>
-{% endfor %}
-</table>
-
+<a href="{% url 'team_fundraising:donation_report_csv' campaign_id %}">Download as csv</a>
+    <table class="table">
+    {% for donation in donations %}
+        <tr scope="col">
+            <td scope="row" nowrap>{{ donation.name }}</td>
+            <td nowrap>${{ donation.amount|floatformat:"2"|intcomma }}</td>
+            <td nowrap>{{ donation.email }}</td>
+            <td nowrap>{{ donation.address}}</td>
+            <td nowrap>{{ donation.city}}</td>
+            <td nowrap>{{ donation.province}}</td>
+            <td nowrap>{{ donation.postal_code}}</td>
+            <td nowrap>{{ donation.country}}</td>
+            <td nowrap>{{ donation.date }}</td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock content %}

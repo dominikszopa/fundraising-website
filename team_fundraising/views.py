@@ -317,7 +317,8 @@ class Donation_Report(View):
         up once.
     """
 
-    template_name = 'team_fundraising/donation_report.html'
+    html_template_name = 'team_fundraising/donation_report.html'
+    csv_template_name = 'team_fundraising/donation_report.csv'
     output_format = 'html'
 
     def get(self, request, campaign_id):
@@ -350,13 +351,24 @@ class Donation_Report(View):
         if self.output_format == 'csv':
             print(self.output_format)
 
-            self.template_name = 'team_fundraising/donation_report.csv'
-
             # response = HttpResponse(content_type='text/csv')
             # response['Content-Disposition'] = \
             #    'attachment; filename="donations.csv"'
 
-        return render(
-            request, self.template_name,
-            {'donations': donations}
-        )
+            return render(
+                request, self.csv_template_name,
+                {
+                    'donations': donations,
+                    'campaign_id': campaign_id
+                }
+            )
+
+        else:
+
+            return render(
+                request, self.html_template_name,
+                {
+                    'donations': donations,
+                    'campaign_id': campaign_id
+                }
+            )

@@ -30,5 +30,5 @@ urlpatterns = [
     path(
         'donation_report_csv/<int:campaign_id>/',
         Donation_Report.as_view(output_format="csv"),
-        name="donation_report"),
+        name="donation_report_csv"),
 ]

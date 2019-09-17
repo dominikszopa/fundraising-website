@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.admin.views.decorators import staff_member_required
 from .views import IndexView
-from team_fundraising.views import Donation_Report
+from team_fundraising.admin import Donation_Report
 
 
 urlpatterns = [

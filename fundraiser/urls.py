@@ -17,13 +17,28 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
 from .views import IndexView
+from team_fundraising.views import Donation_Report
 
 
 urlpatterns = [
     path('', IndexView.as_view()),
     path('team_fundraising/', include('team_fundraising.urls')),
+
+    # Donation reports in the admin section
+    path(
+        'admin/donation_report/<int:campaign_id>/',
+        staff_member_required(Donation_Report.as_view()),
+        name="donation_report"
+    ),
+    path(
+        'admin/donation_report_csv/<int:campaign_id>/',
+        staff_member_required(Donation_Report.as_view(output_format="csv")),
+        name="donation_report_csv"
+    ),
     path('admin/', admin.site.urls),
+
     # Had to add accounts here as well, as internal functions call it without
     # a namespace
     path('accounts/', include('django.contrib.auth.urls')),

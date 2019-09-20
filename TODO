@@ -103,8 +103,8 @@
     [ ] More detailed deployment instructions
 [x] Fix email on production
 [-] Create csv output of donations
-    [ ] Try to move to admin.py
-    [ ] Put in admin template
+    [x] Move to admin.py
+    [x] Put in admin template
     [ ] Add link in main admin page
 [ ] Add message to donation notification
 [ ] Change email links to HTTPS

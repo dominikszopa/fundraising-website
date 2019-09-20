@@ -40,6 +40,7 @@ class Fundraiser(models.Model):
     An individual fundraiser that has a goal and collects donations to their
     total and the campaigns.
     """
+
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
     user = models.OneToOneField(
         User, blank=True, null=True,
@@ -86,6 +87,7 @@ class Donation(models.Model):
     Individual donations that are made to a fundraiser. Note there is no
     "Donater" object, as each donation is treated as unique.
     """
+
     fundraiser = models.ForeignKey(
         Fundraiser, blank=True, null=True,
         on_delete=models.CASCADE
@@ -106,3 +108,14 @@ class Donation(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Donor(Donation):
+    """
+    A proxy model of the Donation model, used to summarize all the
+    Donations by person, for reporting purposes.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Donor'

@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.db.models import Sum, Count, Max
 from django.views import View
-from .models import Campaign, Fundraiser, Donation
+from .models import Campaign, Fundraiser, Donation, Donor
 
 
 class CampaignAdmin(admin.ModelAdmin):
@@ -19,7 +19,7 @@ admin.site.register(Fundraiser)
 
 
 @admin.register(Donation)
-class AuthorAdmin(admin.ModelAdmin):
+class DonationAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'date', 'amount', 'payment_status',
         'email', 'fundraiser', 'country'
@@ -28,20 +28,55 @@ class AuthorAdmin(admin.ModelAdmin):
     list_filter = ('payment_status', 'country')
 
 
-"""
-class DonationReport(admin.AdminSite):
+@admin.register(Donor)
+class DonorAdmin(admin.ModelAdmin):
 
-    def get_urls(self):
-        urls = super(DonationReport, self).get_urls()
-        custom_urls = [
-            path(
-                'donation_report',
-                self.admin_view(reports.donations),
-                name="donation_report"
-                ),
-        ]
-        return urls + custom_urls
-"""
+    change_list_template = 'admin/donation_report.html'
+
+    def changelist_view(self, request, extra_content=None):
+        response = super().changelist_view(
+            request,
+        )
+
+        try:
+            donations = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            print("out!")
+            return response
+
+        print("in!")
+        print(donations)
+
+        # get all donations that are part of this campaign
+        # and have been fully paid through paypal
+        # donations = Donation.objects.filter(
+        #    fundraiser__campaign__pk=campaign_id,
+        #    payment_status='paid')
+
+        # group by email address
+        donations = donations.values(
+                    'email',
+                    'name',
+                    # sum some fields
+                    ).annotate(
+                        amount=Sum('amount'),
+                        num_donations=Count('email'),
+                        address=Max('address'),
+                        city=Max('city'),
+                        province=Max('province'),
+                        postal_code=Max('postal_code'),
+                        country=Max('country'),
+                        date=Max('date'),
+                    )
+
+        # sort by number of donations
+        donations = donations.order_by('-amount')
+
+        response.context_data['summary'] = list(
+            donations
+        )
+
+        return response
 
 
 class Donation_Report(View):

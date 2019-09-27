@@ -30,44 +30,26 @@ class DonationAdmin(admin.ModelAdmin):
 
 @admin.register(Donor)
 class DonorAdmin(admin.ModelAdmin):
+    """
+    Report that shows all the donations, grouped by email and name
+    so that a single person donating to multiple fundraisers will show
+    up once. Can be shown as HTML or exported as CSV
+    """
 
     change_list_template = 'admin/donation_report.html'
 
     def changelist_view(self, request, extra_content=None):
+
+        # call parent class
         response = super().changelist_view(
             request,
         )
 
+        # get the query string for the Donor proxy model
         try:
             donations = response.context_data['cl'].queryset
         except (AttributeError, KeyError):
-            print("out!")
             return response
-
-        print("in!")
-        print(donations)
-
-        # get all donations that are part of this campaign
-        # and have been fully paid through paypal
-        # donations = Donation.objects.filter(
-        #    fundraiser__campaign__pk=campaign_id,
-        #    payment_status='paid')
-
-        # group by email address
-        donations = donations.values(
-                    'email',
-                    'name',
-                    # sum some fields
-                    ).annotate(
-                        amount=Sum('amount'),
-                        num_donations=Count('email'),
-                        address=Max('address'),
-                        city=Max('city'),
-                        province=Max('province'),
-                        postal_code=Max('postal_code'),
-                        country=Max('country'),
-                        date=Max('date'),
-                    )
 
         # sort by number of donations
         donations = donations.order_by('-amount')
@@ -81,9 +63,9 @@ class DonorAdmin(admin.ModelAdmin):
 
 class Donation_Report(View):
     """
-        Report that shows all the donations, grouped by email and name
-        so that a single person donating to multiple fundraisers will show
-        up once. Can be shown as HTML or exported as CSV
+    Report that shows all the donations, grouped by email and name
+    so that a single person donating to multiple fundraisers will show
+    up once. Can be shown as HTML or exported as CSV
     """
 
     html_template_name = 'team_fundraising/donation_report.html'

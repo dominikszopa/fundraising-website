@@ -105,6 +105,8 @@
 [-] Create csv output of donations
     [x] Move to admin.py
     [x] Put in admin template
+    [ ] Add csv download
+    [ ] Limit to one campaign
     [ ] Add link in main admin page
 [ ] Add message to donation notification
 [ ] Change email links to HTTPS

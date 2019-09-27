@@ -7,6 +7,7 @@ by the Fundraisers, or applied to the general Campaign.
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Sum, Count, Max
 
 
 class Campaign(models.Model):
@@ -110,11 +111,50 @@ class Donation(models.Model):
         return self.name
 
 
+class DonorManager(models.Manager):
+    """
+    A model query manager that combines all donation by the donor
+    based on email and name
+    """
+
+    def get_queryset(self):
+
+        donations = super(DonorManager, self).get_queryset()
+
+        # get all donations that are part of this campaign
+        # and have been fully paid through paypal
+        # TODO: limit to one campaign
+        donations = donations.filter(
+            # fundraiser__campaign__pk=campaign_id,
+            payment_status='paid'
+            )
+
+        # group by email address
+        donations = donations.values(
+                    'email',
+                    'name',
+                    # sum some fields
+                    ).annotate(
+                        amount=Sum('amount'),
+                        num_donations=Count('email'),
+                        address=Max('address'),
+                        city=Max('city'),
+                        province=Max('province'),
+                        postal_code=Max('postal_code'),
+                        country=Max('country'),
+                        date=Max('date'),
+                    )
+
+        return donations
+
+
 class Donor(Donation):
     """
     A proxy model of the Donation model, used to summarize all the
     Donations by person, for reporting purposes.
     """
+
+    objects = DonorManager()
 
     class Meta:
         proxy = True

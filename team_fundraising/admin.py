@@ -65,7 +65,7 @@ class DonorCsv(View):
     section.
     """
 
-    csv_template_name = 'team_fundraising/donation_report.csv'
+    csv_template_name = 'admin/donation_report.csv'
 
     def get(self, request):
 

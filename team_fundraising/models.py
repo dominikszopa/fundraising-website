@@ -28,12 +28,21 @@ class Campaign(models.Model):
         """
         Get the total raised from all Fundraisers
         """
-        total_donations = 0
 
-        for fundraiser in self.fundraiser_set.all():
-            total_donations += fundraiser.total_raised()
+        # get all paid donations in this campaign
+        donations = Donation.objects.filter(
+            fundraiser__campaign__pk=self.id,
+            payment_status='paid'
+        )
 
-        return total_donations
+        # sum the amounts
+        donations = donations.aggregate(total=Sum('amount'))
+
+        # replace with zero if there are none
+        if donations["total"] is None:
+            donations["total"] = 0
+
+        return donations["total"]
 
 
 class Fundraiser(models.Model):
@@ -55,21 +64,25 @@ class Fundraiser(models.Model):
     def __str__(self):
         return self.name
 
-    # TODO: combine and optimize total_raised() and total_donations
-    # and maybe add them to the initialization of the class
     def total_raised(self):
         """
         Get the sum of Donations for this Fundraiser
         """
-        total_donations = 0
 
-        for donation in self.donation_set.all():
-            if (donation.payment_status == 'paid' or
-                    donation.payment_status == ''):
+        # get all paid donations for this fundraiser
+        donations = Donation.objects.filter(
+            fundraiser__pk=self.id,
+            payment_status='paid'
+        )
 
-                total_donations += donation.amount
+        # sum the donation amounts
+        donations = donations.aggregate(total=Sum('amount'))
 
-        return total_donations
+        # replace with 0 if there were none
+        if donations["total"] is None:
+            donations["total"] = 0
+
+        return donations["total"]
 
     def total_donations(self):
         """

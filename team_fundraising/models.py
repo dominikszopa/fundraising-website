@@ -7,7 +7,7 @@ by the Fundraisers, or applied to the general Campaign.
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Count, Max
 
 
 class Campaign(models.Model):
@@ -50,6 +50,7 @@ class Fundraiser(models.Model):
     An individual fundraiser that has a goal and collects donations to their
     total and the campaigns.
     """
+
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
     user = models.OneToOneField(
         User, blank=True, null=True,
@@ -100,6 +101,7 @@ class Donation(models.Model):
     Individual donations that are made to a fundraiser. Note there is no
     "Donater" object, as each donation is treated as unique.
     """
+
     fundraiser = models.ForeignKey(
         Fundraiser, blank=True, null=True,
         on_delete=models.CASCADE
@@ -120,3 +122,53 @@ class Donation(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class DonorManager(models.Manager):
+    """
+    A model query manager that combines all donation by the donor
+    based on email and name
+    """
+
+    def get_queryset(self):
+
+        donations = super(DonorManager, self).get_queryset()
+
+        # get all donations that are part of this campaign
+        # and have been fully paid through paypal
+        # TODO: limit to one campaign
+        donations = donations.filter(
+            # fundraiser__campaign__pk=campaign_id,
+            payment_status='paid'
+            )
+
+        # group by email address
+        donations = donations.values(
+                    'email',
+                    'name',
+                    # sum some fields
+                    ).annotate(
+                        amount=Sum('amount'),
+                        num_donations=Count('email'),
+                        address=Max('address'),
+                        city=Max('city'),
+                        province=Max('province'),
+                        postal_code=Max('postal_code'),
+                        country=Max('country'),
+                        date=Max('date'),
+                    )
+
+        return donations
+
+
+class Donor(Donation):
+    """
+    A proxy model of the Donation model, used to summarize all the
+    Donations by person, for reporting purposes.
+    """
+
+    objects = DonorManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Donor'

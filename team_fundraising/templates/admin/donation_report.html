@@ -1,0 +1,86 @@
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+
+
+{% block content_title %}
+    <h1>Donation Report</h1>
+{% endblock content_title %}
+
+{% block result_list %}
+<a href="{% url 'donation_report_csv' %}">Download as csv</a>
+
+<div class="results">
+    <table>
+    <thead>
+      <tr>
+        <th>
+          <div class="text">
+            <a href="#">Name</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Amount</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Email</a>
+          </div>
+        </th>
+        <th>
+            <div class="text">
+              <a href="#">Address</a>
+            </div>
+        </th>
+        <th>
+            <div class="text">
+              <a href="#">City</a>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <a href="#">Province</a>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <a href="#">Postal Code</a>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <a href="#">Country</a>
+            </div>
+          </th>
+
+        <th>
+          <div class="text">
+            <a href="#">
+              <strong>Last Donation</strong>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+        {% for row in summary %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+          <td> {{ row.name }} </td>
+          <td>${{ row.amount | floatformat:"2"| intcomma }} </td>
+          <td> {{ row.email }}</td>
+          <td>{{ row.address}}</td>
+          <td>{{ row.city}}</td>
+          <td>{{ row.province}}</td>
+          <td>{{ row.postal_code}}</td>
+          <td>{{ row.country}}</td>
+          <td>{{ row.date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+</table>
+{% endblock result_list %}
+
+{% block pagination %}{% endblock %}

@@ -103,6 +103,11 @@
     [ ] More detailed deployment instructions
 [x] Fix email on production
 [-] Create csv output of donations
+    [x] Move to admin.py
+    [x] Put in admin template
+    [x] Add csv download
+    [ ] Add filters to one campaign
+    [x] Add link in main admin page
 [ ] Add message to donation notification
 [ ] Change email links to HTTPS
 [ ] Add facebook share button

@@ -1,0 +1,2 @@
+{% load humanize %}{% for donation in donations %}"{{ donation.name|addslashes }}","{{ donation.amount|floatformat:"2" }}","{{ donation.email }}","{{ donation.address}}","{{ donation.city}}","{{ donation.province}}","{{ donation.postal_code}}","{{ donation.country}}","{{ donation.date }}"
+{% endfor %}

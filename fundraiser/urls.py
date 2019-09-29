@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.admin.views.decorators import staff_member_required
 from .views import IndexView
-from team_fundraising.admin import Donation_Report
+from team_fundraising.admin import DonorCsv
 
 
 urlpatterns = [
@@ -28,13 +28,8 @@ urlpatterns = [
 
     # Donation reports in the admin section
     path(
-        'admin/donation_report/<int:campaign_id>/',
-        staff_member_required(Donation_Report.as_view()),
-        name="donation_report"
-    ),
-    path(
-        'admin/donation_report_csv/<int:campaign_id>/',
-        staff_member_required(Donation_Report.as_view(output_format="csv")),
+        'admin/donation_report_csv/',
+        staff_member_required(DonorCsv.as_view()),
         name="donation_report_csv"
     ),
     path('admin/', admin.site.urls),

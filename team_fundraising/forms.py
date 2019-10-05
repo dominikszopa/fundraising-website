@@ -1,7 +1,7 @@
 """ The forms for the team_fundraiser app
 """
 from django import forms
-from datetime import datetime
+from django.utils import timezone
 from .models import Fundraiser
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -20,7 +20,7 @@ class DonationForm(forms.Form):
     province = forms.CharField(max_length=50, required=False)
     country = forms.CharField(max_length=25, required=False)
     postal_code = forms.CharField(max_length=10, required=False)
-    date = datetime.now()
+    date = timezone.now()
 
     message = forms.CharField(
         widget=forms.Textarea(

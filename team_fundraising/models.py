@@ -4,7 +4,7 @@ This module contains the models for the team_fundraising app, including a
 parent Campaign, with individual Fundraisers, and Donations that can be raised
 by the Fundraisers, or applied to the general Campaign.
 """
-from datetime import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Max
@@ -116,7 +116,7 @@ class Donation(models.Model):
     province = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=25, blank=True)
     postal_code = models.CharField(max_length=10, blank=True)
-    date = models.DateTimeField(default=datetime.now)
+    date = models.DateTimeField(default=timezone.now)
     payment_method = models.CharField(max_length=50, blank=True)
     payment_status = models.CharField(max_length=25, blank=True)
 

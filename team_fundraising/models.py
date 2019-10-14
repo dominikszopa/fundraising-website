@@ -86,14 +86,20 @@ class Fundraiser(models.Model):
 
     def total_donations(self):
         """
-        Get the total number of donators for this Fundraisers
+        Get the total number of donators for this Fundraiser
         """
         total_donations = 0
 
-        for donations in self.donation_set.all():
-            total_donations += 1
+        # get all paid donations for this fundraiser
+        donations = Donation.objects.filter(
+            fundraiser__pk=self.id,
+            payment_status='paid'
+        )
 
-        return total_donations
+        # sum the donation amounts
+        total_donations = donations.aggregate(total=Count('amount'))
+
+        return total_donations['total']
 
 
 class Donation(models.Model):

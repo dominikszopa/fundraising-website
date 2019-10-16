@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from ..models import Campaign, Fundraiser, Donation, Donor
 
 
@@ -8,7 +9,7 @@ class TestModels(TestCase):
     @classmethod
     def setUpTestData(cls):
         Campaign.objects.create(
-            name='first',
+            name='Test Campaign',
             goal=1000,
             campaign_message='message',
             default_fundraiser_message='default message',
@@ -16,6 +17,7 @@ class TestModels(TestCase):
 
         campaign1 = Campaign.objects.get(id=1)
 
+        # A fundraiser with a few donations already
         Fundraiser.objects.create(
             campaign=campaign1,
             name='First Fundraiser',
@@ -40,6 +42,7 @@ class TestModels(TestCase):
             postal_code='A0A 1B1',
             payment_method='paypal',
             payment_status='paid',
+            date=timezone.now(),
         )
 
         Donation.objects.create(
@@ -56,6 +59,7 @@ class TestModels(TestCase):
             postal_code='A0A 1B1',
             payment_method='paypal',
             payment_status='paid',
+            date=timezone.now(),
         )
 
         # an incomplete donation, which should not be counted in totals
@@ -68,6 +72,16 @@ class TestModels(TestCase):
             message='Almost',
             payment_method='paypal',
             payment_status='pending',
+            date=timezone.now(),
+        )
+
+        # A fundraiser without donations
+        Fundraiser.objects.create(
+            campaign=campaign1,
+            name='Empty Fundraiser',
+            goal=100,
+            photo='',
+            message='Just starting!',
         )
 
 
@@ -76,7 +90,7 @@ class TestCampaignModel(TestModels):
     def test_name(self):
         """ Check the Campaign.__str__ function """
         campaign = Campaign.objects.get(id=1)
-        self.assertEquals(str(campaign), 'first')
+        self.assertEquals(str(campaign), 'Test Campaign')
 
     def test_donation_total(self):
         """ Verify total donations sum is correct """

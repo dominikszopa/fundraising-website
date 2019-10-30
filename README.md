@@ -41,7 +41,7 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 2. Clone this repository:
 
    `git clone https://github.com/dominikszopa/fundraising.git`
-   `cd fundraising`
+   `cd fundraising-website`
 
 3. Install dependencies:
 

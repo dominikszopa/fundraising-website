@@ -35,7 +35,9 @@ class Donation_text:
     )
 
     notification_email_closing = (
-        "\n\nAwesome work. It might be a good idea to send them a thank you."
+        "\n\nAwesome work! They would probably appreciate "
+        "a quick thank you email.\n\n"
+        "-- Triple Crown for Heart\n"
     )
 
 

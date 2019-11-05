@@ -56,6 +56,7 @@ def process_paypal(sender, **kwargs):
             Donation_text.notification_email_opening
             + '${:,.2f}'.format(donation.amount) + ' from '
             + donation.name + " <" + donation.email + ">"
+            + ' with the message:\n\n"' + donation.message + '"'
             + Donation_text.notification_email_closing,
             'fundraising@triplecrownforheart.ca',
             [donation.fundraiser.user.email, ]

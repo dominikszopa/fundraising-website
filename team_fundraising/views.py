@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
@@ -297,6 +298,29 @@ def update_fundraiser(request):
             'fundraiser_form': fundraiser_form,
         }
     )
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password has been updated')
+            return redirect('team_fundraising:update_fundraiser')
+        else:
+            messages.error(
+                request,
+                'There is an error on the page. Please check and try again.'
+                )
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(
+        request,
+        'accounts/change_password.html',
+        {'form': form}
+        )
 
 
 class About(View):

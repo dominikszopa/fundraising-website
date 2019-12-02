@@ -108,7 +108,7 @@
     [x] Add csv download
     [x] Add link in main admin page
 [x] Add message to donation notification
-[ ] Add link to change password
+[x] Add link to change password
 [ ] Change "Create a fundraiser page" link to "Edit my profile" when logged in
 [ ] Remove special characters from spreadsheet export
 [ ] Support multiple campaigns
@@ -125,6 +125,7 @@
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [ ] Change email links to HTTPS
 [ ] Refresh after "return" link from logout [UT1 3.1]
+[ ] Fix up display of Update Fundraiser page
 [ ] Add facebook share button
 [ ] Move image upload to edit screen
 [ ] Save smaller version of image

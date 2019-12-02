@@ -8,12 +8,21 @@
 {% endblock head %}
 
 {% block content %}
+{% for message in messages %}
+
+    <div class="alert alert-primary" role="alert">
+        {{ message }}
+    </div>
+
+{% endfor %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{ fundraiser_form|crispy }}
     {{ user_form|crispy }}
-
+    <a class="float-right" href="{% url 'team_fundraising:change_password' %}">Change Password</a>
+    <br/>
+  
     <button class="btn btn-primary" type="submit"> Save Changes</button>
     <script>
         CKEDITOR.replace( 'message', {

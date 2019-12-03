@@ -14,7 +14,7 @@ from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from .text import Donation_text, Fundraiser_text
 
 
-def index_view(request):
+def index_view(request, campaign_id):
     # The home page, shows all fundraisers and total raised
 
     template = 'team_fundraising/index.html'

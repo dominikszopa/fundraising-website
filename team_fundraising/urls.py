@@ -5,7 +5,7 @@ from .views import Paypal_donation, About
 app_name = 'team_fundraising'
 
 urlpatterns = [
-    path('', views.index_view, name='index'),
+    path('<campaign_id>/', views.index_view, name='index'),
     path(
         'fundraiser/<int:fundraiser_id>/',
         views.fundraiser_view,

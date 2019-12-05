@@ -25,9 +25,9 @@
         </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:index' %}">Home</a>
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:about' %}">About</a>
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' %}">Join</a>
+                <a class="nav-item nav-link" href="{% url 'team_fundraising:index' campaign.id %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'team_fundraising:about' campaign.id %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' campaign.id %}">Join</a>
                 {% if user.is_authenticated %}
                     <a class="nav-item nav-link" href="{% url 'team_fundraising:logout' %}">Logout</a>
                 {% else %}

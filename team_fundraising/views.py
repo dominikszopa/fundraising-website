@@ -19,7 +19,7 @@ def index_view(request, campaign_id):
 
     template = 'team_fundraising/index.html'
 
-    campaign = get_object_or_404(Campaign)
+    campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     # get all fundraisers, sorted by most money raised
     fundraisers = sorted(
@@ -33,7 +33,9 @@ def index_view(request, campaign_id):
         payment_status__in=["paid", ""]
         ).order_by('-date')[:5]
 
-    general_donations = Donation.objects.filter(fundraiser__isnull=True)
+    general_donations = Donation.objects.filter(
+        pk=campaign_id, fundraiser__isnull=True
+        )
 
     # get raised by fundraisers and add general donations
     total_raised = campaign.total_raised()
@@ -56,6 +58,7 @@ def fundraiser_view(request, fundraiser_id):
     template = 'team_fundraising/fundraiser.html'
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+    campaign = get_object_or_404(Campaign, pk=fundraiser.campaign_id)
 
     if fundraiser.goal != 0:
         fundraiser.percent_raised = int(
@@ -65,6 +68,7 @@ def fundraiser_view(request, fundraiser_id):
         payment_status__in=["paid", ""]).order_by('-date')
 
     context = {
+        'campaign': campaign,
         'fundraiser': fundraiser,
         'donations': donations,
     }
@@ -186,7 +190,7 @@ class Paypal_donation(View):
         return render(request, self.template_name, context)
 
 
-def signup(request):
+def signup(request, campaign_id):
     # Create both a fundraiser and a user, tied together through a foreign key
 
     if request.method == "POST":
@@ -246,7 +250,7 @@ def signup(request):
         fundraiser_form = FundraiserForm(initial={'goal': 200})
 
     # Currently, this works with only the first campaign
-    campaign = get_object_or_404(Campaign)
+    campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     return render(request, 'registration/signup.html', {
         'campaign': campaign,
@@ -327,6 +331,8 @@ class About(View):
 
     template_name = 'team_fundraising/about.html'
 
-    def get(self, request):
+    def get(self, request, campaign_id):
 
-        return render(request, self.template_name)
+        campaign = get_object_or_404(Campaign, pk=campaign_id)
+
+        return render(request, self.template_name, {'campaign': campaign})

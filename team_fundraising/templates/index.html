@@ -1,5 +1,5 @@
 {% load static %}
 
 {% for campaign in campaigns %}
-    <a href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a>
+    <a href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a><br/>
 {% endfor %}

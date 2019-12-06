@@ -79,10 +79,12 @@ def fundraiser_view(request, fundraiser_id):
 def new_donation(request, fundraiser_id):
     # Show donation page, on submit show confirmation and button to PayPal
 
+    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+    campaign = Campaign.objects.filter(fundraiser=fundraiser_id)[0]
+
     if request.method == "POST":
 
         form = DonationForm(request.POST)
-        fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
         if form.is_valid():
 
@@ -130,7 +132,11 @@ def new_donation(request, fundraiser_id):
             form = PayPalPaymentsForm(
                 initial=paypal_dict, button_type="donate")
 
-            context = {"form": form, 'donation': donation}
+            context = {
+                "form": form,
+                'donation': donation,
+                'campaign': campaign,
+                }
 
             # leave a message that the user will see on their return
             # from PayPal
@@ -145,12 +151,12 @@ def new_donation(request, fundraiser_id):
     else:
 
         form = DonationForm()
-        fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
 
     template = "team_fundraising/donation.html"
 
     context = {
         'form': form,
+        'campaign': campaign,
         'fundraiser': fundraiser,
     }
 
@@ -185,7 +191,9 @@ class Paypal_donation(View):
 
         # create the instance
         form = PayPalPaymentsForm(initial=paypal_dict, button_type="donate")
-        context = {"form": form}
+        context = {
+            "form": form
+            }
 
         return render(request, self.template_name, context)
 

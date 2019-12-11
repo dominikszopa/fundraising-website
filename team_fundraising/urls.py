@@ -11,8 +11,7 @@ urlpatterns = [
         views.fundraiser_view,
         name='fundraiser'
     ),
-    path(
-        'donation/<int:fundraiser_id>/', views.new_donation, name="donation"),
+    path('donation/<int:fundraiser_id>/', views.new_donation, name="donation"),
     path('paypal_donation/<int:fundraiser_id>/', Paypal_donation.as_view()),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path(

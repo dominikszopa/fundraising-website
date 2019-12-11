@@ -24,12 +24,12 @@ class Campaign(models.Model):
     def __str__(self):
         return self.name
 
-    def total_raised(self):
+    def get_total_raised(self):
         """
         Get the total raised from all Fundraisers
         """
 
-        # get all paid donations in this campaign
+        # get all paid donations in this campaign for all fundraisers
         donations = Donation.objects.filter(
             fundraiser__campaign__pk=self.id,
             payment_status='paid'
@@ -37,12 +37,32 @@ class Campaign(models.Model):
 
         # sum the amounts
         donations = donations.aggregate(total=Sum('amount'))
+        total_raised = donations['total']
 
         # replace with zero if there are none
-        if donations["total"] is None:
-            donations["total"] = 0
+        if total_raised is None:
+            total_raised = 0
 
-        return donations["total"]
+        # get the "general" donations, ones not to a fundraiser
+        general_donations = Donation.objects.filter(
+            pk=self.id, fundraiser__isnull=True
+        )
+
+        # add general donations to total
+        for donation in general_donations:
+            total_raised += donation.amount
+
+        return total_raised
+
+    def get_recent_donations(self, num_donations):
+
+        # get z recent "paid" donations by newest date
+        recent_donations = Donation.objects.filter(
+            fundraiser__campaign__id=self.id,
+            payment_status__in=["paid", ""]
+        ).order_by('-date')[:num_donations]
+
+        return recent_donations
 
 
 class Fundraiser(models.Model):

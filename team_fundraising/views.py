@@ -29,18 +29,10 @@ def index_view(request, campaign_id):
     )
 
     # get 5 recent "paid" donations by newest date
-    recent_donations = Donation.objects.filter(
-        payment_status__in=["paid", ""]
-        ).order_by('-date')[:5]
-
-    general_donations = Donation.objects.filter(
-        pk=campaign_id, fundraiser__isnull=True
-        )
+    recent_donations = campaign.get_recent_donations(5)
 
     # get raised by fundraisers and add general donations
-    total_raised = campaign.total_raised()
-    for donation in general_donations:
-        total_raised += donation.amount
+    total_raised = campaign.get_total_raised()
 
     context = {
         'campaign': campaign,
@@ -273,6 +265,7 @@ def update_fundraiser(request):
     """
     Update the fundraiser's information, along with the user values
     """
+
     if request.method == 'POST':
 
         user_form = UserForm(request.POST, instance=request.user)
@@ -306,6 +299,7 @@ def update_fundraiser(request):
     return render(
         request, 'team_fundraising/update_fundraiser.html',
         {
+            'campaign': request.user.fundraiser.campaign,
             'user_form': user_form,
             'fundraiser_form': fundraiser_form,
         }

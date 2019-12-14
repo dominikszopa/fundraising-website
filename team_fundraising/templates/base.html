@@ -1,6 +1,6 @@
 {% extends "base_nonav.html" %}
 {% load static %}
-    {% block body %}
+    {% block navbar %}
         <!-- Image and text -->
         <nav class="navbar navbar-expand navbar-light bg-light">
             <a class="navbar-brand" href="#">
@@ -22,6 +22,8 @@
             </div>
             </div>
         </nav>
+    {% endblock navbar %}
+    {% block body %}
         <div class="container">
 
             {% block content %}
@@ -31,4 +33,4 @@
         <br/>
         <br/>
 
-        {% endblock body %}
+    {% endblock body %}

@@ -112,10 +112,11 @@
 [ ] Change "Create a fundraiser page" link to "Edit my profile" when logged in
 [ ] Remove special characters from spreadsheet export
 [ ] Support multiple campaigns
-    [ ] Create homepage of campaigns
-    [ ] Refactor homepage to show a single campaign
+    [-] Create homepage of campaigns
+    [x] Refactor homepage to show a single campaign
+    [ ] Fix thank you message showing up on wrong screen
     [ ] Functionality to disable campaign - link to new one?
-    [ ] Make join page sign up for the right campaign
+    [x] Make join page sign up for the right campaign
     [ ] Add ability to add campaign fundraiser to existing username
     [ ] Make "Edit Profile" default to latest campaign
     [ ] Add ability to switch campaigns in "Edit profile"

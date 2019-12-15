@@ -8,6 +8,13 @@
 {% endblock head %}
 
 {% block content %}
+{% for message in messages %}
+
+  <div class="alert alert-primary" role="alert">
+      {{ message }}
+  </div>
+
+  {% endfor %}
   <div class="row">
     <div class="col-lg-6">
       <br/>

@@ -114,7 +114,7 @@
 [ ] Support multiple campaigns
     [-] Create homepage of campaigns
     [x] Refactor homepage to show a single campaign
-    [ ] Fix thank you message showing up on wrong screen
+    [x] Fix thank you message showing up on wrong screen
     [ ] Functionality to disable campaign - link to new one?
     [x] Make join page sign up for the right campaign
     [ ] Add ability to add campaign fundraiser to existing username
@@ -124,6 +124,7 @@
     [ ] Update tests
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add Javascript warning about low security password [UT1 2.3]
+[ ] Add name to tax receipt information
 [ ] Change email links to HTTPS
 [ ] Refresh after "return" link from logout [UT1 3.1]
 [ ] Fix up display of Update Fundraiser page

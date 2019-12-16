@@ -4,15 +4,17 @@ from team_fundraising.models import Campaign
 
 
 class IndexView(View):
-    # Just an empty page, instead of an error
+    # JShow the list of active and inactive campaigns
 
     def get(self, request):
 
-        campaigns = Campaign.objects.all()
+        active = Campaign.objects.filter(active=True)
+        inactive = Campaign.objects.filter(active=False)
         template = 'index.html'
 
         context = {
-            'campaigns': campaigns
+            'active': active,
+            'inactive': inactive,
         }
 
         return render(request, template, context)

@@ -115,7 +115,7 @@
     [-] Create homepage of campaigns
     [x] Refactor homepage to show a single campaign
     [x] Fix thank you message showing up on wrong screen
-    [ ] Functionality to disable campaign - link to new one?
+    [x] Functionality to disable campaign - link to new one?
     [x] Make join page sign up for the right campaign
     [ ] Add ability to add campaign fundraiser to existing username
     [ ] Make "Edit Profile" default to latest campaign

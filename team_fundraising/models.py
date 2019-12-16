@@ -18,6 +18,7 @@ class Campaign(models.Model):
 
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
     campaign_message = models.CharField(max_length=5000)
     default_fundraiser_message = models.CharField(max_length=5000)
 

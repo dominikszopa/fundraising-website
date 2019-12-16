@@ -1,5 +1,35 @@
+{% extends "base_nonav.html" %}
 {% load static %}
+{% load humanize %}
 
-{% for campaign in campaigns %}
-    <a href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a><br/>
+{% block body %}
+<br/>
+<h4>Active campaigns</h4>
+{% for campaign in active %}
+    <div class="card">
+        <div class="card-header">
+            <a href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a><br/>
+        </div>
+        <div class="card-body">
+            Raised ${{ campaign.get_total_raised|floatformat:"0"|intcomma }} of
+            ${{ campaign.goal|floatformat:"0"|intcomma }}
+        </div>
+    </div>
 {% endfor %}
+
+<br/><br/>
+
+<h4>Previously finished campaigns</h4>
+{% for campaign in inactive %}
+    <div class="card">
+        <div class="card-header">
+            <a href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a><br/>
+        </div>
+        <div class="card-body">
+            Raised ${{ campaign.get_total_raised|floatformat:"0"|intcomma }} of
+            ${{ campaign.goal|floatformat:"0"|intcomma }}
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock body %}

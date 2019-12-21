@@ -117,8 +117,9 @@
     [x] Fix thank you message showing up on wrong screen
     [x] Functionality to disable campaign - link to new one?
     [x] Make join page sign up for the right campaign
-    [ ] Add ability to add campaign fundraiser to existing username
+    [x] Add ability to add campaign fundraiser to existing username
     [ ] Make "Edit Profile" default to latest campaign
+    [ ] Prevent person from signing up to the same campaign more then once
     [ ] Add ability to switch campaigns in "Edit profile"
     [ ] Add filters for campaign to admin page
     [ ] Update tests

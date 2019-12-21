@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -195,54 +196,65 @@ def signup(request, campaign_id):
 
     if request.method == "POST":
 
-        user_form = SignUpForm(request.POST)
         fundraiser_form = FundraiserForm(request.POST, request.FILES)
+        user_form = SignUpForm(request.POST)
 
-        if user_form.is_valid() and fundraiser_form.is_valid():
+        # if you are adding a fundraiser to an existing user
+        if User.objects.filter(username=request.POST['username']).exists():
 
-            user = user_form.save()
-            fundraiser = fundraiser_form.save()
+            if fundraiser_form.is_valid():
 
-            # tie this user to the fundraiser and save the model again
-            fundraiser.user = user
-            fundraiser.save()
+                user = User.objects.filter(
+                    username=request.POST['username'])[0]
 
-            # send them an email that they have successfully signed up
-            send_mail(
-                Fundraiser_text.signup_email_subject,
-                Fundraiser_text.signup_email_opening
-                + request.build_absolute_uri(
-                    reverse(
-                        'team_fundraising:fundraiser', args=[fundraiser.id]
-                    )
+        else:
+
+            if user_form.is_valid() and fundraiser_form.is_valid():
+
+                user = user_form.save()
+
+        fundraiser = fundraiser_form.save()
+
+        # tie this user to the fundraiser and save the model again
+        fundraiser.user = user
+        fundraiser.save()
+
+        # send them an email that they have successfully signed up
+        send_mail(
+            Fundraiser_text.signup_email_subject,
+            Fundraiser_text.signup_email_opening
+            + request.build_absolute_uri(
+                reverse(
+                    'team_fundraising:fundraiser', args=[fundraiser.id]
                 )
-                + "\n\nYour username is: " + user.username
-                + Fundraiser_text.signup_email_closing,
-                'fundraising@triplecrownforheart.ca',
-                [user.email, ],
-                auth_user=settings.EMAIL_HOST_USER,
-                auth_password=settings.EMAIL_HOST_PASSWORD
             )
+            + "\n\nYour username is: " + user.username
+            + Fundraiser_text.signup_email_closing,
+            'fundraising@triplecrownforheart.ca',
+            [user.email, ],
+            auth_user=settings.EMAIL_HOST_USER,
+            auth_password=settings.EMAIL_HOST_PASSWORD
+        )
 
-            # log in the user so they don't have to do it now
-            login_user = authenticate(
-                request,
-                username=request.POST['username'],
-                password=request.POST['password1']
-            )
+        # log in the user so they don't have to do it now
+        login_user = authenticate(
+            request,
+            username=request.POST['username'],
+            password=request.POST['password1']
+        )
 
-            if login_user is not None:
-                login(request, user)
+        if login_user is not None:
+            login(request, user)
 
-            messages.info(
-                request,
-                Fundraiser_text.signup_return_message
-            )
+        messages.info(
+            request,
+            Fundraiser_text.signup_return_message
+        )
 
-            return redirect(
-                'team_fundraising:fundraiser',
-                fundraiser_id=fundraiser.id,
-            )
+        return redirect(
+            'team_fundraising:fundraiser',
+            fundraiser_id=fundraiser.id,
+        )
 
     else:
 

@@ -73,7 +73,7 @@ class Fundraiser(models.Model):
     """
 
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, blank=True, null=True,
         on_delete=models.CASCADE
     )

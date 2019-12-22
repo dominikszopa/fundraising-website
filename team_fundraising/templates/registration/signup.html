@@ -52,6 +52,13 @@ BC Children's Hospital Foundation and the Children's Heart Network.
     {% endfor %}
 {% endif %}
 
+{% for message in messages %}
+
+  <div class="alert alert-primary" role="alert">
+      {{ message }}
+  </div>
+
+  {% endfor %}
 
 <form method="POST"  enctype="multipart/form-data">
     {% csrf_token %}

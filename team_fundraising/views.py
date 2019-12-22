@@ -204,8 +204,42 @@ def signup(request, campaign_id):
 
             if fundraiser_form.is_valid():
 
-                user = User.objects.filter(
-                    username=request.POST['username'])[0]
+                # check if the password is correct
+                user = authenticate(
+                    request,
+                    username=request.POST['username'],
+                    password=request.POST['password1']
+                )
+
+                if user is not None:
+
+                    # check to see if there is already a fundraiser
+                    # in this campaign
+                    if Fundraiser.objects.filter(
+                        user=user.id,
+                        campaign=campaign_id,
+                    ).exists():
+
+                        login(request, user)
+
+                        # send them to the update fundraiser page
+                        return redirect('team_fundraising:update_fundraiser')
+
+                else:
+
+                    print('Bad login')
+                    messages.error(
+                        request,
+                        'The password is incorrect'
+                        )
+
+                    campaign = get_object_or_404(Campaign, pk=campaign_id)
+
+                    return render(request, 'registration/signup.html', {
+                        'campaign': campaign,
+                        'user_form': user_form,
+                        'fundraiser_form': fundraiser_form,
+                    })
 
         else:
 
@@ -261,7 +295,6 @@ def signup(request, campaign_id):
         user_form = SignUpForm()
         fundraiser_form = FundraiserForm(initial={'goal': 200})
 
-    # Currently, this works with only the first campaign
     campaign = get_object_or_404(Campaign, pk=campaign_id)
 
     return render(request, 'registration/signup.html', {
@@ -306,12 +339,19 @@ def update_fundraiser(request):
 
     else:
         user_form = UserForm(instance=request.user)
-        fundraiser_form = FundraiserForm(instance=request.user.fundraiser)
+
+        fundraiser = Fundraiser.objects.filter(
+            user=request.user.id
+        )[0]
+
+        fundraiser_form = FundraiserForm(
+            instance=fundraiser
+            )
 
     return render(
         request, 'team_fundraising/update_fundraiser.html',
         {
-            'campaign': request.user.fundraiser.campaign,
+            'campaign': fundraiser.campaign,
             'user_form': user_form,
             'fundraiser_form': fundraiser_form,
         }

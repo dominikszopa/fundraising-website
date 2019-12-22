@@ -119,7 +119,8 @@
     [x] Make join page sign up for the right campaign
     [x] Add ability to add campaign fundraiser to existing username
     [ ] Make "Edit Profile" default to latest campaign
-    [ ] Prevent person from signing up to the same campaign more then once
+    [x] Prevent person from signing up to the same campaign more then once
+    [ ] Add better message when wrong password
     [ ] Add ability to switch campaigns in "Edit profile"
     [ ] Add filters for campaign to admin page
     [ ] Update tests

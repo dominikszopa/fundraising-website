@@ -230,7 +230,8 @@ def signup(request, campaign_id):
                     print('Bad login')
                     messages.error(
                         request,
-                        'The password is incorrect'
+                        Fundraiser_text.signup_wrong_password_existing_user,
+                        extra_tags='safe',
                         )
 
                     campaign = get_object_or_404(Campaign, pk=campaign_id)

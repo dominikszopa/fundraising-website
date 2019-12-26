@@ -55,7 +55,7 @@ BC Children's Hospital Foundation and the Children's Heart Network.
 {% for message in messages %}
 
   <div class="alert alert-primary" role="alert">
-      {{ message }}
+      {{ message|safe }}
   </div>
 
   {% endfor %}
@@ -130,6 +130,9 @@ BC Children's Hospital Foundation and the Children's Heart Network.
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
             {{ user_form.username }}
+            <small>
+                If you have already participated in a previous campaign, enter your existing username and passowrd.
+            </small>
             {% for error in user_form.username.errors %}
             <div class="alert alert-danger">
                 {{ error|escape }}

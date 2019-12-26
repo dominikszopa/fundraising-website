@@ -72,3 +72,13 @@ class Fundraiser_text:
         "Thank you for signing up. Sharing your fundraiser page on social "
         "media or over email is the best way to get donations."
     )
+
+    signup_wrong_password_existing_user = (
+        "The username already exists, but the password entered is incorrect. "
+        "If you were already a fundraiser for a previous campaign and are "
+        "trying to sign up for this campaign, please enter your "
+        "previous password or use "
+        "<a href='/team_fundraising/accounts/password_reset/'>"
+        "Forgot your password</a>. If this is your first campaign, "
+        "please choose a different username."
+    )

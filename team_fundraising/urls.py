@@ -19,6 +19,11 @@ urlpatterns = [
         views.update_fundraiser,
         name="update_fundraiser",
     ),
+    path(
+        'accounts/update_fundraiser/<int:campaign_id>/',
+        views.update_fundraiser,
+        name="update_fundraiser",
+    ),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/<int:campaign_id>/', views.signup, name="signup"),
     path(

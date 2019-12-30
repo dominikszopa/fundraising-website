@@ -307,7 +307,7 @@ def signup(request, campaign_id):
 
 @login_required
 # @transaction_atomic
-def update_fundraiser(request):
+def update_fundraiser(request, campaign_id=None):
     """
     Update the fundraiser's information, along with the user values
     """
@@ -341,9 +341,15 @@ def update_fundraiser(request):
     else:
         user_form = UserForm(instance=request.user)
 
-        fundraiser = Fundraiser.objects.filter(
-            user=request.user.id
-        )[0]
+        if(campaign_id is None):
+
+            fundraiser = Fundraiser.get_latest_campaign(request.user.id)
+
+        else:
+            fundraiser = Fundraiser.objects.filter(
+                user=request.user.id,
+                campaign_id=campaign_id
+            )[0]
 
         fundraiser_form = FundraiserForm(
             instance=fundraiser

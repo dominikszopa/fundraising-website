@@ -122,6 +122,19 @@ class Fundraiser(models.Model):
 
         return total_donations['total']
 
+    @staticmethod
+    def get_latest_campaign(user_id):
+        """
+        Given a user id, find the most recent active fundraiser
+        """
+
+        # pick an active campaign with the highest number
+        fundraiser = Fundraiser.objects.filter(
+            user=user_id,
+        ).order_by('-campaign__active', '-campaign__id')[0]
+
+        return fundraiser
+
 
 class Donation(models.Model):
     """

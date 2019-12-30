@@ -118,12 +118,12 @@
     [x] Functionality to disable campaign - link to new one?
     [x] Make join page sign up for the right campaign
     [x] Add ability to add campaign fundraiser to existing username
-    [ ] Make "Edit Profile" default to latest campaign
+    [x] Make "Edit Profile" default to latest campaign
     [x] Prevent person from signing up to the same campaign more then once
     [x] Add better message when wrong password
     [ ] Add ability to switch campaigns in "Edit profile"
     [ ] Add filters for campaign to admin page
-    [ ] If you are logged in, don't have the singup page ask you for username and password
+    [ ] If you are logged in, don't have the signup page ask you for username and password
     [ ] Update tests
 [ ] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add Javascript warning about low security password [UT1 2.3]

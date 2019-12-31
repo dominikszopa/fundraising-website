@@ -312,44 +312,43 @@ def update_fundraiser(request, campaign_id=None):
     Update the fundraiser's information, along with the user values
     """
 
+    # if no campaign id is included, get the latest one by default
+    if(campaign_id is None):
+
+        fundraiser = Fundraiser.get_latest_campaign(request.user.id)
+
+    else:
+
+        fundraiser = get_object_or_404(
+            Fundraiser,
+            user=request.user.id,
+            campaign_id=campaign_id
+        )
+
     if request.method == 'POST':
 
         user_form = UserForm(request.POST, instance=request.user)
         fundraiser_form = FundraiserForm(
             request.POST,
             request.FILES,
-            instance=request.user.fundraiser
+            instance=fundraiser
         )
 
         if user_form.is_valid() and fundraiser_form.is_valid():
 
             user_form.save()
             fundraiser_form.save()
-            # TODO: implement some type of success messaging and redirect
-            # somewhere logical
-            # messages.success(request, _("Your information was successfully
-            # updated!"))
+
+            messages.success(request, 'Your information was updated')
+
             return redirect(
                 'team_fundraising:fundraiser',
-                fundraiser_id=request.user.fundraiser.id
+                fundraiser_id=fundraiser_form.instance.pk,
             )
 
-        # TODO: implement messages when something is wrong
-        # else:
-        # messages.error(request, _("Please correct the information below"))
-
     else:
+
         user_form = UserForm(instance=request.user)
-
-        if(campaign_id is None):
-
-            fundraiser = Fundraiser.get_latest_campaign(request.user.id)
-
-        else:
-            fundraiser = Fundraiser.objects.filter(
-                user=request.user.id,
-                campaign_id=campaign_id
-            )[0]
 
         fundraiser_form = FundraiserForm(
             instance=fundraiser

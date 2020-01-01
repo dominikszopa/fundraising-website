@@ -52,8 +52,11 @@
     </div>
     <div class="col-lg-6">
       <br/>
-      <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' campaign.id %}">Create a fundraiser page</a>
-      <br/>
+      {% if user.is_authenticated %}
+        <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit my profile</a>
+      {% else %}
+        <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' campaign.id %}">Create a fundraiser page</a>
+      {% endif %}      <br/>
       <div>
       <!-- Search form --></form>
       <form class="form-inline">

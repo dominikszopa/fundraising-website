@@ -65,9 +65,9 @@
             <div class="col-lg-6">
                 <br/>
                 {{ fundraiser.message|safe }}
-                {% if user.is_authenticated and user.fundraiser.id == fundraiser.id  %}
+                {% if user.is_authenticated and user.id == fundraiser.user.id  %}
                     <br/>
-                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' %}" role="button">Edit</a>  
+                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' fundraiser.campaign.id %}" role="button">Edit</a>  
                 {% endif %}
             </div>
             <div class="col-lg-6">

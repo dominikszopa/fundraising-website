@@ -11,6 +11,8 @@
     }
 </style>
 <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{% static "validation.js" %}"></script>
 {% endblock head %}
     
 
@@ -182,6 +184,20 @@ BC Children's Hospital Foundation and the Children's Heart Network.
         '{% static "ck_editor_override.css  " %}'
       ]
     } );
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $("#id_password2").keyup(function (e) { 
+
+                checkPasswordsMatch(
+                    $("#id_password1"), 
+                    $("#id_password2")
+                );
+
+            });
+        
+        });
     </script>
 </form>
 

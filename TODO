@@ -121,9 +121,10 @@
     [x] Make "Edit Profile" default to latest campaign
     [x] Prevent person from signing up to the same campaign more then once
     [x] Add better message when wrong password
-    [ ] Add ability to switch campaigns in "Edit profile"
-    [ ] Add filters for campaign to admin page
+    [x] Add ability to switch campaigns in "Edit profile"
     [ ] If you are logged in, don't have the signup page ask you for username and password
+    [ ] Disable fields on fundraiser update page when campaign is inactive
+    [ ] Add filters for campaign to admin page
     [ ] Update tests
 [x] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add Javascript warning about low security password [UT1 2.3]

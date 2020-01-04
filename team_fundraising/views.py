@@ -227,7 +227,6 @@ def signup(request, campaign_id):
 
                 else:
 
-                    print('Bad login')
                     messages.error(
                         request,
                         Fundraiser_text.signup_wrong_password_existing_user,
@@ -312,10 +311,15 @@ def update_fundraiser(request, campaign_id=None):
     Update the fundraiser's information, along with the user values
     """
 
+    # get the current active campaign, and the fundraiser entry for this user
+    # if it exists
+    active_campaign = Campaign.get_latest_active_campaign
+    latest_fundraiser = Fundraiser.get_latest_active_campaign(request.user.id)
+
     # if no campaign id is included, get the latest one by default
     if(campaign_id is None):
 
-        fundraiser = Fundraiser.get_latest_campaign(request.user.id)
+        fundraiser = latest_fundraiser
 
     else:
 
@@ -360,6 +364,8 @@ def update_fundraiser(request, campaign_id=None):
             'campaign': fundraiser.campaign,
             'user_form': user_form,
             'fundraiser_form': fundraiser_form,
+            'active_campaign': active_campaign,
+            'latest_fundraiser': latest_fundraiser,
         }
     )
 

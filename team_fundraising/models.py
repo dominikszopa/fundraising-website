@@ -65,6 +65,15 @@ class Campaign(models.Model):
 
         return recent_donations
 
+    @staticmethod
+    def get_latest_active_campaign():
+
+        campaign = Campaign.objects.filter(
+            active=True
+        )[0]
+
+        return campaign
+
 
 class Fundraiser(models.Model):
     """
@@ -123,7 +132,7 @@ class Fundraiser(models.Model):
         return total_donations['total']
 
     @staticmethod
-    def get_latest_campaign(user_id):
+    def get_latest_active_campaign(user_id):
         """
         Given a user id, find the most recent active fundraiser
         """

@@ -15,6 +15,31 @@
     </div>
 
 {% endfor %}
+<br/>
+<h3>{{ campaign.name }}</h3>
+{%  if not campaign.active %}
+
+    <div class="alert alert-primary" role="alert">
+      This campaign is no longer active. 
+
+      {% if active_campaign.id == latest_fundraiser.campaign.id %}
+
+        You probably want to edit the new campaign: 
+          <a href="{% url 'team_fundraising:update_fundraiser' latest_fundraiser.campaign.id %}">
+            {{ latest_fundraiser.campaign.name }}</a>
+
+      {% else %}
+
+          Join the new campaign:
+          <a href="{% url 'team_fundraising:signup' active_campaign.id %}">
+            {{ active_campaign.name }}
+          </a>
+
+      {% endif %}
+      
+    </div>
+{%  endif %}
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 

@@ -204,12 +204,17 @@ def signup(request, campaign_id):
 
             if fundraiser_form.is_valid():
 
-                # check if the password is correct
-                user = authenticate(
-                    request,
-                    username=request.POST['username'],
-                    password=request.POST['password1']
-                )
+                if request.user.is_authenticated:
+
+                    user = request.user
+
+                else:
+                    # check if the password is correct
+                    user = authenticate(
+                        request,
+                        username=request.POST['username'],
+                        password=request.POST['password1']
+                    )
 
                 if user is not None:
 
@@ -270,15 +275,16 @@ def signup(request, campaign_id):
             auth_password=settings.EMAIL_HOST_PASSWORD
         )
 
-        # log in the user so they don't have to do it now
-        login_user = authenticate(
-            request,
-            username=request.POST['username'],
-            password=request.POST['password1']
-        )
+        if not request.user.is_authenticated:
+            # log in the user so they don't have to do it now
+            login_user = authenticate(
+                request,
+                username=request.POST['username'],
+                password=request.POST['password1']
+            )
 
-        if login_user is not None:
-            login(request, user)
+            if login_user is not None:
+                login(request, user)
 
         messages.info(
             request,
@@ -292,7 +298,16 @@ def signup(request, campaign_id):
 
     else:
 
-        user_form = SignUpForm()
+        if(request.user.is_authenticated):
+
+            # pre-populate some values if signing up for another campaign
+            user_form = SignUpForm(initial={
+                'username': request.user.username,
+                'email': request.user.email,
+                })
+        else:
+            user_form = SignUpForm()
+
         fundraiser_form = FundraiserForm(initial={'goal': 200})
 
     campaign = get_object_or_404(Campaign, pk=campaign_id)

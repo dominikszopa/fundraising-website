@@ -131,10 +131,15 @@ BC Children's Hospital Foundation and the Children's Heart Network.
 
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
-            {{ user_form.username }}
+            <input type="text" name="username" value="dominik" maxlength="150" class="form-control" required="" id="id_username"
+                {% if user.is_authenticated %} readonly {% endif %}
+            >
+            {% if not user.is_authenticated %}
             <small>
                 If you have already participated in a previous campaign, enter your existing username and password.
             </small>
+            {% endif %}
+            
             {% for error in user_form.username.errors %}
             <div class="alert alert-danger">
                 {{ error|escape }}
@@ -142,7 +147,7 @@ BC Children's Hospital Foundation and the Children's Heart Network.
             {% endfor %}
     </div>
 </div>
-
+{% if not user.is_authenticated %}
     <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ user_form.password1.auto_id}}">{{ user_form.password1.label }}:</label>
         <div class="col-sm-8">
@@ -173,7 +178,8 @@ BC Children's Hospital Foundation and the Children's Heart Network.
             {% endfor %}
         </div>
     </div>
-    
+{% endif %}
+
     <button type="submit" class="btn btn-primary">Sign up</button>
     <script>
         CKEDITOR.replace( 'message', {

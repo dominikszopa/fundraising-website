@@ -122,7 +122,8 @@
     [x] Prevent person from signing up to the same campaign more then once
     [x] Add better message when wrong password
     [x] Add ability to switch campaigns in "Edit profile"
-    [ ] If you are logged in, don't have the signup page ask you for username and password
+    [x] If you are logged in, don't have the signup page ask you for username and password
+    [ ] Change "Join" to "Edit" when logged in
     [ ] Disable fields on fundraiser update page when campaign is inactive
     [ ] Add filters for campaign to admin page
     [ ] Update tests

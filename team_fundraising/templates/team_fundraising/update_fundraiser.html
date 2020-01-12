@@ -19,7 +19,7 @@
 <h3>{{ campaign.name }}</h3>
 {%  if not campaign.active %}
 
-    <div class="alert alert-primary" role="alert">
+    <div class="alert alert-warning" role="alert">
       This campaign is no longer active. 
 
       {% if active_campaign.id == latest_fundraiser.campaign.id %}
@@ -30,12 +30,14 @@
 
       {% else %}
 
-          Join the new campaign:
+          Please join the new campaign:
           <a href="{% url 'team_fundraising:signup' active_campaign.id %}">
             {{ active_campaign.name }}
           </a>
 
       {% endif %}
+      <br>
+      If you need to change something in this campaign, please contact the organization directly.
       
     </div>
 {%  endif %}
@@ -48,7 +50,10 @@
     <a class="float-right" href="{% url 'team_fundraising:change_password' %}">Change Password</a>
     <br/>
   
-    <button class="btn btn-primary" type="submit"> Save Changes</button>
+    {% if campaign.active %}  
+      <button class="btn btn-primary" type="submit"> Save Changes</button>
+    {% endif %}
+
     <script>
         CKEDITOR.replace( 'message', {
         height: 260,

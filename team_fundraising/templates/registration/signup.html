@@ -17,8 +17,24 @@
     
 
 {% block content %}
+
 <br/>
 <h3> Join {{ campaign.name }}</h3>
+
+{%  if not campaign.active %}
+
+    <div class="alert alert-warning" role="alert">
+      This campaign is no longer active. 
+
+        Please join the new campaign:
+        <a href="{% url 'team_fundraising:signup' campaign.get_latest_active_campaign.id %}">
+        {{ campaign.get_latest_active_campaign.name }}
+        </a>
+
+      
+    </div>
+{%  else %}
+
 Sign up to create your own fundraising page to raise money for the 
 BC Children's Hospital Foundation and the Children's Heart Network.
 <br/><br/>
@@ -206,5 +222,7 @@ BC Children's Hospital Foundation and the Children's Heart Network.
         });
     </script>
 </form>
+
+{% endif %}
 
 {% endblock content %}

@@ -7,7 +7,8 @@ by the Fundraisers, or applied to the general Campaign.
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count, Max
+from django.db.models import Sum, Count, Max, Q
+from django.db.models.functions import Coalesce
 
 
 class Campaign(models.Model):
@@ -54,6 +55,32 @@ class Campaign(models.Model):
             total_raised += donation.amount
 
         return total_raised
+
+    def get_fundraisers_with_totals(self):
+        """
+        Get all fundraisers in this campaign, with their raised totals
+        already included. This is designed to be more efficient (less queries)
+        then running a total_raised() call on each fundraiser.
+        """
+
+        # sum the amount of only "paid" donations
+        paid_donations = Coalesce(Sum(
+            'donation__amount',
+            filter=Q(donation__payment_status__exact='paid')
+            ), 0)
+
+        # filter only fundraisers in this campaign
+        fundraisers = Fundraiser.objects.filter(campaign_id=self.id)
+
+        # create the annotated query
+        fundraisers = fundraisers.annotate(
+            total_raised=paid_donations
+            )
+
+        # sort by total raised
+        fundraisers = fundraisers.order_by('-total_raised')
+
+        return fundraisers
 
     def get_recent_donations(self, num_donations):
 

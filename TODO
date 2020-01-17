@@ -124,12 +124,12 @@
     [x] Add ability to switch campaigns in "Edit profile"
     [x] If you are logged in, don't have the signup page ask you for username and password
     [x] Change "Join" to "Edit" when logged in
-    [ ] Disable fields on fundraiser update page when campaign is inactive
+    [x] Disable fields on fundraiser update page when campaign is inactive
     [ ] Add filters for campaign to admin page
     [ ] Update tests
 [x] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Add Javascript warning about low security password [UT1 2.3]
-[ ] Optimize home page queries
+[x] Optimize home page queries
 [ ] Add name to tax receipt information
 [ ] Change email links to HTTPS
 [ ] Refresh after "return" link from logout [UT1 3.1]

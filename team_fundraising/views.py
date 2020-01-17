@@ -22,12 +22,7 @@ def index_view(request, campaign_id):
 
     campaign = get_object_or_404(Campaign, pk=campaign_id)
 
-    # get all fundraisers, sorted by most money raised
-    fundraisers = sorted(
-        campaign.fundraiser_set.all(),
-        key=lambda x: x.total_raised(),
-        reverse=True
-    )
+    fundraisers = campaign.get_fundraisers_with_totals()
 
     # get 5 recent "paid" donations by newest date
     recent_donations = campaign.get_recent_donations(5)

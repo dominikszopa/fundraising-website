@@ -42,6 +42,11 @@
     </div>
 {%  endif %}
 
+{% if active_campaign.id != latest_fundraiser.campaign.id %}
+  <a class="btn btn-primary primary-button" href="{% url 'team_fundraising:signup_logged_in' active_campaign.id %}">Join the new campaign</a>
+  <br/><br/>
+{% endif %}
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 

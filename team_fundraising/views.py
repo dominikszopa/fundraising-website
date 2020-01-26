@@ -10,7 +10,7 @@ from django.conf import settings
 from django.views import View
 from paypal.standard.forms import PayPalPaymentsForm
 
-from .models import Campaign, Fundraiser, Donation
+from .models import Campaign, Fundraiser, Donation, ProxyUser
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from .text import Donation_text, Fundraiser_text
 
@@ -312,6 +312,36 @@ def signup(request, campaign_id):
         'user_form': user_form,
         'fundraiser_form': fundraiser_form,
     })
+
+
+class OneClickSignUp(View):
+    """
+    Create a new fundraiser in a new campaign for an existing user.
+    Copies over information from the previous user.
+    """
+
+    def get(self, request, campaign_id):
+
+        user = get_object_or_404(ProxyUser, pk=request.user.id)
+        campaign = get_object_or_404(Campaign, pk=campaign_id)
+
+        previous_fundraiser = user.get_latest_fundraiser()
+
+        # Create a new fundraiser using previous information and
+        # defaults for the campaign
+        new_fundraiser = Fundraiser(
+            campaign=campaign,
+            user=user,
+            name=previous_fundraiser.name,
+            goal=200,
+            photo=previous_fundraiser.photo,
+            message=campaign.default_fundraiser_message,
+        )
+
+        new_fundraiser.save()
+
+        # send them to the update fundraiser page
+        return redirect('team_fundraising:update_fundraiser', campaign_id)
 
 
 @login_required

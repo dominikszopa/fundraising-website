@@ -1,6 +1,7 @@
 from django.urls import path, include
+from django.contrib.auth.decorators import login_required
 from . import views
-from .views import Paypal_donation, About
+from .views import Paypal_donation, About, OneClickSignUp
 
 app_name = 'team_fundraising'
 
@@ -26,6 +27,11 @@ urlpatterns = [
     ),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/<int:campaign_id>/', views.signup, name="signup"),
+    path(
+        'accounts/signup_logged_in/<int:campaign_id>/',
+        login_required(OneClickSignUp.as_view()),
+        name="signup_logged_in"
+    ),
     path(
         'accounts/change_password/',
         views.change_password,

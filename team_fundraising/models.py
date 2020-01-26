@@ -248,3 +248,26 @@ class Donor(Donation):
     class Meta:
         proxy = True
         verbose_name = 'Donor'
+
+
+class ProxyUser(User):
+    """
+    A proxy mode of the User model, to provide additional functions
+    for the User
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = 'UserProxy'
+
+    def get_latest_fundraiser(self):
+        """
+        Get a single, latest fundraiser for the user.
+        For now, uses id order to identify the latest one.
+        """
+
+        fundraiser = Fundraiser.objects.filter(
+            user_id=self.id
+        ).order_by('id')[0]
+
+        return fundraiser

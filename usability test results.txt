@@ -1,6 +1,6 @@
-Usability test 1 - March 17, Iphone SE
+Usability test 1 - March 17 2019, iPhone SE
 
-Tasks 1: Donate to Peter Sagan
+Task 1: Donate to Peter Sagan
 1.1 - Scrolled instead of searching
 1.2 - Didn't put in name when trying to be anonymous - just skipped it
 1.3 - didn't return to merchant, assumed it was fine
@@ -22,3 +22,11 @@ Task 4: Recover password
 Thoughts:
 5.1 - "provide feedback that your password isn't the same"
 5.2 - "provide feedback that your password is not good enough"
+
+
+Usability Test 2 - January 27 2020, iPhone 11
+
+Task 1: Sign up for new campaign
+- used login and "recover password" functionality
+- prefers to have last year's message
+- didn't try sign up with existing username

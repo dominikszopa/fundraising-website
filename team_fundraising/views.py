@@ -335,11 +335,11 @@ class OneClickSignUp(View):
             name=previous_fundraiser.name,
             goal=200,
             photo=previous_fundraiser.photo,
-            message=campaign.default_fundraiser_message,
+            message=previous_fundraiser.message,
         )
 
         new_fundraiser.save()
-        
+
         messages.info(
             request,
             'You have signed up for ' + campaign.name

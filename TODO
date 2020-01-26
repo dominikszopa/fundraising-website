@@ -130,6 +130,7 @@
     [ ] Add filters for campaign to admin page
     [ ] Update tests
 [x] Add Javascript when passwords match / don't match [UT1 2.5]
+[ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [x] Optimize home page queries
 [ ] Make default fundraiser amount configurable

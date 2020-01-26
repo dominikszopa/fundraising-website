@@ -75,9 +75,8 @@ class Fundraiser_text:
 
     signup_wrong_password_existing_user = (
         "The username already exists, but the password entered is incorrect. "
-        "If you were already a fundraiser for a previous campaign and are "
-        "trying to sign up for this campaign, please enter your "
-        "previous password or use "
+        "If you were already a fundraiser for a previous campaign, please "
+        "enter your previous password or use "
         "<a href='/team_fundraising/accounts/password_reset/'>"
         "Forgot your password</a>. If this is your first campaign, "
         "please choose a different username."

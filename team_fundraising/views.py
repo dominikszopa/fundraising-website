@@ -339,6 +339,11 @@ class OneClickSignUp(View):
         )
 
         new_fundraiser.save()
+        
+        messages.info(
+            request,
+            'You have signed up for ' + campaign.name
+        )
 
         # send them to the update fundraiser page
         return redirect('team_fundraising:update_fundraiser', campaign_id)

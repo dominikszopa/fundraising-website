@@ -127,8 +127,9 @@
     [x] Disable fields on fundraiser update page when campaign is inactive
     [x] Create one-click signup for logged-in users
     [ ] Fix bug when clicking 'Edit' in campaign you are not part of yet
+    [ ] Create email signup invite, including to add to campaign
     [ ] Add filters for campaign to admin page
-    [ ] Update tests
+    [ ] Update and add tests
 [x] Add Javascript when passwords match / don't match [UT1 2.5]
 [ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]

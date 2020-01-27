@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
@@ -370,11 +371,19 @@ def update_fundraiser(request, campaign_id=None):
 
     else:
 
-        fundraiser = get_object_or_404(
-            Fundraiser,
-            user=request.user.id,
-            campaign_id=campaign_id
-        )
+        try:
+            # try to get the fundraiser for this campaign
+            fundraiser = Fundraiser.objects.get(
+                user=request.user.id,
+                campaign_id=campaign_id,
+            )
+
+        except ObjectDoesNotExist:
+
+            # if not, get a fundraiser for any campaign
+            fundraiser = Fundraiser.objects.filter(
+                user=request.user.id,
+            )[0]
 
     if request.method == 'POST':
 

@@ -7,7 +7,7 @@ by the Fundraisers, or applied to the general Campaign.
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count, Max, Q
+from django.db.models import Sum, Count, Max, Q, F
 from django.db.models.functions import Coalesce
 
 
@@ -203,18 +203,16 @@ class Donation(models.Model):
 class DonorManager(models.Manager):
     """
     A model query manager that combines all donation by the donor
-    based on email and name
+    based on email, name and campaign
     """
 
     def get_queryset(self):
 
         donations = super(DonorManager, self).get_queryset()
 
-        # get all donations that are part of this campaign
+        # get all donations by campaign
         # and have been fully paid through paypal
-        # TODO: limit to one campaign
         donations = donations.filter(
-            # fundraiser__campaign__pk=campaign_id,
             payment_status='paid'
             )
 
@@ -222,6 +220,7 @@ class DonorManager(models.Manager):
         donations = donations.values(
                     'email',
                     'name',
+                    campaign_id=F('fundraiser__campaign_id'),
                     # sum some fields
                     ).annotate(
                         amount=Sum('amount'),

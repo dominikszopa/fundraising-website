@@ -34,6 +34,7 @@ class DonorAdmin(admin.ModelAdmin):
     """
 
     change_list_template = 'admin/donation_report.html'
+    list_filter = ('fundraiser__campaign_id',)
 
     def changelist_view(self, request, extra_content=None):
 

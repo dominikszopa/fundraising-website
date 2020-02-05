@@ -43,6 +43,10 @@ class DonorAdmin(admin.ModelAdmin):
             request,
         )
 
+        # if the user has chosen a campaign using the filter, pass it
+        campaign_id = request.GET.get('fundraiser__campaign_id__id__exact', '')
+        response.context_data['campaign_id'] = campaign_id
+
         # get the query string for the Donor proxy model
         try:
             donations = response.context_data['cl'].queryset
@@ -68,14 +72,13 @@ class DonorCsv(View):
 
     csv_template_name = 'admin/donation_report.csv'
 
-    def get(self, request):
+    def get(self, request, campaign_id):
 
-        donations = Donor.objects.all()
+        # get donations for a single campaign
+        donations = Donor.objects.filter(fundraiser__campaign_id=campaign_id)
 
         context = {
             'donations': donations,
-            # TODO: add filter for campaign_id
-            # 'campaign_id': campaign_id
             }
 
         # set up the csv content type

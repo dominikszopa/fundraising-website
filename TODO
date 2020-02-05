@@ -128,9 +128,9 @@
     [x] Create one-click signup for logged-in users
     [x] Fix bug when clicking 'Edit' in campaign you are not part of yet
     [ ] Create email signup invite, including to add to campaign
-    [-] Add filters for campaign to admin page
+    [x] Add filters for campaign to admin page
     [ ] Update and add tests
-[ ] Remove special characters from spreadsheet export
+[x] Remove special characters from spreadsheet export
 [ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [x] Optimize home page queries

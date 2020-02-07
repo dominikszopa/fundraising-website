@@ -127,6 +127,7 @@
     [x] Disable fields on fundraiser update page when campaign is inactive
     [x] Create one-click signup for logged-in users
     [x] Fix bug when clicking 'Edit' in campaign you are not part of yet
+    [-] Create better homepage
     [ ] Create email signup invite, including to add to campaign
     [x] Add filters for campaign to admin page
     [ ] Update and add tests

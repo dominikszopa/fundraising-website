@@ -128,6 +128,8 @@
     [x] Create one-click signup for logged-in users
     [x] Fix bug when clicking 'Edit' in campaign you are not part of yet
     [x] Create better homepage
+    [x] Make non-specific campaign go to latest
+    [ ] Test with one campaign
     [ ] Create email signup invite, including to add to campaign
     [x] Add filters for campaign to admin page
     [ ] Update and add tests

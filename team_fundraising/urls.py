@@ -6,6 +6,7 @@ from .views import Paypal_donation, About, OneClickSignUp
 app_name = 'team_fundraising'
 
 urlpatterns = [
+    path('', views.index_view_default, name='index_default'),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('<campaign_id>/', views.index_view, name='index'),
     path(

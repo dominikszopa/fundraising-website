@@ -41,6 +41,13 @@ def index_view(request, campaign_id):
     return render(request, template, context)
 
 
+def index_view_default(request):
+
+    campaign = Campaign.get_latest_active_campaign()
+
+    return index_view(request, campaign.id)
+
+
 def fundraiser_view(request, fundraiser_id):
     # An individual's fundraising page, including total and donations
 

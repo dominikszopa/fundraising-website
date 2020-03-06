@@ -7,7 +7,14 @@
 {% endblock content_title %}
 
 {% block result_list %}
-<a href="{% url 'donation_report_csv' %}">Download as csv</a>
+
+{% if campaign_id %}
+  <a href="{% url 'donation_report_csv' campaign_id %}">Download as csv</a>
+{% else %}
+  Select a campaign to download a list of donors file
+{% endif %}
+<br/><br/>
+
 
 <div class="results">
     <table>

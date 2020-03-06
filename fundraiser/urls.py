@@ -28,7 +28,7 @@ urlpatterns = [
 
     # Donation reports in the admin section
     path(
-        'admin/donation_report_csv/',
+        'admin/donation_report_csv/<int:campaign_id>/',
         staff_member_required(DonorCsv.as_view()),
         name="donation_report_csv"
     ),

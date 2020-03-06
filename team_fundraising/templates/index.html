@@ -1,0 +1,53 @@
+{% extends "base_nonav.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+<br/>
+<div class="container">
+    <h4>Click on a campaign to get started:</h4>
+    <br/>
+    {% for campaign in active %}
+    <div class="col-lg-8  mx-auto">
+        <div class="card mb-3 text-center">
+            <img class="card-img-top" src="{% static "homepage.jpg" %}" alt="Card image cap">
+            <div class="card-body">
+                <h2 class="card-title"><a class="stretched-link" href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a></h2>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio campaign.get_total_raised campaign.goal 100 %}%" aria-valuenow="{% widthratio campaign.get_total_raised campaign.goal 100 %}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div>
+                    Raised ${{ campaign.get_total_raised|floatformat:"0"|intcomma }} of
+                    ${{ campaign.goal|floatformat:"0"|intcomma }}
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+<br/><br/>
+
+<div class="container">
+<center><h4>Previously finished campaigns</h4></center>
+<br/>
+{% for campaign in inactive %}
+    <div class="col-lg-6  mx-auto">
+        <div class="card mb-3 text-center">
+            <img class="card-img-top" src="{% static "homepage.jpg" %}" alt="Card image cap">
+            <div class="card-body">
+                <h2 class="card-title"><a class="stretched-link" href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a></h2>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio campaign.get_total_raised campaign.goal 100 %}%" aria-valuenow="{% widthratio campaign.get_total_raised campaign.goal 100 %}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div>
+                Raised ${{ campaign.get_total_raised|floatformat:"0"|intcomma }} of
+                ${{ campaign.goal|floatformat:"0"|intcomma }}
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock body %}

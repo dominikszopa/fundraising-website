@@ -95,7 +95,7 @@ class TestCampaignModel(TestModels):
     def test_donation_total(self):
         """ Verify total donations sum is correct """
         campaign = Campaign.objects.get(id=1)
-        total = campaign.total_raised()
+        total = campaign.get_total_raised()
         self.assertEquals(total, 83.00)
 
 

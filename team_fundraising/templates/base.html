@@ -1,46 +1,38 @@
+{% extends "base_nonav.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-    <head profile="http://www.w3.org/2005/10/profile">
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <link rel="icon" type="image/png" href="{% static "favicon.png" %}">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">        
-        <link rel="stylesheet" href="{% static "fundraising.css" %}">
-        <link rel="stylesheet" href="{% static "thermometer.css" %}">
-        {% block head %}
-        {% endblock head %}
-    </head>
-    <body>
+    {% block navbar %}
         <!-- Image and text -->
         <nav class="navbar navbar-expand navbar-light bg-light">
-          <a class="navbar-brand" href="#">
-            <img src="{% static "tc4h_logo.png" %}" width="40" height="40" class="d-inline-block align-top" alt="">
-        </a>
+            <a class="navbar-brand" href="#">
+                <img src="{% static "tc4h_logo.png" %}" width="40" height="40" class="d-inline-block align-top" alt="">
+            </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:index' %}">Home</a>
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:about' %}">About</a>
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' %}">Join</a>
+                <a class="nav-item nav-link" href="{% url 'team_fundraising:index' campaign.id %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'team_fundraising:about' campaign.id %}">About</a>
+
                 {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{% url 'team_fundraising:logout' %}">Logout</a>
+                    <a class="nav-item nav-link" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit</a>
+                    <a class="nav-item nav-link" href="{% url 'team_fundraising:logout' %}?next={% url 'team_fundraising:index' campaign.id %}">Logout</a>
                 {% else %}
+                    <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' campaign.id %}">Join</a>
                     <a class="nav-item nav-link" href="{% url 'team_fundraising:login' %}">Login</a>
                 {% endif %}
             </div>
             </div>
         </nav>
+    {% endblock navbar %}
+    {% block body %}
         <div class="container">
+
             {% block content %}
             {% endblock content %}
+
         </div>
         <br/>
         <br/>
-    </body>
-</html>
+
+    {% endblock body %}

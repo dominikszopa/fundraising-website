@@ -7,7 +7,8 @@ by the Fundraisers, or applied to the general Campaign.
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count, Max
+from django.db.models import Sum, Count, Max, Q, F
+from django.db.models.functions import Coalesce
 
 
 class Campaign(models.Model):
@@ -18,18 +19,19 @@ class Campaign(models.Model):
 
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
     campaign_message = models.CharField(max_length=5000)
     default_fundraiser_message = models.CharField(max_length=5000)
 
     def __str__(self):
         return self.name
 
-    def total_raised(self):
+    def get_total_raised(self):
         """
         Get the total raised from all Fundraisers
         """
 
-        # get all paid donations in this campaign
+        # get all paid donations in this campaign for all fundraisers
         donations = Donation.objects.filter(
             fundraiser__campaign__pk=self.id,
             payment_status='paid'
@@ -37,12 +39,67 @@ class Campaign(models.Model):
 
         # sum the amounts
         donations = donations.aggregate(total=Sum('amount'))
+        total_raised = donations['total']
 
         # replace with zero if there are none
-        if donations["total"] is None:
-            donations["total"] = 0
+        if total_raised is None:
+            total_raised = 0
 
-        return donations["total"]
+        # get the "general" donations, ones not to a fundraiser
+        general_donations = Donation.objects.filter(
+            pk=self.id, fundraiser__isnull=True
+        )
+
+        # add general donations to total
+        for donation in general_donations:
+            total_raised += donation.amount
+
+        return total_raised
+
+    def get_fundraisers_with_totals(self):
+        """
+        Get all fundraisers in this campaign, with their raised totals
+        already included. This is designed to be more efficient (less queries)
+        then running a total_raised() call on each fundraiser.
+        """
+
+        # sum the amount of only "paid" donations
+        paid_donations = Coalesce(Sum(
+            'donation__amount',
+            filter=Q(donation__payment_status__exact='paid')
+            ), 0)
+
+        # filter only fundraisers in this campaign
+        fundraisers = Fundraiser.objects.filter(campaign_id=self.id)
+
+        # create the annotated query
+        fundraisers = fundraisers.annotate(
+            total_raised=paid_donations
+            )
+
+        # sort by total raised
+        fundraisers = fundraisers.order_by('-total_raised')
+
+        return fundraisers
+
+    def get_recent_donations(self, num_donations):
+
+        # get z recent "paid" donations by newest date
+        recent_donations = Donation.objects.filter(
+            fundraiser__campaign__id=self.id,
+            payment_status__in=["paid", ""]
+        ).order_by('-date')[:num_donations]
+
+        return recent_donations
+
+    @staticmethod
+    def get_latest_active_campaign():
+
+        campaign = Campaign.objects.filter(
+            active=True
+        )[0]
+
+        return campaign
 
 
 class Fundraiser(models.Model):
@@ -52,7 +109,7 @@ class Fundraiser(models.Model):
     """
 
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, blank=True, null=True,
         on_delete=models.CASCADE
     )
@@ -101,6 +158,19 @@ class Fundraiser(models.Model):
 
         return total_donations['total']
 
+    @staticmethod
+    def get_latest_active_campaign(user_id):
+        """
+        Given a user id, find the most recent active fundraiser
+        """
+
+        # pick an active campaign with the highest number
+        fundraiser = Fundraiser.objects.filter(
+            user=user_id,
+        ).order_by('-campaign__active', '-campaign__id')[0]
+
+        return fundraiser
+
 
 class Donation(models.Model):
     """
@@ -133,18 +203,16 @@ class Donation(models.Model):
 class DonorManager(models.Manager):
     """
     A model query manager that combines all donation by the donor
-    based on email and name
+    based on email, name and campaign
     """
 
     def get_queryset(self):
 
         donations = super(DonorManager, self).get_queryset()
 
-        # get all donations that are part of this campaign
+        # get all donations by campaign
         # and have been fully paid through paypal
-        # TODO: limit to one campaign
         donations = donations.filter(
-            # fundraiser__campaign__pk=campaign_id,
             payment_status='paid'
             )
 
@@ -152,6 +220,7 @@ class DonorManager(models.Manager):
         donations = donations.values(
                     'email',
                     'name',
+                    campaign_id=F('fundraiser__campaign_id'),
                     # sum some fields
                     ).annotate(
                         amount=Sum('amount'),
@@ -178,3 +247,26 @@ class Donor(Donation):
     class Meta:
         proxy = True
         verbose_name = 'Donor'
+
+
+class ProxyUser(User):
+    """
+    A proxy mode of the User model, to provide additional functions
+    for the User
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = 'UserProxy'
+
+    def get_latest_fundraiser(self):
+        """
+        Get a single, latest fundraiser for the user.
+        For now, uses id order to identify the latest one.
+        """
+
+        fundraiser = Fundraiser.objects.filter(
+            user_id=self.id
+        ).order_by('id')[0]
+
+        return fundraiser

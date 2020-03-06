@@ -101,3 +101,11 @@ class FundraiserForm(forms.ModelForm):
 
         self.fields['name'].widget.attrs['size'] = 50
         self.fields['goal'].widget.attrs['size'] = 10
+
+        # disable all the fields if the campaign is no longer active
+        if self.instance.pk is not None:
+
+            if self.instance.campaign.active is False:
+
+                for field in self.fields:
+                    self.fields[field].disabled = True

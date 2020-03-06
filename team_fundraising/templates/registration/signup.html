@@ -11,14 +11,36 @@
     }
 </style>
 <script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="{% static "validation.js" %}"></script>
 {% endblock head %}
     
 
 {% block content %}
+
 <br/>
 <h3> Join {{ campaign.name }}</h3>
+
+{%  if not campaign.active %}
+
+    <div class="alert alert-warning" role="alert">
+      This campaign is no longer active. 
+
+        Please join the new campaign:
+        <a href="{% url 'team_fundraising:signup' campaign.get_latest_active_campaign.id %}">
+        {{ campaign.get_latest_active_campaign.name }}
+        </a>
+
+      
+    </div>
+{%  else %}
+
 Sign up to create your own fundraising page to raise money for the 
 BC Children's Hospital Foundation and the Children's Heart Network.
+If you already have an account, you can also 
+<a href="{% url 'team_fundraising:login' %}">Login</a> 
+to join the campaign with one click.
+
 <br/><br/>
 
 {# show form errors at the top of the page #}
@@ -52,6 +74,13 @@ BC Children's Hospital Foundation and the Children's Heart Network.
     {% endfor %}
 {% endif %}
 
+{% for message in messages %}
+
+  <div class="alert alert-primary" role="alert">
+      {{ message|safe }}
+  </div>
+
+  {% endfor %}
 
 <form method="POST"  enctype="multipart/form-data">
     {% csrf_token %}
@@ -122,7 +151,15 @@ BC Children's Hospital Foundation and the Children's Heart Network.
 
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
-            {{ user_form.username }}
+            <input type="text" name="username" value="dominik" maxlength="150" class="form-control" required="" id="id_username"
+                {% if user.is_authenticated %} readonly {% endif %}
+            >
+            {% if not user.is_authenticated %}
+            <small>
+                If you have already participated in a previous campaign, enter your existing username and password.
+            </small>
+            {% endif %}
+            
             {% for error in user_form.username.errors %}
             <div class="alert alert-danger">
                 {{ error|escape }}
@@ -130,7 +167,7 @@ BC Children's Hospital Foundation and the Children's Heart Network.
             {% endfor %}
     </div>
 </div>
-
+{% if not user.is_authenticated %}
     <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ user_form.password1.auto_id}}">{{ user_form.password1.label }}:</label>
         <div class="col-sm-8">
@@ -161,7 +198,8 @@ BC Children's Hospital Foundation and the Children's Heart Network.
             {% endfor %}
         </div>
     </div>
-    
+{% endif %}
+
     <button type="submit" class="btn btn-primary">Sign up</button>
     <script>
         CKEDITOR.replace( 'message', {
@@ -173,6 +211,22 @@ BC Children's Hospital Foundation and the Children's Heart Network.
       ]
     } );
     </script>
+    <script>
+        $(document).ready(function () {
+
+            $("#id_password2").keyup(function (e) { 
+
+                checkPasswordsMatch(
+                    $("#id_password1"), 
+                    $("#id_password2")
+                );
+
+            });
+        
+        });
+    </script>
 </form>
+
+{% endif %}
 
 {% endblock content %}

@@ -1,47 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base_nonav.html" %}
+{% load static %}        
 {% load crispy_forms_tags %}
 {% block head %}
-<title>Login</title>
+    <title>Login</title>
 {% endblock head %}
-
-{% block content %}
-
-
-{% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-
-{% if next %}
-    {% if user.is_authenticated %}
-        <p>Your account doesn't have access to this page. To proceed,
-        please login with an account that has access.</p>
-    {% else %}
-    <p> Please login to see this page,</p>
+</head>
+{% block body %}
+    <nav class="navbar navbar-expand navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+                <img src="{% static "tc4h_logo.png" %}" width="40" height="40" class="d-inline-block align-top" alt="">
+        </a>
+        Login
+    </nav>
+    <div class="container">
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
-{% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+            please login with an account that has access.</p>
+        {% else %}
+        <p> Please login to see this page,</p>
+        {% endif %}
+    {% endif %}
 
 
-<form method="post" action="{% url 'team_fundraising:login' %}">
-    {% csrf_token %}
+    <form method="post" action="{% url 'team_fundraising:login' %}">
+        {% csrf_token %}
 
-    <div>
-        {{ form.username|as_crispy_field }}
-    </div>
-    <div>
+        <div>
+            {{ form.username|as_crispy_field }}
+        </div>
+        <div>
 
-        {{ form.password|as_crispy_field }}
-    </div>
-    <div>
-        <input type="submit" class="btn btn-primary" value="login" />
-        <input type="hidden" name="next" value="{{ next }}" />
-    </div>
+            {{ form.password|as_crispy_field }}
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary" value="login" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
 
-</form>
+    </form>
 
-<br>
+    <br>
 
-<a href="{% url 'team_fundraising:password_reset'%}">Forgot your password?</a>
+    <a href="{% url 'team_fundraising:password_reset'%}">Forgot your password?</a>
 
-{% endblock content %}
-    
+{% endblock body %}

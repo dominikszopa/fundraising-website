@@ -4,7 +4,7 @@ from team_fundraising.models import Campaign
 
 
 class IndexView(View):
-    # JShow the list of active and inactive campaigns
+    # Show the list of active and inactive campaigns
 
     def get(self, request):
 

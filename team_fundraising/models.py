@@ -20,8 +20,8 @@ class Campaign(models.Model):
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
-    campaign_message = models.CharField(max_length=5000)
-    default_fundraiser_message = models.CharField(max_length=5000)
+    campaign_message = models.TextField()
+    default_fundraiser_message = models.TextField()
 
     def __str__(self):
         return self.name
@@ -116,7 +116,7 @@ class Fundraiser(models.Model):
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0, blank=True)
     photo = models.ImageField(upload_to='photos/', blank=True)
-    message = models.CharField(max_length=5000, blank=True)
+    message = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

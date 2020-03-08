@@ -129,15 +129,18 @@
     [x] Fix bug when clicking 'Edit' in campaign you are not part of yet
     [x] Create better homepage
     [x] Make non-specific campaign go to latest
-    [ ] Test with one campaign
-    [ ] Create email signup invite, including to add to campaign
+    [x] Test with one campaign
     [x] Add filters for campaign to admin page
     [ ] Update and add tests
+[x] Optimize home page queries
 [x] Remove special characters from spreadsheet export
 [ ] Store campaign image in database
+[ ] Automatically sign up for fundraising when registering on Squarespace
+    [ ] Research Squarespace API
+    [ ] Plan out implementation
+    [ ] Create email signup invite, including to add to campaign
 [ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]
-[x] Optimize home page queries
 [ ] Make default fundraiser amount configurable
 [ ] Add name to tax receipt information
 [ ] Change email links to HTTPS

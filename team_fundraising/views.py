@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import messages
@@ -13,6 +12,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Campaign, Fundraiser, Donation, ProxyUser
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
+from .register import send_new_fundraiser_email
 from .text import Donation_text, Fundraiser_text
 
 
@@ -263,22 +263,7 @@ def signup(request, campaign_id):
         fundraiser.user = user
         fundraiser.save()
 
-        # send them an email that they have successfully signed up
-        send_mail(
-            Fundraiser_text.signup_email_subject,
-            Fundraiser_text.signup_email_opening
-            + request.build_absolute_uri(
-                reverse(
-                    'team_fundraising:fundraiser', args=[fundraiser.id]
-                )
-            )
-            + "\n\nYour username is: " + user.username
-            + Fundraiser_text.signup_email_closing,
-            'fundraising@triplecrownforheart.ca',
-            [user.email, ],
-            auth_user=settings.EMAIL_HOST_USER,
-            auth_password=settings.EMAIL_HOST_PASSWORD
-        )
+        send_new_fundraiser_email(request, user, fundraiser)
 
         if not request.user.is_authenticated:
             # log in the user so they don't have to do it now
@@ -349,6 +334,8 @@ class OneClickSignUp(View):
         )
 
         new_fundraiser.save()
+
+        send_new_fundraiser_email(request, user, new_fundraiser)
 
         messages.info(
             request,

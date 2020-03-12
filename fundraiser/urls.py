@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.admin.views.decorators import staff_member_required
 from .views import IndexView
-from team_fundraising.admin import DonorCsv
+from team_fundraising.admin import DonorCsv, EmailSignup
 
 
 urlpatterns = [
@@ -31,6 +31,11 @@ urlpatterns = [
         'admin/donation_report_csv/<int:campaign_id>/',
         staff_member_required(DonorCsv.as_view()),
         name="donation_report_csv"
+    ),
+    path(
+        'admin/email_signup/',
+        staff_member_required(EmailSignup.as_view()),
+        name="email_signup"
     ),
     path('admin/', admin.site.urls),
 

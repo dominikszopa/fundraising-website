@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.views import View
 from .models import Campaign, Fundraiser, Donation, Donor
+from .register import signup_by_email
 
 
 class CampaignAdmin(admin.ModelAdmin):
@@ -92,3 +94,34 @@ class DonorCsv(View):
 
         response.write(t.render(context))
         return response
+
+
+class EmailSignup(View):
+    """
+    Show a form that allows signup of new fundraisers by email
+    """
+
+    template_name = 'admin/email_signup.html'
+
+    def get(self, request):
+
+        # get all campaigns
+        campaigns = Campaign.objects.all()
+
+        # display the form
+
+        return render(request, self.template_name, {'campaigns': campaigns})
+
+    def post(self, request):
+
+        # get campaign
+        campaign = get_object_or_404(Campaign, pk=request.POST['campaign'])
+        email = request.POST['email']
+
+        # TODO: loop through emails
+
+        signup_by_email(request, campaign.id, email)
+
+        #   store fundraisers in array
+
+        return render(request, self.template_name)  # , fundraisers)

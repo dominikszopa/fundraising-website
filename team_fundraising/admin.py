@@ -102,26 +102,33 @@ class EmailSignup(View):
     """
 
     template_name = 'admin/email_signup.html'
+    campaigns = Campaign.objects.all()
 
     def get(self, request):
 
-        # get all campaigns
-        campaigns = Campaign.objects.all()
-
         # display the form
 
-        return render(request, self.template_name, {'campaigns': campaigns})
+        return render(
+            request,
+            self.template_name,
+            {'campaigns': self.campaigns}
+        )
 
     def post(self, request):
 
         # get campaign
         campaign = get_object_or_404(Campaign, pk=request.POST['campaign'])
+        name = request.POST['name']
         email = request.POST['email']
 
         # TODO: loop through emails
 
-        signup_by_email(request, campaign.id, email)
+        signup_by_email(request, campaign.id, name, email)
 
         #   store fundraisers in array
 
-        return render(request, self.template_name)  # , fundraisers)
+        return render(
+            request,
+            self.template_name,
+            {'campaigns': self.campaigns}
+        )

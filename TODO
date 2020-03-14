@@ -136,9 +136,11 @@
 [x] Remove special characters from spreadsheet export
 [ ] Store campaign image in database
 [ ] Automatically sign up for fundraising when registering on Squarespace
-    [ ] Research Squarespace API
+    [x] Create email signup invite, including to add to campaign
+    [ ] Send password by email when signing them up
+    [ ] Make default donation amount part of campaign
+    [ ] Research Gmail API
     [ ] Plan out implementation
-    [ ] Create email signup invite, including to add to campaign
 [ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]
 [ ] Make default fundraiser amount configurable

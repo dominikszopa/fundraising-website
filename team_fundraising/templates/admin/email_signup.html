@@ -14,9 +14,18 @@
     <body>
         <div class="container">
             <br/>
+
+            {% for message in messages %}
+
+                <div class="alert alert-primary" role="alert">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+            <br/>
             <form  method="POST">
                 {% csrf_token %}
-
+                Campaign:
                 <select id="campaign" name="campaign">
                     {% for campaign in campaigns %}
                         <option value="{{ campaign.id }}">{{ campaign.name }}</option>
@@ -24,7 +33,10 @@
                 </select>
                 <br/><br/>
 
-                <input type="text" id="email" name="email">
+                Name: <input type="text" id="name" name="name">
+                <br/><br/>
+
+                Email: <input type="text" id="email" name="email">
                 <br/><br/>
 
                 <button type="submit" class="btn btn-primary">Sign up</button>

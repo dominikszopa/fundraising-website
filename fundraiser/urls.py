@@ -25,6 +25,7 @@ from team_fundraising.admin import DonorCsv
 urlpatterns = [
     path('', IndexView.as_view()),
     path('team_fundraising/', include('team_fundraising.urls')),
+    path('api/', include('api.urls')),
 
     # Donation reports in the admin section
     path(

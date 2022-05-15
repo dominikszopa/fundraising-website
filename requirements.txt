@@ -5,7 +5,7 @@ django-crispy-forms==1.7.2
 django-debug-toolbar==2.2.1
 django-paypal==1.0.0
 idna==2.8
-Pillow==8.3.2
+Pillow==9.0.1
 python-dotenv==0.10.3
 pytz==2019.2
 requests==2.22.0

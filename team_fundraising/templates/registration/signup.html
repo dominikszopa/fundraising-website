@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block head %}
-<title>Join Triple Crown for Heart Fundraising</title> 
+<title>Join Triple Crown for Heart Fundraising</title>
 <style>
     th {
       height: 50px;
@@ -14,7 +14,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="{% static "validation.js" %}"></script>
 {% endblock head %}
-    
+
 
 {% block content %}
 
@@ -24,21 +24,21 @@
 {%  if not campaign.active %}
 
     <div class="alert alert-warning" role="alert">
-      This campaign is no longer active. 
+      This campaign is no longer active.
 
         Please join the new campaign:
         <a href="{% url 'team_fundraising:signup' campaign.get_latest_active_campaign.id %}">
         {{ campaign.get_latest_active_campaign.name }}
         </a>
 
-      
+
     </div>
 {%  else %}
 
-Sign up to create your own fundraising page to raise money for the 
+Sign up to create your own fundraising page to raise money for the
 BC Children's Hospital Foundation and the Children's Heart Network.
-If you already have an account, you can also 
-<a href="{% url 'team_fundraising:login' %}">Login</a> 
+If you already have an account, you can also
+<a href="{% url 'team_fundraising:login' %}">Login</a>
 to join the campaign with one click.
 
 <br/><br/>
@@ -151,7 +151,7 @@ to join the campaign with one click.
 
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
-            <input type="text" name="username" value="dominik" maxlength="150" class="form-control" required="" id="id_username"
+            <input type="text" name="username" maxlength="150" class="form-control" required="" id="id_username"
                 {% if user.is_authenticated %} readonly {% endif %}
             >
             {% if not user.is_authenticated %}
@@ -159,7 +159,7 @@ to join the campaign with one click.
                 If you have already participated in a previous campaign, enter your existing username and password.
             </small>
             {% endif %}
-            
+
             {% for error in user_form.username.errors %}
             <div class="alert alert-danger">
                 {{ error|escape }}
@@ -214,15 +214,15 @@ to join the campaign with one click.
     <script>
         $(document).ready(function () {
 
-            $("#id_password2").keyup(function (e) { 
+            $("#id_password2").keyup(function (e) {
 
                 checkPasswordsMatch(
-                    $("#id_password1"), 
+                    $("#id_password1"),
                     $("#id_password2")
                 );
 
             });
-        
+
         });
     </script>
 </form>

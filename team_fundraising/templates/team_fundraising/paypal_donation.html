@@ -31,6 +31,14 @@ Please confirm your information:
 You will be redirected to Paypal to complete the payment.<br/>
 You can choose "Pay with a credit or Visa Debit card" at the bottom if you don't have a Paypal account.
 <br/><br/>
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+    <input type="hidden" name="hosted_button_id" value="ZP94YRRCX8GML" />
+    <input type="image" src="https://pics.paypal.com/00/s/YTU1MGZkNjEtMjlkYy00Y2VkLWJlMDQtODgwYzg1ODdiMDlj/file.PNG" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+    <img alt="" border="0" src="https://www.paypal.com/en_CA/i/scr/pixel.gif" width="1" height="1" />
+    </form>
+
+
 <!-- writes out the form tag automatically -->
 {{ form.render }}
 {% endblock content %}

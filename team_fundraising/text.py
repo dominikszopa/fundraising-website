@@ -15,15 +15,30 @@ class Donation_text:
     # Start of the email sent confirming the paypal payment has gone through
     # used in paypal.py:process_paypal()
     confirmation_email_opening = (
-        'Thank you for your donation of '
+        'Thank you for your generous donation of '
     )
 
     # Closing of the email sent confirming the paypal payment has gone through
-    # used in paypal.py:process_paypal()
-    confirmation_email_closing = (
-        '.\n\nFor all donations over $20, you will receive a tax receipt for '
-        'the 2019 tax year.'
-        '\nYour PayPal receipt should arrive in a separate email.\n'
+    # used in paypal.py:process_paypal() - text only
+    confirmation_email_closing_text = (
+        " supporting BC Children's Hospital and the Children's "
+        "Heart Network!"
+        "\n\nFor all donations over $20, you will receive a tax receipt for "
+        "the 2022 tax year."
+        "\nYour PayPal receipt should arrive in a separate email.\n"
+    )
+
+    # Closing of the email sent confirming the paypal payment has gone through
+    # used in paypal.py:process_paypal() - with html link
+    confirmation_email_closing_html = (
+        " supporting BC Children's Hospital and the Children's "
+        "Heart Network!<br><br>"
+        "<a href=\"https://triplecrownforheart.ca/a-familys-story\">"
+        "Learn more about families </a> who have been impacted by "
+        "the amazing work at BC Children's Hospital.<br><br>"
+        "For all donations over $20, you will receive a tax receipt for "
+        "the 2022 tax year.<br>"
+        "Your PayPal receipt should arrive in a separate email.\n"
     )
 
     notification_email_subject = (

@@ -6,19 +6,19 @@ Built in Python/Django 2.2 and Bootstrap 4 for the [Triple Crown for Heart](http
 
 Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](https://donations.triplecrownforheart.ca/team_fundraising/). If you would like to use this platform for your charity fundraising event, please contact the [author](#authors).
 
-<img src="screenshot.png" alt="demo screenshot" />
+![Demo screenshot](screenshot.png)
 
 ## Table of Contents
 
 * [Features](#features)
-* [Installing](#installling)
-* [Deployment](#Deployment)
-* [Support](#Support)
-* [Build with](#Built-with)
-* [Contributing](#Contributing)
-* [Authors](#Authors)
-* [License](#License)
-* [Acknowledgments](#Acknowledgments)
+* [Installing](#installing)
+* [Deployment](#deployment)
+* [Support](#support)
+* [Build with](#built-with)
+* [Contributing](#contributing)
+* [Authors](#authors)
+* [License](#license)
+* [Acknowledgments](#acknowledgments)
 
 ## Features
 
@@ -36,40 +36,46 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
 ### Local installation
 
-1. (optional) Create and activate a [virtualenv](https://virtualenv.pypa.io/) to have an isolated environment (you may want to use [virtualenvwrapper](http://virtualenvwrapper.readthedocs.org/)).
+1. Install poetry
 
-2. Clone this repository:
+   `pip install poetry`
+
+1. Clone this repository:
 
    `git clone https://github.com/dominikszopa/fundraising.git`
-   `cd fundraising-website`
+   `cd fundraising`
 
-3. Install dependencies:
+1. Install dependencies:
 
-   `pip install -r requirements.txt`
+   `poetry install`
 
-4. Copy .env.example to .env:
+1. Activate the virtual environment
+
+   `poetry shell`
+
+1. Copy .env.example to .env:
 
    `cp .env.example .env`
 
-5. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
+1. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
 
-6. Create a database:
+1. Create a database:
 
    `python3 ./manage.py migrate`
 
-7. Create a superuser - please use a strong password:
+1. Create a superuser - please use a strong password:
 
    `python3 ./manage.py createsuperuser`
 
-8. Load test data into the database from fixtures:
+1. Load test data into the database from fixtures:
 
    `python3 ./manage.py loaddata startingdata`
 
-9. If everything installed, you should be able to start the Django development server:
+1. If everything installed, you should be able to start the Django development server:
 
    `python3 ./manage.py runserver localhost:8000`
 
-10. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
 
 ### Email
 

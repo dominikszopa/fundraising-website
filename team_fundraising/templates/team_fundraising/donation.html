@@ -88,6 +88,10 @@
     </div>
     <hr>
     <div>Please fill in the following information to receive a tax receipt for donations over $20:</div>
+    <br>
+    <div>
+        {{ form.tax_name|as_crispy_field }}
+    </div>
     <div>
         {{ form.address|as_crispy_field }}
     </div>

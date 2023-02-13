@@ -187,6 +187,7 @@ class Donation(models.Model):
     anonymous = models.BooleanField(default=False)
     email = models.EmailField()
     message = models.CharField(max_length=280, blank=True)
+    tax_name = models.CharField(max_length=50, blank=True)
     address = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=50, blank=True)
     province = models.CharField(max_length=50, blank=True)

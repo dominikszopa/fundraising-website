@@ -304,7 +304,7 @@ def signup(request, campaign_id):
 
     else:
 
-        if(request.user.is_authenticated):
+        if (request.user.is_authenticated):
 
             # pre-populate some values if signing up for another campaign
             user_form = SignUpForm(initial={
@@ -373,7 +373,7 @@ def update_fundraiser(request, campaign_id=None):
     latest_fundraiser = Fundraiser.get_latest_active_campaign(request.user.id)
 
     # if no campaign id is included, get the latest one by default
-    if(campaign_id is None):
+    if (campaign_id is None):
 
         fundraiser = latest_fundraiser
 

@@ -11,7 +11,21 @@ class CampaignAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Campaign)
-admin.site.register(Fundraiser)
+# admin.site.register(Fundraiser)
+
+
+@admin.register(Fundraiser)
+class FundraiserAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'user', 'user_email', 'campaign', 'goal', 'total_raised'
+        )
+
+    def user_email(self, obj):
+        if obj.user:
+            return obj.user.email
+
+    search_fields = ('name', 'campaign__name')
+    list_filter = ('campaign__name', 'user')
 
 
 @admin.register(Donation)

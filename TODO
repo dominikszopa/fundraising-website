@@ -1,3 +1,5 @@
+# Todo list for fundraising site
+
 [x] Ability to donate to the cause, not a particular fundraiser
 [x] Display total including non-fundraiser amounts
 [x] Change donation form to Form or ModelForm
@@ -39,7 +41,7 @@
     [ ] Fix collapsing
 [x] Fix field alignment of signup form
 [x] Add $ to currency fields
-[x] Update Django 
+[x] Update Django
 [x] Send email to fundraiser when someone donates
 [x] Usability test
 [x] Add spacing at bottom of pages [UT1 2.6]
@@ -134,6 +136,7 @@
     [ ] Update and add tests
 [x] Optimize home page queries
 [x] Remove special characters from spreadsheet export
+[ ] Don't allow signup submit when password does not match
 [ ] Store campaign image in database
 [ ] Automatically sign up for fundraising when registering on Squarespace
     [ ] Research Squarespace API

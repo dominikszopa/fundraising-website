@@ -4,7 +4,7 @@
 
 {% block head %}
 <title>Triple Crown for Heart Fundraising</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 {% endblock head %}
 
 {% block content %}
@@ -18,8 +18,8 @@
   <div class="row">
     <div class="col-lg-6">
       <br/>
-      <h3>{{ campaign.name }}</h3> 
-      <img src="{% static "homepage.jpg" %}" width="100%"> 
+      <h3>{{ campaign.name }}</h3>
+      <img src="{% static "homepage.jpg" %}" width="100%">
       <div id="countdown-wrap">
         <div id="goal-stat">
           <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
@@ -57,11 +57,11 @@
       {% else %}
         <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' campaign.id %}">Create a fundraiser page</a>
       {% endif %}      <br/>
-      
+
       <div>
       <!-- Search form --></form>
       <form class="form-inline">
-              <input id="search" class="form-control form-control-md ml-3 full-width" 
+              <input id="search" class="form-control form-control-md ml-3 full-width"
                 type="text" placeholder="Search for a fundraiser" data-search />
       </form>
       </div>
@@ -77,9 +77,9 @@
                 {% endif %}
                 <div class="card-body">
                   <p class="card-title">
-                      {{ fundraiser.name }}</p> 
+                      {{ fundraiser.name }}</p>
                   <p class="card-text">
-                      ${{ fundraiser.total_raised|floatformat:"0"|intcomma }} 
+                      ${{ fundraiser.total_raised|floatformat:"0"|intcomma }}
                       of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
                   <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
                 </div>

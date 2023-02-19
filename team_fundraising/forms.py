@@ -68,8 +68,14 @@ class SignUpForm(UserCreationForm):
         fields = ('email', 'username', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
+
         super(SignUpForm, self).__init__(*args, **kwargs)
+
         self.fields['username'].widget.attrs.pop("autofocus", None)
+
+        self.fields['email'].required = True
+        self.fields['username'].required = True
+
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
@@ -102,6 +108,9 @@ class FundraiserForm(forms.ModelForm):
 
         self.fields['name'].widget.attrs['size'] = 50
         self.fields['goal'].widget.attrs['size'] = 10
+
+        self.fields['name'].required = True
+        self.fields['goal'].required = True
 
         # disable all the fields if the campaign is no longer active
         if self.instance.pk is not None:

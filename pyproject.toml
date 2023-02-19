@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fundraising"
-version = "1.2.0"
+version = "2.1.0"
 description = "An event fundraising website where individuals can create personal pages, set goals and raise money for the overall goal."
 authors = ["Dominik Szopa <techdomi@gmail.com>"]
 license = "MIT License"

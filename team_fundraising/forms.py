@@ -15,7 +15,7 @@ class DonationForm(forms.Form):
     other_amount = forms.CharField(required=False)
     email = forms.EmailField()
     anonymous = forms.BooleanField(required=False)
-    tax_name = forms.CharField(label='Name', required=False)
+    tax_name = forms.CharField(label='Full Name', required=False)
     address = forms.CharField(max_length=100, required=False)
     city = forms.CharField(max_length=50, required=False)
     province = forms.CharField(max_length=50, required=False)

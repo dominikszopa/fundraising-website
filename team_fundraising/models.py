@@ -7,7 +7,7 @@ by the Fundraisers, or applied to the general Campaign.
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count, Max, Q, F
+from django.db.models import Sum, Count, Max, Q, F, FloatField
 from django.db.models.functions import Coalesce
 
 
@@ -38,7 +38,9 @@ class Campaign(models.Model):
         )
 
         # sum the amounts
-        donations = donations.aggregate(total=Sum('amount'))
+        donations = donations.aggregate(
+            total=Sum('amount', output_field=FloatField())
+        )
         total_raised = donations['total']
 
         # replace with zero if there are none
@@ -66,8 +68,9 @@ class Campaign(models.Model):
         # sum the amount of only "paid" donations
         paid_donations = Coalesce(Sum(
             'donation__amount',
-            filter=Q(donation__payment_status__exact='paid')
-            ), 0)
+            filter=Q(donation__payment_status__exact='paid'),
+            output_field=FloatField()
+            ), 0, output_field=FloatField())
 
         # filter only fundraisers in this campaign
         fundraisers = Fundraiser.objects.filter(campaign_id=self.id)

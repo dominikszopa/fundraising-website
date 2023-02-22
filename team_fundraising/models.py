@@ -22,6 +22,7 @@ class Campaign(models.Model):
     active = models.BooleanField(default=True)
     campaign_message = models.TextField()
     default_fundraiser_message = models.TextField()
+    default_fundraiser_amount = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

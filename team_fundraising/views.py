@@ -215,6 +215,7 @@ def signup(request, campaign_id):
                     user = request.user
 
                 else:
+
                     # check if the password is correct
                     user = authenticate(
                         request,
@@ -252,34 +253,51 @@ def signup(request, campaign_id):
                         'fundraiser_form': fundraiser_form,
                     })
 
-        else:
+        else:  # new user
 
             if user_form.is_valid() and fundraiser_form.is_valid():
 
                 user = user_form.save()
 
-        fundraiser = fundraiser_form.save()
+        if fundraiser_form.is_valid():
 
-        # tie this user to the fundraiser and save the model again
-        fundraiser.user = user
-        fundraiser.save()
+            fundraiser = fundraiser_form.save()
 
-        # send them an email that they have successfully signed up
-        send_mail(
-            Fundraiser_text.signup_email_subject,
-            Fundraiser_text.signup_email_opening
-            + request.build_absolute_uri(
-                reverse(
-                    'team_fundraising:fundraiser', args=[fundraiser.id]
+            # tie this user to the fundraiser and save the model again
+            fundraiser.user = user
+            fundraiser.save()
+
+            # send them an email that they have successfully signed up
+            send_mail(
+                Fundraiser_text.signup_email_subject,
+                Fundraiser_text.signup_email_opening
+                + request.build_absolute_uri(
+                    reverse(
+                        'team_fundraising:fundraiser', args=[fundraiser.id]
+                    )
                 )
+                + "\n\nYour username is: " + user.username
+                + Fundraiser_text.signup_email_closing,
+                'fundraising@triplecrownforheart.ca',
+                [user.email, ],
+                auth_user=settings.EMAIL_HOST_USER,
+                auth_password=settings.EMAIL_HOST_PASSWORD
             )
-            + "\n\nYour username is: " + user.username
-            + Fundraiser_text.signup_email_closing,
-            'fundraising@triplecrownforheart.ca',
-            [user.email, ],
-            auth_user=settings.EMAIL_HOST_USER,
-            auth_password=settings.EMAIL_HOST_PASSWORD
-        )
+        else:  # not a valid fundraiser form
+
+            messages.error(
+                request,
+                "Something went wrong. Please try again.",
+                extra_tags='safe',
+                )
+
+            campaign = get_object_or_404(Campaign, pk=campaign_id)
+
+            return render(request, 'registration/signup.html', {
+                'campaign': campaign,
+                'user_form': user_form,
+                'fundraiser_form': fundraiser_form,
+            })
 
         if not request.user.is_authenticated:
             # log in the user so they don't have to do it now
@@ -302,7 +320,7 @@ def signup(request, campaign_id):
             fundraiser_id=fundraiser.id,
         )
 
-    else:
+    else:  # GET
 
         if (request.user.is_authenticated):
 

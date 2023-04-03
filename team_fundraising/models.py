@@ -101,7 +101,7 @@ class Campaign(models.Model):
 
         campaign = Campaign.objects.filter(
             active=True
-        )[0]
+        ).first()
 
         return campaign
 
@@ -171,7 +171,7 @@ class Fundraiser(models.Model):
         # pick an active campaign with the highest number
         fundraiser = Fundraiser.objects.filter(
             user=user_id,
-        ).order_by('-campaign__active', '-campaign__id')[0]
+        ).order_by('-campaign__active', '-campaign__id').first()
 
         return fundraiser
 
@@ -272,6 +272,6 @@ class ProxyUser(User):
 
         fundraiser = Fundraiser.objects.filter(
             user_id=self.id
-        ).order_by('id')[0]
+        ).order_by('id').first()
 
         return fundraiser

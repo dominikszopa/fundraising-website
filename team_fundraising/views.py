@@ -78,7 +78,7 @@ def new_donation(request, fundraiser_id):
     # Show donation page, on submit show confirmation and button to PayPal
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
-    campaign = Campaign.objects.filter(fundraiser=fundraiser_id)[0]
+    campaign = Campaign.objects.filter(fundraiser=fundraiser_id).first()
 
     if request.method == "POST":
 

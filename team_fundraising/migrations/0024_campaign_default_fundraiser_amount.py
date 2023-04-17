@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='campaign',
             name='default_fundraiser_amount',
-            field=models.IntegerField(default=0),
+            field=models.IntegerField(default=200),
         ),
     ]

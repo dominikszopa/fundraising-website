@@ -409,7 +409,7 @@ def update_fundraiser(request, campaign_id=None):
             # if not, get a fundraiser for any campaign
             fundraiser = Fundraiser.objects.filter(
                 user=request.user.id,
-            )[0]
+            ).first()
 
     if request.method == 'POST':
 

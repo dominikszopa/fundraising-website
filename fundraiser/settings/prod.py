@@ -9,11 +9,7 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 # Debug must be off in production, ignore the environment variable
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'donations.triplecrownforheart.ca',
-    'fundraising.triplecrownforheart.ca',
-    'localhost'
-    ]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(",")
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')

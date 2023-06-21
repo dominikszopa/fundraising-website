@@ -123,7 +123,7 @@ class Fundraiser(models.Model):
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0, blank=True)
     photo = models.ImageField(upload_to='photos/', blank=True)
-    photo_800 = models.ImageField(upload_to='photos/', blank=True)
+    photo_small = models.ImageField(upload_to='photos_small/', blank=True)
     message = models.TextField(blank=True)
 
     def __str__(self):
@@ -135,11 +135,9 @@ class Fundraiser(models.Model):
             with Image.open(self.photo) as img:
                 img.thumbnail((800, 800))
                 photo_dir, photo_filename = os.path.split(self.photo.name)
-                photo_name, photo_ext = os.path.splitext(photo_filename)
-                new_photo_name = f"{photo_name}_800{photo_ext}"
-                new_photo_path = os.path.join(photo_dir, new_photo_name)
+                new_photo_path = os.path.join('photos_small', photo_filename)
                 img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
-                self.photo_800.name = new_photo_path
+                self.photo_small.name = new_photo_path
 
         super().save(*args, **kwargs)
 

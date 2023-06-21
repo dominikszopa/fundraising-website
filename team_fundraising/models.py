@@ -4,11 +4,14 @@ This module contains the models for the team_fundraising app, including a
 parent Campaign, with individual Fundraisers, and Donations that can be raised
 by the Fundraisers, or applied to the general Campaign.
 """
+import os
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Max, Q, F, FloatField
 from django.db.models.functions import Coalesce
+from django.conf import settings
+from PIL import Image
 
 
 class Campaign(models.Model):
@@ -120,10 +123,25 @@ class Fundraiser(models.Model):
     name = models.CharField(max_length=50)
     goal = models.IntegerField(default=0, blank=True)
     photo = models.ImageField(upload_to='photos/', blank=True)
+    photo_800 = models.ImageField(upload_to='photos/', blank=True)
     message = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Generate and save the lower-resolution version of the photo
+        if self.photo:
+            with Image.open(self.photo) as img:
+                img.thumbnail((800, 800))
+                photo_dir, photo_filename = os.path.split(self.photo.name)
+                photo_name, photo_ext = os.path.splitext(photo_filename)
+                new_photo_name = f"{photo_name}_800{photo_ext}"
+                new_photo_path = os.path.join(photo_dir, new_photo_name)
+                img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
+                self.photo_800.name = new_photo_path
+
+        super().save(*args, **kwargs)
 
     def total_raised(self):
         """

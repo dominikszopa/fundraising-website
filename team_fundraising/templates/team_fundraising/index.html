@@ -70,7 +70,9 @@
 
           {% for fundraiser in fundraisers %}
               <div class="card mt-3 mr-1" style="width: 160px;" data-filter-item data-filter-name="{{ fundraiser.name|lower }}">
-                {% if fundraiser.photo %}
+                {% if fundraiser.photo_small %}
+                  <img class="card-img-top circle-image-small" src="{{ fundraiser.photo_small.url }}" alt="Card image cap" width="140" height="140">
+                {% elif fundraiser.photo %}
                   <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
                 {% else %}
                   <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="140" height="140">

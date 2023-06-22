@@ -27,7 +27,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                {% if fundraiser.photo %}
+                {% if fundraiser.photo_small %}
+                    <img src="{{ fundraiser.photo_small.url }}" width="200" height="200" class="circle-image">
+                {% elif fundraiser.photo %}
                     <img src="{{ fundraiser.photo.url }}" width="200" height="200" class="circle-image">
                 {% else %}
                     <img  src="{% static "nophoto.png" %}" alt="Card image cap" width="200" height="200" class="circle-image">

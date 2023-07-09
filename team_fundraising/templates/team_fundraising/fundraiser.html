@@ -56,9 +56,9 @@
                     document.getElementById("progress").style.width = "{{ fundraiser.percent_raised }}%";
                 </script>
 
-                <!--http://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
+                <!--https://stackoverflow.com/questions/9335140/how-to-countdown-to-a-date -->
 
-                
+
                 <a class="btn btn-primary donate-button" href="{% url 'team_fundraising:donation' fundraiser.id %}" role="button">Donate</a>
                 <br/>
             </div>
@@ -69,7 +69,7 @@
                 {{ fundraiser.message|safe }}
                 {% if user.is_authenticated and user.id == fundraiser.user.id  %}
                     <br/>
-                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' fundraiser.campaign.id %}" role="button">Edit</a>  
+                    <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' fundraiser.campaign.id %}" role="button">Edit</a>
                 {% endif %}
             </div>
             <div class="col-lg-6">
@@ -83,7 +83,7 @@
                             {% else %}
                                 {{ donation.name }}
                             {% endif %}
-                            - ${{ donation.amount|floatformat:"2"|intcomma }} 
+                            - ${{ donation.amount|floatformat:"2"|intcomma }}
                             {% if donation.message %}
                             - {{ donation.message }}
                             {% endif %}

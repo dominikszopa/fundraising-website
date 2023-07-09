@@ -20,11 +20,11 @@
 {%  if not campaign.active %}
 
     <div class="alert alert-warning" role="alert">
-      This campaign is no longer active. 
+      This campaign is no longer active.
 
       {% if active_campaign.id == latest_fundraiser.campaign.id %}
 
-        You probably want to edit the new campaign: 
+        You probably want to edit the new campaign:
           <a href="{% url 'team_fundraising:update_fundraiser' latest_fundraiser.campaign.id %}">
             {{ latest_fundraiser.campaign.name }}</a>
 
@@ -38,7 +38,7 @@
       {% endif %}
       <br>
       If you need to change something in this campaign, please contact the organization directly.
-      
+
     </div>
 {%  endif %}
 
@@ -54,8 +54,8 @@
     {{ user_form|crispy }}
     <a class="float-right" href="{% url 'team_fundraising:change_password' %}">Change Password</a>
     <br/>
-  
-    {% if campaign.active %}  
+
+    {% if campaign.active %}
       <button class="btn btn-primary" type="submit"> Save Changes</button>
     {% endif %}
 
@@ -64,7 +64,7 @@
         height: 260,
       /* Default CKEditor styles are included as well to avoid copying default styles. */
       contentsCss: [
-        'http://cdn.ckeditor.com/4.11.4/full-all/contents.css',
+        'https://cdn.ckeditor.com/4.11.4/full-all/contents.css',
         '{% static "ck_editor_override.css  " %}'
       ]
     } );

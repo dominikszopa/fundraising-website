@@ -244,6 +244,7 @@ class DonorManager(models.Manager):
                     campaign_id=F('fundraiser__campaign_id'),
                     # sum some fields
                     ).annotate(
+                        tax_name=Max('tax_name'),
                         amount=Sum('amount'),
                         num_donations=Count('email'),
                         address=Max('address'),

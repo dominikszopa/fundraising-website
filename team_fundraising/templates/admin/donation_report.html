@@ -74,7 +74,7 @@
     <tbody>
         {% for row in summary %}
         <tr class="{% cycle 'row1' 'row2' %}">
-          <td> {{ row.name }} </td>
+          <td> {{ row.tax_name }} </td>
           <td>${{ row.amount | floatformat:"2"| intcomma }} </td>
           <td> {{ row.email }}</td>
           <td>{{ row.address}}</td>

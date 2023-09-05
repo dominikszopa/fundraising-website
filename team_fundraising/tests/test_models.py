@@ -81,6 +81,7 @@ class TestModels(TestCase):
             name='Empty Fundraiser',
             goal=100,
             photo='',
+            photo_small='',
             message='Just starting!',
         )
 

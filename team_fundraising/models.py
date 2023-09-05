@@ -8,7 +8,7 @@ import os
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count, Max, Q, F, FloatField
+from django.db.models import Sum, Count, Max, Q, F, FloatField, Case, When
 from django.db.models.functions import Coalesce
 from django.conf import settings
 from PIL import Image
@@ -244,7 +244,11 @@ class DonorManager(models.Manager):
                     campaign_id=F('fundraiser__campaign_id'),
                     # sum some fields
                     ).annotate(
-                        tax_name=Max('tax_name'),
+                        tax_name=Case(
+                            When(tax_name='', then=F('name')),
+                            default=F('tax_name'),
+                            output_field=models.CharField(),
+                            ),
                         amount=Sum('amount'),
                         num_donations=Count('email'),
                         address=Max('address'),

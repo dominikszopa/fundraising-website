@@ -1,4 +1,4 @@
 {% autoescape off %}
-{% load humanize %}{% for donation in donations %}"{{ donation.tax_name|addslashes }}","{{ donation.amount|floatformat:"2" }}","{{ donation.email }}","{{ donation.address|addslashes}}","{{ donation.city|addslashes}}","{{ donation.province|addslashes}}","{{ donation.postal_code|addslashes}}","{{ donation.country|addslashes}}","{{ donation.date }}"
+{% load humanize %}{% for donation in donations %}"{{ donation.name|addslashes }}","{{ donation.amount|floatformat:"2" }}","{{ donation.email }}","{{ donation.address|addslashes}}","{{ donation.city|addslashes}}","{{ donation.province|addslashes}}","{{ donation.postal_code|addslashes}}","{{ donation.country|addslashes}}","{{ donation.date }}"
 {% endfor %}
 {% endautoescape %}

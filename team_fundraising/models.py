@@ -237,14 +237,16 @@ class DonorManager(models.Manager):
             payment_status='paid'
             )
 
-        # group by email address
+        # group by email address and the tax_name provided
+        # fill in name with the tax_name, but fall back to name if it's blank
         donations = donations.values(
                     'email',
-                    'name',
+                    'tax_name',
                     campaign_id=F('fundraiser__campaign_id'),
-                    # sum some fields
+                    #  sum values, name is the tax_name if it exists
+                    #  otherwise the name
                     ).annotate(
-                        tax_name=Case(
+                        name=Case(
                             When(tax_name='', then=F('name')),
                             default=F('tax_name'),
                             output_field=models.CharField(),

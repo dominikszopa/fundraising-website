@@ -15,7 +15,7 @@ def process_paypal(sender, **kwargs):
     """
     ipn_obj = sender
     print("received the paypal signal...")
-    print('ipn_obj.payment_status = ' + str(ipn_obj.payment_status))
+    print(f"ipn_obj.payment_status = {ipn_obj.payment_status}")
 
     if ipn_obj.payment_status == ST_PP_COMPLETED:
         # Check that the receiver email is the same we previously
@@ -29,12 +29,12 @@ def process_paypal(sender, **kwargs):
         # ALSO: for the same reason, you need to check the amount
         # received, `custom` etc. are all what you expect or what
         # is allowed.
-        print('ipn_obj.custom (donation)= ' + str(ipn_obj.custom))
+        print(f"ipn_obj.custom (donation) = {ipn_obj.custom}")
 
         donation = get_object_or_404(Donation, pk=ipn_obj.custom)
 
         # TODO: write these to the db or a file so we have some traceability
-        # print(ipn_obj.mc_gross + " " + ipn_obj.mc_currency)
+        # print(f"{ipn_obj.mc_gross}  {ipn_obj.mc_currency}")
 
         donation.payment_method = 'paypal'
         donation.payment_status = 'paid'

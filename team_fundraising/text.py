@@ -24,7 +24,7 @@ class Donation_text:
         " supporting BC Children's Hospital and the Children's "
         "Heart Network!"
         "\n\nFor all donations over $20, you will receive a tax receipt for "
-        "the 2023 tax year."
+        "the 2024 tax year."
         "\nYour PayPal receipt should arrive in a separate email.\n"
     )
 
@@ -37,7 +37,7 @@ class Donation_text:
         "Learn more about families </a> who have been impacted by "
         "the amazing work at BC Children's Hospital.<br><br>"
         "For all donations over $20, you will receive a tax receipt for "
-        "the 2023 tax year.<br>"
+        "the 2024 tax year.<br>"
         "Your PayPal receipt should arrive in a separate email.\n"
     )
 

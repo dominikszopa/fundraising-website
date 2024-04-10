@@ -362,6 +362,7 @@ class OneClickSignUp(View):
             campaign=campaign,
             user=user,
             name=previous_fundraiser.name,
+            team=previous_fundraiser.team,
             goal=200,
             photo=previous_fundraiser.photo,
             message=previous_fundraiser.message,

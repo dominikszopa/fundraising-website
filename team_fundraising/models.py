@@ -121,6 +121,7 @@ class Fundraiser(models.Model):
         on_delete=models.CASCADE
     )
     name = models.CharField(max_length=50)
+    team = models.CharField(max_length=50, blank=True)
     goal = models.IntegerField(default=0, blank=True)
     photo = models.ImageField(upload_to='photos/', blank=True)
     photo_small = models.ImageField(upload_to='photos_small/', blank=True)

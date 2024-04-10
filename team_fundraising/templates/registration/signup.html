@@ -101,6 +101,18 @@ to join the campaign with one click.
     </div>
 
     <div class="form-group row">
+        <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.team.auto_id}}">{{ fundraiser_form.team.label }} Name (optional):</label>
+        <div class="col-sm-8">
+            {{ fundraiser_form.team }}
+            {% for error in fundraiser_form.team.errors %}
+            <div class="alert alert-danger">
+                {{ error|escape }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.goal.auto_id}}">{{ fundraiser_form.goal.label }}:</label>
         <div class="input-group col-sm-8">
             <div class="input-group-addon">

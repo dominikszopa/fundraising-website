@@ -79,7 +79,13 @@
                 {% endif %}
                 <div class="card-body">
                   <p class="card-title">
-                      {{ fundraiser.name }}</p>
+                    {{ fundraiser.name }}<br/>
+                    <small class="text-muted">
+                      {{ fundraiser.team }}
+                    </small>
+                  </p>
+                  </p>
+                  </p>
                   <p class="card-text">
                       ${{ fundraiser.total_raised|floatformat:"0"|intcomma }}
                       of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>

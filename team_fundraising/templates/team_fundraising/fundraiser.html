@@ -35,7 +35,10 @@
                     <img  src="{% static "nophoto.png" %}" alt="Card image cap" width="200" height="200" class="circle-image">
                 {% endif %}
 
-                <h2>{{ fundraiser.name }}</h2>
+                <h2>
+                    {{ fundraiser.name }}<br/>
+                    <small class="text-muted">{{ fundraiser.team }}</small>
+                </h2>
             </div>
             <div class="col-lg-6">
 

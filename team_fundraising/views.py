@@ -372,7 +372,25 @@ class OneClickSignUp(View):
 
         messages.info(
             request,
-            'You have signed up for ' + campaign.name
+            'You have signed up for ' + campaign.name +
+            '. You can change any of your information below.'
+        )
+
+        # send them an email that they have successfully signed up
+        send_mail(
+            Fundraiser_text.signup_email_subject,
+            Fundraiser_text.signup_email_opening
+            + request.build_absolute_uri(
+                reverse(
+                    'team_fundraising:fundraiser', args=[new_fundraiser.id]
+                )
+            )
+            + "\n\nYour username is: " + user.username
+            + Fundraiser_text.signup_email_closing,
+            'fundraising@triplecrownforheart.ca',
+            [user.email, ],
+            auth_user=settings.EMAIL_HOST_USER,
+            auth_password=settings.EMAIL_HOST_PASSWORD
         )
 
         # send them to the update fundraiser page

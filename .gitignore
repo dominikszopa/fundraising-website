@@ -140,3 +140,6 @@ dmypy.json
 .vscode
 
 # End of https://www.gitignore.io/api/django
+
+# Backup sqlite databases
+backup/

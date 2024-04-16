@@ -296,6 +296,6 @@ class ProxyUser(User):
 
         fundraiser = Fundraiser.objects.filter(
             user_id=self.id
-        ).order_by('id').first()
+        ).order_by('-id').first()
 
         return fundraiser

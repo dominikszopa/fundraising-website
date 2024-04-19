@@ -19,7 +19,9 @@
     <div class="col-lg-6">
       <br/>
       <h3>{{ campaign.name }}</h3>
-      <img src="{% static "homepage.jpg" %}" width="100%">
+      {% if campaign.photo %}
+        <img src="{{ campaign.photo.url }}" width="100%">
+      {% endif %}
       <div id="countdown-wrap">
         <div id="goal-stat">
           <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>

@@ -24,6 +24,7 @@ class Campaign(models.Model):
     goal = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
     campaign_message = models.TextField()
+    photo = models.ImageField(upload_to='photos/', blank=True)
     default_fundraiser_message = models.TextField()
     default_fundraiser_amount = models.IntegerField(default=0)
 

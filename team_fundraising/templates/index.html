@@ -10,7 +10,9 @@
     {% for campaign in active %}
     <div class="col-lg-8  mx-auto">
         <div class="card mb-3 text-center">
-            <img class="card-img-top" src="{% static "homepage.jpg" %}" alt="Card image cap">
+            {% if campaign.photo %}
+                <img class="card-img-top" src="{{ campaign.photo.url }}" alt="Card image cap">
+            {% endif %}
             <div class="card-body">
                 <h2 class="card-title"><a class="stretched-link" href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a></h2>
                 <div class="progress" style="height: 25px;">
@@ -34,7 +36,9 @@
 {% for campaign in inactive %}
     <div class="col-lg-6  mx-auto">
         <div class="card mb-3 text-center">
-            <img class="card-img-top" src="{% static "homepage.jpg" %}" alt="Card image cap">
+            {% if campaign.photo %}
+                <img class="card-img-top" src="{{ campaign.photo.url }}" alt="Card image cap">
+            {% endif %}
             <div class="card-body">
                 <h2 class="card-title"><a class="stretched-link" href="{% url 'team_fundraising:index' campaign.id %}">{{ campaign.name }}</a></h2>
                 <div class="progress" style="height: 25px;">

@@ -322,6 +322,8 @@ def signup(request, campaign_id):
 
     else:  # GET
 
+        campaign = get_object_or_404(Campaign, pk=campaign_id)
+
         if (request.user.is_authenticated):
 
             # pre-populate some values if signing up for another campaign
@@ -332,9 +334,9 @@ def signup(request, campaign_id):
         else:
             user_form = SignUpForm()
 
-        fundraiser_form = FundraiserForm(initial={'goal': 200})
-
-    campaign = get_object_or_404(Campaign, pk=campaign_id)
+        fundraiser_form = FundraiserForm(
+            initial={'goal': campaign.default_fundraiser_amount}
+        )
 
     return render(request, 'registration/signup.html', {
         'campaign': campaign,
@@ -363,7 +365,7 @@ class OneClickSignUp(View):
             user=user,
             name=previous_fundraiser.name,
             team=previous_fundraiser.team,
-            goal=200,
+            goal=campaign.default_fundraiser_amount,
             photo=previous_fundraiser.photo,
             message=previous_fundraiser.message,
         )

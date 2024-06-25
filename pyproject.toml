@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-requests = "^2.31.0"
+requests = "^2.32.0"
 certifi = "^2023.7.22"
 chardet = "^5.1.0"
 django = "^3.2.25"

@@ -1,0 +1,13 @@
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app/team_fundraising
+    command: ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

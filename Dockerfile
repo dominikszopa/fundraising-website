@@ -14,12 +14,19 @@ RUN pip install --no-cache-dir poetry
 # Copy the project files into the container
 COPY . /app/team_fundraising/
 
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /app/team_fundraising/entrypoint.sh
+
 # Install dependencies using Poetry
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi
 
+# Make the entrypoint script executable
+RUN chmod +x /app/team_fundraising/entrypoint.sh
+
 # Set the port Django will run on
 EXPOSE 8000
 
-# Run the application server
+# Use the entrypoint script to run the server
+ENTRYPOINT ["/app/team_fundraising/entrypoint.sh"]
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

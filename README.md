@@ -34,16 +34,34 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 * [Python 3.8](https://www.python.org/)
 * [git](https://git-scm.com/)
 
-### Local installation
+### Docker Installation
 
-1. Install poetry
-
-   `pip install poetry`
+1. Install Docker and Docker Compose
 
 1. Clone this repository:
 
    `git clone https://github.com/dominikszopa/fundraising.git`
-   `cd fundraising`
+   'cd fundraising'
+
+1. Copy .env.example to .env:
+
+   `cp .env.example .env`
+
+1. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
+
+1. Run the following command to start the app:
+
+   `docker-compose up`
+
+1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+
+### Local Development Installation
+
+1. Follow steps 1-4 from [Docker Installation](#docker-installation)
+
+1. Install poetry
+
+   `pip install poetry`
 
 1. Install dependencies:
 
@@ -52,12 +70,6 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 1. Activate the virtual environment
 
    `poetry shell`
-
-1. Copy .env.example to .env:
-
-   `cp .env.example .env`
-
-1. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
 
 1. Create a database:
 

@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "poetry"
+    directory: "/" # Location of your pyproject.toml file
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 10

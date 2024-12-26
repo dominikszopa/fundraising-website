@@ -2,7 +2,7 @@
 
 An event fundraising website where individuals can create personal pages, set goals and raise money for the overall goal.
 
-Built in Python/Django 3.2 and Bootstrap 4 for the [Triple Crown for Heart](https://triplecrownforheart.ca/) bike ride, because you shouldn't be charged for charity fundraising.
+Built in Python/Django 4.2 and Bootstrap 4 for the [Triple Crown for Heart](https://triplecrownforheart.ca/) bike ride, because you shouldn't be charged for charity fundraising.
 
 Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](https://donations.triplecrownforheart.ca/team_fundraising/). If you would like to use this platform for your charity fundraising event, please contact the [author](#authors).
 
@@ -31,7 +31,7 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
 ### Prerequisites
 
-* [Python 3.8](https://www.python.org/)
+* [Python 3.12](https://www.python.org/)
 * [git](https://git-scm.com/)
 
 ### Docker Installation

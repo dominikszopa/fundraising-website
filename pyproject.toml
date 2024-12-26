@@ -20,7 +20,7 @@ pillow = "^10.3.0"
 python-dotenv = "^0.21.1"
 pytz = "^2022.7.1"
 six = "^1.16.0"
-sqlparse = "^0.5.0"
+sqlparse = "^0.5.3"
 urllib3 = "^1.26.19"
 
 

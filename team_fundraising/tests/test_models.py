@@ -91,13 +91,13 @@ class TestCampaignModel(TestModels):
     def test_name(self):
         """ Check the Campaign.__str__ function """
         campaign = Campaign.objects.get(id=1)
-        self.assertEquals(str(campaign), 'Test Campaign')
+        self.assertEqual(str(campaign), 'Test Campaign')
 
     def test_donation_total(self):
         """ Verify total donations sum is correct """
         campaign = Campaign.objects.get(id=1)
         total = campaign.get_total_raised()
-        self.assertEquals(total, 83.00)
+        self.assertEqual(total, 83.00)
 
 
 class TestFundraiser(TestModels):
@@ -105,19 +105,19 @@ class TestFundraiser(TestModels):
     def test_name(self):
         """ Check the Fundraiser .__str__ function """
         fundraiser = Fundraiser.objects.get(id=1)
-        self.assertEquals(str(fundraiser), 'First Fundraiser')
+        self.assertEqual(str(fundraiser), 'First Fundraiser')
 
     def test_donation_total(self):
         """ Verify total donations for fundraiser is correct """
         fundraiser = Fundraiser.objects.get(id=1)
         total = fundraiser.total_raised()
-        self.assertEquals(total, 83.00)
+        self.assertEqual(total, 83.00)
 
     def test_total_donators(self):
         """ Check the number of donators is correct """
         fundraiser = Fundraiser.objects.get(id=1)
         total = fundraiser.total_donations()
-        self.assertEquals(total, 2)
+        self.assertEqual(total, 2)
 
 
 class TestDonation(TestModels):
@@ -125,7 +125,7 @@ class TestDonation(TestModels):
     def test_name(self):
         """ Check the donation .__str__ function """
         donation = Donation.objects.get(id=1)
-        self.assertEquals(str(donation), 'First Donator')
+        self.assertEqual(str(donation), 'First Donator')
 
 
 class TestDonorManager(TestModels):
@@ -137,4 +137,4 @@ class TestDonorManager(TestModels):
         """
         donors = Donor.objects.all()
         donations = donors[0]['amount']
-        self.assertEquals(donations, 83.00)
+        self.assertEqual(donations, 83.00)

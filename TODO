@@ -35,10 +35,9 @@
 [x] Add password recovery
     [x] Update buttons to bootstrap
     [ ] Add username to password reset complete screen
-[-] Add navigation header
+[x] Add navigation header
     [x] Add brand image
     [x] Remove unnecessary buttons
-    [ ] Fix collapsing
 [x] Fix field alignment of signup form
 [x] Add $ to currency fields
 [x] Update Django
@@ -113,8 +112,8 @@
 [x] Add link to change password
 [x] Change "Create a fundraiser page" link to "Edit my profile" when logged in
 [x] Add Javascript when passwords match / don't match [UT1 2.5]
-[-] Support multiple campaigns
-    [-] Create homepage of campaigns
+[x] Support multiple campaigns
+    [x] Create homepage of campaigns
     [x] Refactor homepage to show a single campaign
     [x] Fix thank you message showing up on wrong screen
     [x] Functionality to disable campaign - link to new one?
@@ -133,7 +132,6 @@
     [x] Make non-specific campaign go to latest
     [x] Test with one campaign
     [x] Add filters for campaign to admin page
-    [ ] Update and add tests
 [x] Optimize home page queries
 [x] Remove special characters from spreadsheet export
 [ ] Don't allow signup submit when password does not match
@@ -144,24 +142,20 @@
     [ ] Create email signup invite, including to add to campaign
 [ ] Auto login after password change
 [ ] Add Javascript warning about low security password [UT1 2.3]
-[ ] Make default fundraiser amount configurable
+[x] Make default fundraiser amount configurable
 [ ] Add name to tax receipt information
 [ ] Change email links to HTTPS
 [ ] Refresh after "return" link from logout [UT1 3.1]
-[ ] Fix up display of Update Fundraiser page
 [ ] Add facebook share button
 [ ] Move image upload to edit screen
-[ ] Save smaller version of image
+[x] Save smaller version of image
 [ ] Add bug reporting page
-[ ] Update donate page to donate to general cause
-[ ] Update all notices and emails
-[ ] Fix password recovery on iphone [UT1 4.1]
 [ ] Add Google Analytics
 [ ] Optimize total counts in Fundraiser class
-[-] Fix up bootstrap forms - switch to crispy forms
+[x] Fix up bootstrap forms - switch to crispy forms
 [ ] Fix field validation of signup form - duplicate username
 [ ] Add amount validation in new donation form
-[ ] Control size of fields
+[x] Control size of fields
 [-] Connect with Paypal
     [x] Add more detail to forwarding page
     [x] Remove "pending" transations from the total

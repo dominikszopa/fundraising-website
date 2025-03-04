@@ -6,6 +6,10 @@ authors = ["Dominik Szopa <techdomi@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
 
+packages = [
+    { include = "team_fundraising" }
+]
+
 [tool.poetry.dependencies]
 python = "^3.12"
 requests = "^2.32.3"
@@ -23,7 +27,6 @@ pytz = "^2025.1"
 six = "^1.17.0"
 sqlparse = "^0.5.3"
 urllib3 = "^2.2.3"
-
 
 [build-system]
 requires = ["poetry-core"]

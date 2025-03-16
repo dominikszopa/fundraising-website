@@ -7,7 +7,17 @@
   font-family: sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
   font-size: 16px;
   color: #333;
-  line-height: 1.6;
+  line-height: 1.4;
+}
+
+/* Adjust spacing in the editor to match the front-end display */
+.ql-editor p {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.ql-editor p:empty {
+  display: none;
 }
 
 .ql-container {

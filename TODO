@@ -57,6 +57,7 @@
 [x] Make better example data
 [x] Add HTML editor to message
 [x] Make CKEditor font consistent
+[x] Replace CKEditor with Quill editor
 [x] Make side-by-side layout in desktop
 [x] Create blank homepage
 [x] Make unique settings file for production

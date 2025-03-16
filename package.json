@@ -1,0 +1,10 @@
+{
+  "name": "fundraising-website",
+  "version": "2.1.0",
+  "description": "An event fundraising website where individuals can create personal pages, set goals and raise money for the overall goal.",
+  "dependencies": {
+    "quill": "^1.3.7"
+  },
+  "author": "Dominik Szopa <techdomi@gmail.com>",
+  "license": "MIT"
+}

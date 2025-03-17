@@ -69,7 +69,9 @@
         <div class="row">
             <div class="col-lg-6">
                 <br/>
-                {{ fundraiser.message|safe }}
+                <div class="fundraiser-content" style="line-height: 1.4;">
+                    {{ fundraiser.message|safe }}
+                </div>
                 {% if user.is_authenticated and user.id == fundraiser.user.id  %}
                     <br/>
                     <a class="btn btn-secondary" href="{% url 'team_fundraising:update_fundraiser' fundraiser.campaign.id %}" role="button">Edit</a>

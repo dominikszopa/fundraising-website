@@ -11,8 +11,10 @@
     }
 </style>
 
-<script src="//cdn.ckeditor.com/4.11.4/basic/ckeditor.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<link href="{% static 'quill_override.css' %}" rel="stylesheet">
 <script src="{% static "validation.js" %}"></script>
 {% endblock head %}
 
@@ -130,9 +132,8 @@ to join the campaign with one click.
     <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.message.auto_id}}">{{ fundraiser_form.message.label }}:</label>
         <div class="col-sm-8">
-            <textarea name="message" cols="20" rows="3" maxlength="5000" class="form-control" id="id_message">
-                {{ campaign.default_fundraiser_message }}
-            </textarea>
+            <div id="quill-editor">{{ campaign.default_fundraiser_message|safe }}</div>
+            <textarea name="message" style="display:none" id="id_message"></textarea>
         </div>
     </div>
 
@@ -216,14 +217,24 @@ to join the campaign with one click.
 
     <button type="submit" class="btn btn-primary">Sign up</button>
     <script>
-        CKEDITOR.replace( 'message', {
-        height: 260,
-      /* Default CKEditor styles are included as well to avoid copying default styles. */
-      contentsCss: [
-        'https://cdn.ckeditor.com/4.11.4/full-all/contents.css',
-        '{% static "ck_editor_override.css" %}'
-      ]
-    } );
+        var quill = new Quill('#quill-editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    ['clean']
+                ]
+            }
+        });
+        
+        // Copy Quill content to the hidden textarea before form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('id_message').value = quill.root.innerHTML;
+        });
     </script>
     <script>
         $(document).ready(function () {

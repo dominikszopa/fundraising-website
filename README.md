@@ -128,7 +128,7 @@ For any issues installing, using or contributing, please feel free to contact th
 * [django-paypal](https://django-paypal.readthedocs.io/en/stable/) - Payment processor
 * [Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - Interface
 * [django-crispy-forms](https://django-crispy-forms.readthedocs.io/en/latest/) - Bootstrap forms
-* [CKEditor 4](https://ckeditor.com/ckeditor-4) - WYSIWYG editor
+* [Quill](https://quilljs.com/) - WYSIWYG editor
 
 ## Contributing
 

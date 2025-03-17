@@ -1,0 +1,31 @@
+/* 
+ * Quill Editor override styles
+ */
+
+.ql-editor {
+  min-height: 260px;
+  font-family: sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* Adjust spacing in the editor to match the front-end display */
+.ql-editor p {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.ql-editor p:empty {
+  display: none;
+}
+
+.ql-container {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}

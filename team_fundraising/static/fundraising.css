@@ -71,3 +71,33 @@ h2 {
     width: 100%;
     margin-right: 1rem;
 }
+
+/* Control spacing in fundraiser messages */
+.col-lg-6 p {
+    margin-bottom: 0.5rem;
+}
+
+/* Fix extra spacing between paragraphs from Quill */
+.col-lg-6 p:empty {
+    display: none;
+}
+
+/* Handle consecutive paragraphs that might come from Quill */
+.fundraiser-content p + p {
+    margin-top: 0.5rem;
+}
+
+/* Override default browser paragraph spacing */
+.fundraiser-content {
+    line-height: 1.0;
+}
+.fundraiser-content p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+/* Maintain proper spacing for lists */
+.col-lg-6 ul, .col-lg-6 ol {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}

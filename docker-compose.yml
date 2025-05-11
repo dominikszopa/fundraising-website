@@ -1,13 +1,28 @@
 
 services:
-  web:
+
+  gunicorn:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "fundraiser.wsgi:application"]
     volumes:
       - .:/app/team_fundraising
-    command: ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - gunicorn
+
+volumes:
+  db_data:

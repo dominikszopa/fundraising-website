@@ -34,14 +34,5 @@ RUN pip install gunicorn
 # Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Create directory for Let's Encrypt certificates
-RUN mkdir -p /etc/letsencrypt
-
 # Collect static files
 RUN python manage.py collectstatic --noinput
-
-# Expose both HTTP and HTTPS ports
-EXPOSE 80 443
-
-# Start Nginx and Gunicorn
-CMD ["sh", "-c", "nginx && gunicorn --bind 0.0.0.0:8000 fundraiser.wsgi:application"]

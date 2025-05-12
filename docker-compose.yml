@@ -12,12 +12,14 @@ services:
       - .env
     ports:
       - "8000:8000"
+    restart: always
 
   nginx:
     image: nginx:latest
     ports:
       - "80:80"
       - "443:443"
+    restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt:ro

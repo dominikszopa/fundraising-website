@@ -180,18 +180,18 @@ django-crispy-forms = ">=2.3"
 
 [[package]]
 name = "django"
-version = "4.2.25"
+version = "5.2.7"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django-4.2.25-py3-none-any.whl", hash = "sha256:9584cf26b174b35620e53c2558b09d7eb180a655a3470474f513ff9acb494f8c"},
-    {file = "django-4.2.25.tar.gz", hash = "sha256:2391ab3d78191caaae2c963c19fd70b99e9751008da22a0adcc667c5a4f8d311"},
+    {file = "django-5.2.7-py3-none-any.whl", hash = "sha256:59a13a6515f787dec9d97a0438cd2efac78c8aca1c80025244b0fe507fe0754b"},
+    {file = "django-5.2.7.tar.gz", hash = "sha256:e0f6f12e2551b1716a95a63a1366ca91bbcd7be059862c1b18f989b1da356cdd"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.6.0,<4"
+asgiref = ">=3.8.1"
 sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -482,4 +482,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "89bb03b678af0e8f8a99d20db377a4dc294984b767d360e9e3d97bac6cbe5f52"
+content-hash = "f83f5de358f73e3cdaa46e14f14f9a49e795b0b73a889d646eddc9dbdb14af0c"

@@ -164,19 +164,22 @@ files = [
 
 [[package]]
 name = "crispy-bootstrap4"
-version = "2024.10"
+version = "2025.6"
 description = "Bootstrap4 template pack for django-crispy-forms"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "crispy-bootstrap4-2024.10.tar.gz", hash = "sha256:503e8922b0f3b5262a6fdf303a3a94eb2a07514812f1ca130b88f7c02dd25e2b"},
-    {file = "crispy_bootstrap4-2024.10-py3-none-any.whl", hash = "sha256:138a97884044ae4c4799c80595b36c42066e4e933431e2e971611e251c84f96c"},
+    {file = "crispy_bootstrap4-2025.6-py3-none-any.whl", hash = "sha256:64bf732b27690c7147bfaa154b4b690217bee81c71731daf5da73de00ee01943"},
+    {file = "crispy_bootstrap4-2025.6.tar.gz", hash = "sha256:69066c33fc9c8841cbd8741a7ec99ad9234f12877b4549490031a47c2c1abd79"},
 ]
 
 [package.dependencies]
 django = ">=4.2"
 django-crispy-forms = ">=2.3"
+
+[package.extras]
+test = ["pytest", "pytest-django"]
 
 [[package]]
 name = "django"
@@ -482,4 +485,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "f83f5de358f73e3cdaa46e14f14f9a49e795b0b73a889d646eddc9dbdb14af0c"
+content-hash = "39449316b894dd3b47614649da2973af4154ba1e8d88e1e930ded9c273488ca7"

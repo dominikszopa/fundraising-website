@@ -376,14 +376,14 @@ xmp = ["defusedxml"]
 
 [[package]]
 name = "python-dotenv"
-version = "1.1.1"
+version = "1.2.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "python_dotenv-1.1.1-py3-none-any.whl", hash = "sha256:31f23644fe2602f88ff55e1f5c79ba497e01224ee7737937930c448e4d0e24dc"},
-    {file = "python_dotenv-1.1.1.tar.gz", hash = "sha256:a8a6399716257f45be6a007360200409fce5cda2661e3dec71d23dc15f6189ab"},
+    {file = "python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61"},
+    {file = "python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6"},
 ]
 
 [package.extras]
@@ -485,4 +485,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "e02b285ac3b310fd03e528ed6cb95674bc511d9faf52c0f8e61c8fbfe144955c"
+content-hash = "f3632e0b1e7a5f88584057fd6d326b168e248af05bafd546af5a9e9256cf371f"

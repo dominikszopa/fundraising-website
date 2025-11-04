@@ -1,0 +1,96 @@
+name: Django Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ['3.12']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached dependencies
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+
+    - name: Install project
+      run: poetry install --no-interaction
+
+    - name: Create .env file
+      run: |
+        cat > .env << EOF
+        DEBUG=True
+        SECRET_KEY=test-secret-key-for-ci-only
+        PAYPAL_ACCOUNT=test@example.com
+        PAYPAL_TEST=True
+        EMAIL_HOST_USER=test@example.com
+        EMAIL_HOST_PASSWORD=test-password
+        EMAIL_HOST=smtp.example.com
+        EMAIL_PORT=587
+        EOF
+
+    - name: Create data directory for SQLite database
+      run: mkdir -p data
+
+    - name: Run migrations
+      run: poetry run python3 manage.py migrate --noinput --settings=fundraiser.settings.dev
+
+    - name: Run linting (flake8)
+      run: |
+        if poetry run python3 -c "import flake8" 2>/dev/null; then
+          poetry run python3 -m flake8 --max-line-length=100 --exclude=migrations,__pycache__,.venv
+        else
+          echo "Flake8 not installed, skipping linting"
+        fi
+      continue-on-error: true
+
+    - name: Run Django tests
+      run: poetry run python3 manage.py test team_fundraising.tests --settings=fundraiser.settings.dev
+
+    - name: Run specific test modules
+      run: |
+        poetry run python3 manage.py test team_fundraising.tests.test_models --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_views --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_signup --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_donations --settings=fundraiser.settings.dev
+
+    - name: Check for test coverage (if installed)
+      run: |
+        if poetry run which coverage; then
+          poetry run coverage run --source='.' manage.py test team_fundraising.tests --settings=fundraiser.settings.dev
+          poetry run coverage report
+        else
+          echo "Coverage not installed, skipping"
+        fi
+      continue-on-error: true

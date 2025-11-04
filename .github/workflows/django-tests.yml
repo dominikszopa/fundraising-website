@@ -56,29 +56,39 @@ jobs:
         PAYPAL_TEST=True
         EMAIL_HOST_USER=test@example.com
         EMAIL_HOST_PASSWORD=test-password
+        EMAIL_HOST=smtp.example.com
+        EMAIL_PORT=587
         EOF
 
+    - name: Create data directory for SQLite database
+      run: mkdir -p data
+
     - name: Run migrations
-      run: poetry run python3 manage.py migrate --noinput
+      run: poetry run python3 manage.py migrate --noinput --settings=fundraiser.settings.dev
 
     - name: Run linting (flake8)
-      run: poetry run python3 -m flake8 --max-line-length=100 --exclude=migrations,__pycache__,.venv
+      run: |
+        if poetry run python3 -c "import flake8" 2>/dev/null; then
+          poetry run python3 -m flake8 --max-line-length=100 --exclude=migrations,__pycache__,.venv
+        else
+          echo "Flake8 not installed, skipping linting"
+        fi
       continue-on-error: true
 
     - name: Run Django tests
-      run: poetry run python3 manage.py test team_fundraising.tests
+      run: poetry run python3 manage.py test team_fundraising.tests --settings=fundraiser.settings.dev
 
     - name: Run specific test modules
       run: |
-        poetry run python3 manage.py test team_fundraising.tests.test_models
-        poetry run python3 manage.py test team_fundraising.tests.test_views
-        poetry run python3 manage.py test team_fundraising.tests.test_signup
-        poetry run python3 manage.py test team_fundraising.tests.test_donations
+        poetry run python3 manage.py test team_fundraising.tests.test_models --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_views --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_signup --settings=fundraiser.settings.dev
+        poetry run python3 manage.py test team_fundraising.tests.test_donations --settings=fundraiser.settings.dev
 
     - name: Check for test coverage (if installed)
       run: |
         if poetry run which coverage; then
-          poetry run coverage run --source='.' manage.py test team_fundraising.tests
+          poetry run coverage run --source='.' manage.py test team_fundraising.tests --settings=fundraiser.settings.dev
           poetry run coverage report
         else
           echo "Coverage not installed, skipping"

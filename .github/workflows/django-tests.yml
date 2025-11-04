@@ -52,7 +52,6 @@ jobs:
         cat > .env << EOF
         DEBUG=True
         SECRET_KEY=test-secret-key-for-ci-only
-        DATABASE_URL=sqlite:///${{ github.workspace }}/db.sqlite3
         PAYPAL_ACCOUNT=test@example.com
         PAYPAL_TEST=True
         EMAIL_HOST_USER=test@example.com

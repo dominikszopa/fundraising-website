@@ -14,6 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Create superuser: `python3 manage.py createsuperuser`
 - Load test data: `python3 manage.py loaddata startingdata`
 - Collect static files: `python3 manage.py collectstatic`
+- Migrate from SQLite to PostgreSQL: `python3 manage.py migrate_sqlite_to_postgres`
 
 ## Code Style
 - Follow PEP 8 with 100 character line limit (enforced by .flake8)
@@ -33,7 +34,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Main Django app: `team_fundraising` (contains models, views, forms, templates)
 - Bootstrap 4 for frontend with django-crispy-forms (using crispy_bootstrap4)
 - PayPal integration via django-paypal with IPN (Instant Payment Notification)
-- SQLite database stored in `data/db.sqlite3`
+- PostgreSQL database (configurable via environment variables)
 - Media files (photos) uploaded to `media/photos/` with thumbnails in `media/photos_small/`
 - Static files collected to `static/` directory
 
@@ -52,6 +53,7 @@ Additional models:
 ### Settings & Environment
 - Environment variables loaded from `.env` file via python-dotenv
 - Required env vars: `SECRET_KEY`, `DEBUG`
+- Database: `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`
 - Optional: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`
 - PayPal: `PAYPAL_TEST`, `PAYPAL_ACCOUNT`
 - Use `get_env_variable()` and `read_boolean()` helpers from `base.py`

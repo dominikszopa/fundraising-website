@@ -32,6 +32,7 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 ### Prerequisites
 
 * [Python 3.12](https://www.python.org/)
+* [PostgreSQL](https://www.postgresql.org/) (version 12 or higher recommended)
 * [git](https://git-scm.com/)
 
 ### Docker Installation
@@ -71,7 +72,46 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
    `poetry shell`
 
-1. Create a database:
+1. Create a PostgreSQL database:
+
+   **Having trouble connecting?** See [PostgreSQL Setup Guide](docs/POSTGRESQL_SETUP.md) for detailed instructions and troubleshooting.
+
+   ```bash
+   # Connect to PostgreSQL
+   psql -U postgres -h localhost
+
+   # Create the database
+   CREATE DATABASE fundraising;
+
+   # Create a user (recommended for security)
+   CREATE USER fundraiser WITH PASSWORD 'your_password';
+
+   # Grant privileges
+   GRANT ALL PRIVILEGES ON DATABASE fundraising TO fundraiser;
+
+   # For PostgreSQL 15+, also grant schema permissions
+   \c fundraising
+   GRANT ALL ON SCHEMA public TO fundraiser;
+
+   # Exit psql
+   \q
+   ```
+
+   **Common Issues:**
+   - If you get "Peer authentication failed", see [docs/POSTGRESQL_SETUP.md](docs/POSTGRESQL_SETUP.md)
+   - If psql command is not found, install PostgreSQL first: `sudo apt-get install postgresql`
+
+1. Update your .env file with database credentials:
+
+   ```
+   DATABASE_NAME=fundraising
+   DATABASE_USER=fundraiser
+   DATABASE_PASSWORD=your_password
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   ```
+
+1. Run migrations to create database tables:
 
    `python3 ./manage.py migrate`
 
@@ -88,6 +128,29 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
    `python3 ./manage.py runserver localhost:8000`
 
 1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+
+### Migrating from SQLite to PostgreSQL
+
+If you have an existing SQLite database with data you want to migrate to PostgreSQL:
+
+1. Follow all the steps above to set up PostgreSQL and run migrations
+
+1. Run the migration command:
+
+   `python3 ./manage.py migrate_sqlite_to_postgres`
+
+   You can specify a custom SQLite path:
+
+   `python3 ./manage.py migrate_sqlite_to_postgres --sqlite-path=/path/to/db.sqlite3`
+
+1. The command will:
+   - Read all data from your SQLite database
+   - Clear the PostgreSQL database
+   - Import all users, campaigns, fundraisers, and donations
+   - Preserve all relationships and foreign keys
+   - Keep your existing media files
+
+1. After successful migration, you can backup and remove the old SQLite database
 
 ### Email
 

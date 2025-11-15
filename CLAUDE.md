@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Create superuser: `python3 manage.py createsuperuser`
 - Load test data: `python3 manage.py loaddata startingdata`
 - Collect static files: `python3 manage.py collectstatic`
-- Migrate from SQLite to PostgreSQL: `python3 manage.py migrate_sqlite_to_postgres`
+- Migrate from SQLite to PostgreSQL: Use `pgloader` (see README.md)
 
 ## Code Style
 - Follow PEP 8 with 100 character line limit (enforced by .flake8)

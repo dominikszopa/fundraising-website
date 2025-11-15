@@ -135,22 +135,47 @@ If you have an existing SQLite database with data you want to migrate to Postgre
 
 1. Follow all the steps above to set up PostgreSQL and run migrations
 
-1. Run the migration command:
+1. Install pgloader:
 
-   `python3 ./manage.py migrate_sqlite_to_postgres`
+   ```bash
+   # On Ubuntu/Debian/WSL
+   sudo apt-get install pgloader
 
-   You can specify a custom SQLite path:
+   # On macOS
+   brew install pgloader
+   ```
 
-   `python3 ./manage.py migrate_sqlite_to_postgres --sqlite-path=/path/to/db.sqlite3`
+1. Create a pgloader configuration file `migration.load`:
 
-1. The command will:
-   - Read all data from your SQLite database
-   - Clear the PostgreSQL database
-   - Import all users, campaigns, fundraisers, and donations
-   - Preserve all relationships and foreign keys
-   - Keep your existing media files
+   ```
+   LOAD DATABASE
+       FROM sqlite://data/db.sqlite3
+       INTO postgresql://fundraiser:your_password@localhost/fundraising
 
-1. After successful migration, you can backup and remove the old SQLite database
+   WITH include drop, create tables, create indexes, reset sequences
+
+   SET work_mem to '16MB', maintenance_work_mem to '512 MB';
+   ```
+
+1. Run pgloader:
+
+   ```bash
+   pgloader migration.load
+   ```
+
+   pgloader will:
+   - Automatically create tables and indexes
+   - Migrate all data with proper type conversions
+   - Preserve relationships and foreign keys
+   - Handle timezone conversions
+   - Show progress and statistics
+
+1. After successful migration:
+   - Verify your data: `psql -U fundraiser -h localhost -d fundraising`
+   - Your media files are already in place
+   - You can backup and remove the old SQLite database
+
+**Note:** pgloader is a dedicated database migration tool that handles edge cases better than custom scripts. It's the recommended approach for production migrations.
 
 ### Email
 

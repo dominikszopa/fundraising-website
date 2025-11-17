@@ -1,0 +1,44 @@
+# Docker Compose Override - Connect to Local PostgreSQL
+#
+# This file shows how to configure Docker to use your local PostgreSQL database
+# instead of running PostgreSQL in a container.
+#
+# To use this:
+# 1. Copy this file: cp docker-compose.override.yml.example docker-compose.override.yml
+# 2. Update DATABASE_HOST below based on your OS (see comments)
+# 3. Ensure your local PostgreSQL is running and accessible
+# 4. Run: docker-compose up
+#
+# Docker Compose will automatically merge this with docker-compose.yml
+
+services:
+  # Remove the PostgreSQL container - we'll use host PostgreSQL instead
+  db:
+    image: tianon/true
+    restart: "no"
+
+  gunicorn:
+    environment:
+      # Use dev settings for local development
+      - DJANGO_SETTINGS_MODULE=fundraiser.settings.dev
+
+      # For Mac/Windows with Docker Desktop:
+      - DATABASE_HOST=host.docker.internal
+
+      # For Linux, uncomment this instead:
+      # - DATABASE_HOST=172.17.0.1
+
+      # These should match your local PostgreSQL setup
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=fundraising
+      - DATABASE_USER=fundraiser
+      # DATABASE_PASSWORD comes from .env file
+
+    # Remove dependency on db container
+    depends_on:
+      - db
+
+    # Override the depends_on to remove health check
+    depends_on:
+      db:
+        condition: service_started

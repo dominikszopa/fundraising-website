@@ -1,6 +1,23 @@
 
 services:
 
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=fundraising
+      - POSTGRES_USER=fundraiser
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fundraiser -d fundraising"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   gunicorn:
     build:
       context: .
@@ -10,8 +27,16 @@ services:
       - .:/app/team_fundraising
     env_file:
       - .env
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=fundraising
+      - DATABASE_USER=fundraiser
     ports:
       - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
   nginx:
@@ -28,4 +53,4 @@ services:
       - gunicorn
 
 volumes:
-  db_data:
+  postgres_data:

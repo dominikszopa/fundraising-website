@@ -37,24 +37,90 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
 ### Docker Installation
 
+Docker can be run in two modes:
+
+#### Mode 1: Self-Contained (Recommended for Production)
+
+This mode runs PostgreSQL as a Docker container. Everything is self-contained.
+
 1. Install Docker and Docker Compose
 
 1. Clone this repository:
 
-   `git clone https://github.com/dominikszopa/fundraising.git`
-   'cd fundraising'
+   ```bash
+   git clone https://github.com/dominikszopa/fundraising.git
+   cd fundraising
+   ```
 
 1. Copy .env.example to .env:
 
-   `cp .env.example .env`
+   ```bash
+   cp .env.example .env
+   ```
 
-1. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
+1. Edit .env and configure required values:
+   * `SECRET_KEY`: A long (32+ chars) random string
+   * `DATABASE_PASSWORD`: A secure password for PostgreSQL
 
-1. Run the following command to start the app:
+1. Start the application:
 
-   `docker-compose up`
+   ```bash
+   # Development/Testing
+   docker-compose up -d
 
-1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+   # Production (with production-specific settings)
+   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+   ```
+
+   This will start:
+   * PostgreSQL database (port 5432)
+   * Django application with Gunicorn (port 8000)
+   * Nginx reverse proxy (ports 80/443)
+
+1. The first startup will automatically:
+   * Create the PostgreSQL database
+   * Run migrations
+   * Create a superuser (admin)
+   * Load test data
+
+1. Browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+
+1. Useful commands:
+   * View logs: `docker-compose logs -f`
+   * Stop: `docker-compose down`
+   * Reset database: `docker-compose down -v` (deletes postgres_data volume)
+
+#### Mode 2: Use Local PostgreSQL
+
+This mode connects Docker containers to your local PostgreSQL database (useful for development).
+
+1. Follow steps 1-4 from Mode 1 above
+
+1. Set up local PostgreSQL (see [Local Development Installation](#local-development-installation))
+
+1. Create override file to use host PostgreSQL:
+
+   ```bash
+   cp docker-compose.override.yml.example docker-compose.override.yml
+   ```
+
+1. Edit `docker-compose.override.yml` and set the correct `DATABASE_HOST`:
+   * Mac/Windows: Use `host.docker.internal`
+   * Linux: Use `172.17.0.1`
+
+1. Ensure your local PostgreSQL allows connections from Docker:
+   * Edit `pg_hba.conf` to allow connections from 172.17.0.0/16 (Linux)
+   * Or ensure localhost connections are allowed (Mac/Windows)
+
+1. Start the application:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   Docker will automatically merge docker-compose.yml with your override file.
+
+1. The containers will now use your local PostgreSQL database
 
 ### Local Development Installation
 

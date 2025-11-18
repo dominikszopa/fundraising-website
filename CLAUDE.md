@@ -16,6 +16,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Collect static files: `python3 manage.py collectstatic`
 - Migrate from SQLite to PostgreSQL: Use `pgloader` (see README.md)
 
+## Testing with PostgreSQL
+- PostgreSQL user needs CREATEDB permission for tests
+- Django creates a `test_fundraising` database automatically
+- Tests are compatible with both SQLite and PostgreSQL
+
 ## Code Style
 - Follow PEP 8 with 100 character line limit (enforced by .flake8)
 - Sort imports alphabetically: standard library, third-party, local

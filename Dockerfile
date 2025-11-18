@@ -41,3 +41,9 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
+
+# Set the entrypoint script
+ENTRYPOINT ["/app/team_fundraising/entrypoint.sh"]
+
+# Default command to run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "fundraiser.wsgi:application"]

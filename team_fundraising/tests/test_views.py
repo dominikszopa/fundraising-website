@@ -1,5 +1,6 @@
 from .test_models import TestModels
 from django.urls import reverse
+from ..models import Campaign, Fundraiser
 
 
 class HomePageViewTests(TestModels):
@@ -7,19 +8,22 @@ class HomePageViewTests(TestModels):
 
     def test_homepage_loads(self):
         # Just test the top of the homepage loads with the campaign name
-        response = self.client.get(reverse('team_fundraising:index', args='1'))
+        campaign = Campaign.objects.get(name='Test Campaign')
+        response = self.client.get(reverse('team_fundraising:index', args=[campaign.id]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['campaign'].name, 'Test Campaign')
 
     def test_homepage_totals(self):
         # Check the homepage displays total donations and raised
-        response = self.client.get(reverse('team_fundraising:index', args='1'))
+        campaign = Campaign.objects.get(name='Test Campaign')
+        response = self.client.get(reverse('team_fundraising:index', args=[campaign.id]))
         self.assertEqual(response.context['total_raised'], 83.00)
         self.assertEqual(response.context['campaign'].goal, 1000.00)
 
     def test_homepage_fundraiser(self):
         # Check the first fundraiser has the right information
-        response = self.client.get(reverse('team_fundraising:index', args='1'))
+        campaign = Campaign.objects.get(name='Test Campaign')
+        response = self.client.get(reverse('team_fundraising:index', args=[campaign.id]))
         self.assertEqual(
             response.context['fundraisers'][0].name, 'First Fundraiser'
         )
@@ -32,7 +36,8 @@ class HomePageViewTests(TestModels):
 
     def test_empty_homepage_fundraiser(self):
         # Check a fundraiser without donations still shows up
-        response = self.client.get(reverse('team_fundraising:index', args='1'))
+        campaign = Campaign.objects.get(name='Test Campaign')
+        response = self.client.get(reverse('team_fundraising:index', args=[campaign.id]))
         self.assertEqual(
             response.context['fundraisers'][1].name, 'Empty Fundraiser'
         )
@@ -44,7 +49,8 @@ class HomePageViewTests(TestModels):
         )
 
     def test_recent_donations(self):
-        response = self.client.get(reverse('team_fundraising:index', args='1'))
+        campaign = Campaign.objects.get(name='Test Campaign')
+        response = self.client.get(reverse('team_fundraising:index', args=[campaign.id]))
         self.assertEqual(
             response.context['recent_donations'][0].amount, 33.00
         )
@@ -55,8 +61,9 @@ class FundraiserViewTests(TestModels):
 
     def test_fundraiser(self):
         """ Check the information on the first fundraiser """
+        fundraiser = Fundraiser.objects.get(name='First Fundraiser')
         response = self.client.get(
-            reverse('team_fundraising:fundraiser', args='1')
+            reverse('team_fundraising:fundraiser', args=[fundraiser.id])
         )
         self.assertEqual(
             response.context['fundraiser'].name, 'First Fundraiser'
@@ -73,8 +80,9 @@ class FundraiserViewTests(TestModels):
 
     def test_empty_fundraiser(self):
         """ Check the information on a fundraiser without donations """
+        fundraiser = Fundraiser.objects.get(name='Empty Fundraiser')
         response = self.client.get(
-            reverse('team_fundraising:fundraiser', args='2')
+            reverse('team_fundraising:fundraiser', args=[fundraiser.id])
         )
         self.assertEqual(
             response.context['fundraiser'].name, 'Empty Fundraiser'

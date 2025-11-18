@@ -18,15 +18,24 @@ services:
     restart: "no"
 
   gunicorn:
+    # Enable host.docker.internal on Linux/WSL2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Skip entrypoint - we don't want to run migrations or load data on local DB
+    # This prevents the container from running migrations and loading fixtures on startup
+    entrypoint: []
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "fundraiser.wsgi:application"]
+
     environment:
       # Use dev settings for local development
       - DJANGO_SETTINGS_MODULE=fundraiser.settings.dev
 
-      # For Mac/Windows with Docker Desktop:
+      # For Mac/Windows with Docker Desktop or Linux/WSL2:
       - DATABASE_HOST=host.docker.internal
 
-      # For Linux, uncomment this instead:
-      # - DATABASE_HOST=172.17.0.1
+      # For Linux without WSL2, uncomment this instead:
+      # - DATABASE_HOST=172.18.0.1
 
       # These should match your local PostgreSQL setup
       - DATABASE_PORT=5432

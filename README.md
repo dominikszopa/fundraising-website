@@ -150,7 +150,8 @@ This mode connects Docker containers to your local PostgreSQL database (useful f
    CREATE DATABASE fundraising;
 
    # Create a user (recommended for security)
-   CREATE USER fundraiser WITH PASSWORD 'your_password';
+   # CREATEDB permission is needed for running Django tests
+   CREATE USER fundraiser WITH PASSWORD 'your_password' CREATEDB;
 
    # Grant privileges
    GRANT ALL PRIVILEGES ON DATABASE fundraising TO fundraiser;

@@ -28,6 +28,8 @@ services:
     env_file:
       - .env
     environment:
+       # Use dev settings for local development
+      - DJANGO_SETTINGS_MODULE=fundraiser.settings.dev
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - DATABASE_NAME=fundraising

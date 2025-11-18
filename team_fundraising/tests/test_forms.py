@@ -1,5 +1,6 @@
 from .test_models import TestModels
 from ..forms import SignUpForm, DonationForm, FundraiserForm
+from ..models import Campaign
 
 
 class SignupTests(TestModels):
@@ -57,9 +58,10 @@ class DonationFormTests(TestModels):
 class FundraiserFormTest(TestModels):
 
     def test_simple_fundraiser(self):
+        campaign = Campaign.objects.first()
         form = FundraiserForm(
             data={
-                'campaign': '1',
+                'campaign': campaign.id,
                 'name': 'Test Post',
                 'goal': '200',
                 'email': 'name@domain.com',

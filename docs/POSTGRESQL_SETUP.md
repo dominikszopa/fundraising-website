@@ -114,7 +114,8 @@ psql -U postgres -h localhost
 CREATE DATABASE fundraising;
 
 # Create a dedicated user (recommended for security)
-CREATE USER fundraiser WITH PASSWORD 'your_fundraiser_password';
+# CREATEDB permission is needed for Django to create test databases
+CREATE USER fundraiser WITH PASSWORD 'your_fundraiser_password' CREATEDB;
 
 # Grant privileges
 GRANT ALL PRIVILEGES ON DATABASE fundraising TO fundraiser;

@@ -26,7 +26,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_with_all_fields(self):
         """Test creating a donation with all fields populated"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'John Donor',
@@ -70,7 +70,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_minimal_fields(self):
         """Test creating a donation with only required fields"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Jane Donor',
@@ -98,7 +98,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_anonymous(self):
         """Test creating an anonymous donation"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Anonymous Donor',
@@ -125,7 +125,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_other_amount(self):
         """Test donation with 'other' amount option"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Custom Donor',
@@ -149,7 +149,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_large_amount(self):
         """Test donation with a large amount"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Big Donor',
@@ -172,7 +172,7 @@ class TestDonationCreation(TestCase):
 
     def test_donation_with_tax_receipt_info(self):
         """Test donation with tax receipt information"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Tax Donor',
@@ -225,7 +225,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_missing_name(self):
         """Test that donation fails without a name"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'email': 'noname@example.com',
@@ -248,7 +248,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_missing_email(self):
         """Test that donation fails without an email"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'No Email',
@@ -270,7 +270,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_missing_amount(self):
         """Test that donation fails without an amount"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'No Amount',
@@ -292,7 +292,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_invalid_email(self):
         """Test that donation fails with invalid email"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Bad Email',
@@ -315,7 +315,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_invalid_other_amount(self):
         """Test that donation fails with non-numeric 'other' amount"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Bad Amount',
@@ -339,7 +339,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_empty_other_amount(self):
         """Test that donation fails when 'other' amount is empty"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Empty Other',
@@ -363,7 +363,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_negative_amount(self):
         """Test donation with negative amount"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Negative Donor',
@@ -385,7 +385,7 @@ class TestDonationValidation(TestCase):
 
     def test_donation_zero_amount(self):
         """Test donation with zero amount"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Zero Donor',
@@ -443,7 +443,7 @@ class TestDonationViews(TestCase):
 
     def test_donation_page_get_request(self):
         """Test that GET request displays donation form"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         response = self.client.get(
             reverse('team_fundraising:donation', args=[fundraiser.id])
@@ -457,7 +457,7 @@ class TestDonationViews(TestCase):
 
     def test_donation_creates_pending_status(self):
         """Test that new donations have pending payment status"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Pending Donor',
@@ -477,7 +477,7 @@ class TestDonationViews(TestCase):
 
     def test_donation_not_counted_until_paid(self):
         """Test that pending donations don't count toward fundraiser total"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         # Check initial total
         initial_total = fundraiser.total_raised()
@@ -509,7 +509,7 @@ class TestDonationViews(TestCase):
 
     def test_multiple_donations_same_fundraiser(self):
         """Test multiple people can donate to same fundraiser"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         # First donation
         donation_data_1 = {
@@ -551,7 +551,7 @@ class TestDonationViews(TestCase):
 
     def test_donation_with_long_message(self):
         """Test donation with maximum length message"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         long_message = 'X' * 280  # Max length is 280 characters
 
@@ -574,7 +574,7 @@ class TestDonationViews(TestCase):
 
     def test_donation_decimal_amounts(self):
         """Test donations with decimal amounts"""
-        fundraiser = Fundraiser.objects.get(id=1)
+        fundraiser = Fundraiser.objects.first()
 
         donation_data = {
             'name': 'Decimal Donor',

@@ -20,7 +20,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_new_user_and_fundraiser(self):
         """Test creating a new user and fundraiser together"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         signup_data = {
             'username': 'testuser',
@@ -58,7 +58,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_minimal_required_fields(self):
         """Test creating fundraiser with only required fields"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         signup_data = {
             'username': 'minimaluser',
@@ -87,7 +87,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_existing_user_new_fundraiser(self):
         """Test adding a new fundraiser to an existing user account"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Create an existing user
         existing_user = User.objects.create_user(
@@ -123,7 +123,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_existing_user_wrong_password(self):
         """Test that signup fails with wrong password for existing user"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Create an existing user
         User.objects.create_user(
@@ -156,7 +156,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_duplicate_fundraiser_in_same_campaign(self):
         """Test that user cannot create duplicate fundraiser in same campaign"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Create user with existing fundraiser
         user = User.objects.create_user(
@@ -194,7 +194,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_authenticated_user_adding_fundraiser(self):
         """Test that already logged-in user can add a fundraiser"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Create and log in a user
         user = User.objects.create_user(
@@ -223,7 +223,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_missing_fundraiser_name(self):
         """Test that signup fails when fundraiser name is missing"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Missing fundraiser name
         signup_data = {
@@ -246,7 +246,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_missing_goal(self):
         """Test that signup fails when required fundraiser field is missing"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         signup_data = {
             'username': 'testuser',
@@ -272,7 +272,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_get_request(self):
         """Test that GET request displays signup form"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         response = self.client.get(
             reverse('team_fundraising:signup', args=[campaign.id])
@@ -285,7 +285,7 @@ class TestFundraiserSignup(TestCase):
 
     def test_signup_prepopulates_for_authenticated_user(self):
         """Test that signup form prepopulates data for logged-in users"""
-        campaign = Campaign.objects.get(id=1)
+        campaign = Campaign.objects.first()
 
         # Create and log in a user
         user = User.objects.create_user(

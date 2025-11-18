@@ -8,7 +8,6 @@ app_name = 'team_fundraising'
 urlpatterns = [
     path('', views.index_view_default, name='index_default'),
     path('paypal/', include('paypal.standard.ipn.urls')),
-    path('<campaign_id>/', views.index_view, name='index'),
     path(
         'fundraiser/<int:fundraiser_id>/',
         views.fundraiser_view,
@@ -26,7 +25,6 @@ urlpatterns = [
         views.update_fundraiser,
         name="update_fundraiser",
     ),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/<int:campaign_id>/', views.signup, name="signup"),
     path(
         'accounts/signup_logged_in/<int:campaign_id>/',
@@ -38,5 +36,7 @@ urlpatterns = [
         views.change_password,
         name='change_password'
     ),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('about/<int:campaign_id>/', About.as_view(), name="about"),
+    path('<int:campaign_id>/', views.index_view, name='index'),
 ]

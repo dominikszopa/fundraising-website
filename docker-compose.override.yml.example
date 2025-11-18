@@ -34,10 +34,6 @@ services:
       - DATABASE_USER=fundraiser
       # DATABASE_PASSWORD comes from .env file
 
-    # Remove dependency on db container
-    depends_on:
-      - db
-
     # Override the depends_on to remove health check
     depends_on:
       db:

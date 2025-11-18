@@ -1,0 +1,28 @@
+# Docker Compose Production Configuration
+#
+# This file contains production-specific overrides.
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Production settings:
+# - No volume mounts for code (uses code baked into image)
+# - Production-optimized settings
+# - Security hardening
+
+services:
+  db:
+    # Production: Don't expose PostgreSQL port to host
+    ports: []
+
+  gunicorn:
+    # Don't mount code as volume in production (use what's in the image)
+    volumes: []
+
+    environment:
+      - DJANGO_SETTINGS_MODULE=fundraiser.settings.prod
+
+  nginx:
+    # Production: Only expose HTTPS if certificates are available
+    # Customize based on your SSL/TLS setup
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro

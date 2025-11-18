@@ -10,7 +10,12 @@ ENV DJANGO_SETTINGS_MODULE=fundraiser.settings.prod
 WORKDIR /app/team_fundraising
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y nginx && apt-get clean
+# libpq-dev is required for psycopg2 (PostgreSQL adapter)
+RUN apt-get update && apt-get install -y \
+    nginx \
+    libpq-dev \
+    gcc \
+    && apt-get clean
 
 # Install Poetry
 RUN pip install --no-cache-dir poetry

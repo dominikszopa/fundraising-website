@@ -166,6 +166,10 @@
     [ ] Write to a file or db what the payment and received was
 [ ] Add CAPTCHA for signup
 [x] Create tests
+[x] Switch to PostgreSQL
+    [x] Try pgloader
+    [ ] Update docker to use PostgreSQL
+    [ ] Fix tests for PostgreSQL
 
 Future:
-[ ] Switch to PostgreSQL
+

@@ -144,3 +144,6 @@ dmypy.json
 
 # Backup sqlite databases
 backup/
+
+# Docker override file (local configuration)
+docker-compose.override.yml

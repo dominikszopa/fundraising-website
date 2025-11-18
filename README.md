@@ -32,28 +32,95 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 ### Prerequisites
 
 * [Python 3.12](https://www.python.org/)
+* [PostgreSQL](https://www.postgresql.org/) (version 12 or higher recommended)
 * [git](https://git-scm.com/)
 
 ### Docker Installation
+
+Docker can be run in two modes:
+
+#### Mode 1: Self-Contained (Recommended for Production)
+
+This mode runs PostgreSQL as a Docker container. Everything is self-contained.
 
 1. Install Docker and Docker Compose
 
 1. Clone this repository:
 
-   `git clone https://github.com/dominikszopa/fundraising.git`
-   'cd fundraising'
+   ```bash
+   git clone https://github.com/dominikszopa/fundraising.git
+   cd fundraising
+   ```
 
 1. Copy .env.example to .env:
 
-   `cp .env.example .env`
+   ```bash
+   cp .env.example .env
+   ```
 
-1. Edit .env and add a SECRET_KEY value, a long (32 chars or more) random string.
+1. Edit .env and configure required values:
+   * `SECRET_KEY`: A long (32+ chars) random string
+   * `DATABASE_PASSWORD`: A secure password for PostgreSQL
 
-1. Run the following command to start the app:
+1. Start the application:
 
-   `docker-compose up`
+   ```bash
+   # Development/Testing
+   docker-compose up -d
 
-1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+   # Production (with production-specific settings)
+   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+   ```
+
+   This will start:
+   * PostgreSQL database (port 5432)
+   * Django application with Gunicorn (port 8000)
+   * Nginx reverse proxy (ports 80/443)
+
+1. The first startup will automatically:
+   * Create the PostgreSQL database
+   * Run migrations
+   * Create a superuser (admin)
+   * Load test data
+
+1. Browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+
+1. Useful commands:
+   * View logs: `docker-compose logs -f`
+   * Stop: `docker-compose down`
+   * Reset database: `docker-compose down -v` (deletes postgres_data volume)
+
+#### Mode 2: Use Local PostgreSQL
+
+This mode connects Docker containers to your local PostgreSQL database (useful for development).
+
+1. Follow steps 1-4 from Mode 1 above
+
+1. Set up local PostgreSQL (see [Local Development Installation](#local-development-installation))
+
+1. Create override file to use host PostgreSQL:
+
+   ```bash
+   cp docker-compose.override.yml.example docker-compose.override.yml
+   ```
+
+1. Edit `docker-compose.override.yml` and set the correct `DATABASE_HOST`:
+   * Mac/Windows: Use `host.docker.internal`
+   * Linux: Use `172.17.0.1`
+
+1. Ensure your local PostgreSQL allows connections from Docker:
+   * Edit `pg_hba.conf` to allow connections from 172.17.0.0/16 (Linux)
+   * Or ensure localhost connections are allowed (Mac/Windows)
+
+1. Start the application:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   Docker will automatically merge docker-compose.yml with your override file.
+
+1. The containers will now use your local PostgreSQL database
 
 ### Local Development Installation
 
@@ -71,7 +138,46 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
 
    `poetry shell`
 
-1. Create a database:
+1. Create a PostgreSQL database:
+
+   **Having trouble connecting?** See [PostgreSQL Setup Guide](docs/POSTGRESQL_SETUP.md) for detailed instructions and troubleshooting.
+
+   ```bash
+   # Connect to PostgreSQL
+   psql -U postgres -h localhost
+
+   # Create the database
+   CREATE DATABASE fundraising;
+
+   # Create a user (recommended for security)
+   CREATE USER fundraiser WITH PASSWORD 'your_password';
+
+   # Grant privileges
+   GRANT ALL PRIVILEGES ON DATABASE fundraising TO fundraiser;
+
+   # For PostgreSQL 15+, also grant schema permissions
+   \c fundraising
+   GRANT ALL ON SCHEMA public TO fundraiser;
+
+   # Exit psql
+   \q
+   ```
+
+   **Common Issues:**
+   - If you get "Peer authentication failed", see [docs/POSTGRESQL_SETUP.md](docs/POSTGRESQL_SETUP.md)
+   - If psql command is not found, install PostgreSQL first: `sudo apt-get install postgresql`
+
+1. Update your .env file with database credentials:
+
+   ```
+   DATABASE_NAME=fundraising
+   DATABASE_USER=fundraiser
+   DATABASE_PASSWORD=your_password
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   ```
+
+1. Run migrations to create database tables:
 
    `python3 ./manage.py migrate`
 
@@ -88,6 +194,54 @@ Currently used at: [https://donations.triplecrownforheart.ca/team_fundraising/](
    `python3 ./manage.py runserver localhost:8000`
 
 1. You can browse to [http://localhost:8000/team_fundraising/](http://localhost:8000/team_fundraising/)
+
+### Migrating from SQLite to PostgreSQL
+
+If you have an existing SQLite database with data you want to migrate to PostgreSQL:
+
+1. Follow all the steps above to set up PostgreSQL and run migrations
+
+1. Install pgloader:
+
+   ```bash
+   # On Ubuntu/Debian/WSL
+   sudo apt-get install pgloader
+
+   # On macOS
+   brew install pgloader
+   ```
+
+1. Create a pgloader configuration file `migration.load`:
+
+   ```
+   LOAD DATABASE
+       FROM sqlite://data/db.sqlite3
+       INTO postgresql://fundraiser:your_password@localhost/fundraising
+
+   WITH include drop, create tables, create indexes, reset sequences
+
+   SET work_mem to '16MB', maintenance_work_mem to '512 MB';
+   ```
+
+1. Run pgloader:
+
+   ```bash
+   pgloader migration.load
+   ```
+
+   pgloader will:
+   - Automatically create tables and indexes
+   - Migrate all data with proper type conversions
+   - Preserve relationships and foreign keys
+   - Handle timezone conversions
+   - Show progress and statistics
+
+1. After successful migration:
+   - Verify your data: `psql -U fundraiser -h localhost -d fundraising`
+   - Your media files are already in place
+   - You can backup and remove the old SQLite database
+
+**Note:** pgloader is a dedicated database migration tool that handles edge cases better than custom scripts. It's the recommended approach for production migrations.
 
 ### Email
 

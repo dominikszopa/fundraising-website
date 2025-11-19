@@ -168,8 +168,8 @@
 [x] Create tests
 [x] Switch to PostgreSQL
     [x] Try pgloader
-    [ ] Update docker to use PostgreSQL
-    [ ] Fix tests for PostgreSQL
+    [x] Update docker to use PostgreSQL
+    [x] Fix tests for PostgreSQL
+[ ] Fix github action tests
 
 Future:
-

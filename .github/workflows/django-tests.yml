@@ -17,6 +17,21 @@ jobs:
       matrix:
         python-version: ['3.12']
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: fundraising
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -58,10 +73,15 @@ jobs:
         EMAIL_HOST_PASSWORD=test-password
         EMAIL_HOST=smtp.example.com
         EMAIL_PORT=587
+        DATABASE_ENGINE=django.db.backends.postgresql
+        DATABASE_NAME=fundraising
+        DATABASE_USER=postgres
+        DATABASE_PASSWORD=password
+        DATABASE_HOST=localhost
+        DATABASE_PORT=5432
         EOF
 
-    - name: Create data directory for SQLite database
-      run: mkdir -p data
+
 
     - name: Run migrations
       run: poetry run python3 manage.py migrate --noinput --settings=fundraiser.settings.dev

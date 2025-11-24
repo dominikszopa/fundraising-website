@@ -39,6 +39,9 @@ RUN pip install gunicorn
 # Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Placeholder SECRET_KEY for collectstatic (overridden at runtime by Railway env vars)
+ENV SECRET_KEY=build-time-placeholder
+
 # Collect static files
 RUN python manage.py collectstatic --noinput
 

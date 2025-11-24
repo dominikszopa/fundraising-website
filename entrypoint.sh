@@ -10,6 +10,9 @@ done
 
 echo "PostgreSQL is up - executing commands"
 
+# Collect static files
+poetry run python manage.py collectstatic --noinput
+
 # Apply database migrations
 poetry run python manage.py migrate
 

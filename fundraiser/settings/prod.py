@@ -3,6 +3,18 @@ import sys
 import os
 
 
+# Whitenoise for serving static files
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # SECRET_KEY is read from environment variable for security
 SECRET_KEY = get_env_variable('SECRET_KEY')
 

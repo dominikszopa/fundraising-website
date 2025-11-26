@@ -14,16 +14,17 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    container: ghcghcr.io/railwayapp/cli:latest
     environment: production
+
+    env:
+      SVC_ID: my-service-id
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
       - name: Deploy to Railway
-        run: railway up --detach --service fundraising-website
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service=${{ env.SVC_ID }}
+

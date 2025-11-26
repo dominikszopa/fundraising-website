@@ -18,7 +18,7 @@ jobs:
     environment: production
 
     env:
-      SVC_ID: my-service-id
+      SVC_ID: django
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
     steps:

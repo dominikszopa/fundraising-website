@@ -25,6 +25,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug - Check Railway CLI version
+        run: railway --version
+
+      - name: Debug - Verify token is set
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "ERROR: RAILWAY_TOKEN is not set"
+            exit 1
+          else
+            echo "RAILWAY_TOKEN is set (length: ${#RAILWAY_TOKEN})"
+          fi
+
+      - name: Debug - Test Railway authentication
+        run: railway whoami
+
+      - name: Debug - List services
+        run: railway service list || echo "Failed to list services"
+
       - name: Deploy to Railway
         run: railway up --service=${{ env.SVC_ID }}
 

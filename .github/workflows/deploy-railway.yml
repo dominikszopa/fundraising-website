@@ -14,7 +14,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    container: ghcghcr.io/railwayapp/cli:latest
+    container: ghcr.io/railwayapp/cli:latest
     environment: production
 
     env:

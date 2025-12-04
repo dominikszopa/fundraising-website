@@ -18,8 +18,9 @@ STORAGES = {
 # SECRET_KEY is read from environment variable for security
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
-# Debug must be off in production, ignore the environment variable
-DEBUG = False
+# Allow DEBUG to be controlled by environment variable for testing
+# WARNING: Set to False in production after testing
+DEBUG = read_boolean(os.getenv('DEBUG', 'False'))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(",")

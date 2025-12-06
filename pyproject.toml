@@ -27,7 +27,7 @@ python-dotenv = "^1.2.1"
 pytz = "^2025.2"
 six = "^1.17.0"
 sqlparse = "^0.5.4"
-urllib3 = "^2.5.0"
+urllib3 = "^2.6.0"
 
 [build-system]
 requires = ["poetry-core"]

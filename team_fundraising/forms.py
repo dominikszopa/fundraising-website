@@ -2,6 +2,9 @@
 """
 from django import forms
 from django.utils import timezone
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+
 from .models import Fundraiser
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -62,10 +65,18 @@ class UserForm(forms.ModelForm):
 
 
 class SignUpForm(UserCreationForm):
+    captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox(
+            attrs={
+                'data-callback': 'recaptchaCallback',
+                'data-expired-callback': 'recaptchaExpiredCallback',
+            }
+        )
+    )
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = ('email', 'username', 'password1', 'password2', 'captcha')
 
     def __init__(self, *args, **kwargs):
 

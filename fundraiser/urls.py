@@ -47,4 +47,4 @@ if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
         # For django versions before 2.0:
         # url(r'^__debug__/', include(debug_toolbar.urls)),
 
-    ] + urlpatterns
+    ] + urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

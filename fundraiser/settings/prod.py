@@ -25,12 +25,11 @@ DEBUG = read_boolean(os.getenv('DEBUG', 'False'))
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(",")
 
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-EMAIL_TIMEOUT = 10  # Timeout after 10 seconds to prevent worker timeout
+# AWS SES email configuration
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_SES_REGION = os.getenv('AWS_SES_REGION', 'us-east-1')
+DEFAULT_FROM_EMAIL = 'fundraising@triplecrownforheart.ca'
 
 # Make links sent be HTTPS
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -1,9 +1,9 @@
 from paypal.standard.models import ST_PP_COMPLETED
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from .models import Donation
 from .text import Donation_text
+from .email_utils import send_email
 
 
 def process_paypal(sender, **kwargs):
@@ -51,24 +51,24 @@ def process_paypal(sender, **kwargs):
                                 + Donation_text.confirmation_email_closing_html)
 
         # send the thank you email
-        send_mail(
+        send_email(
             Donation_text.confirmation_email_subject,
             thank_you_email_text,
-            'fundraising@triplecrownforheart.ca',
-            [donation.email, ],
-            html_message=thank_you_email_html
+            settings.DEFAULT_FROM_EMAIL,
+            [donation.email],
+            html_content=thank_you_email_html
         )
 
         # send the notification email to the fundraiser
-        send_mail(
+        send_email(
             Donation_text.notification_email_subject,
             Donation_text.notification_email_opening
             + '${:,.2f}'.format(donation.amount) + ' from '
             + donation.name + " <" + donation.email + ">"
             + ' with the message:\n\n"' + donation.message + '"'
             + Donation_text.notification_email_closing,
-            'fundraising@triplecrownforheart.ca',
-            [donation.fundraiser.user.email, ]
+            settings.DEFAULT_FROM_EMAIL,
+            [donation.fundraiser.user.email]
         )
 
     else:

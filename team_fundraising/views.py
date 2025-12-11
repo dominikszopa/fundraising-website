@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import messages
@@ -15,6 +14,7 @@ import logging
 from .models import Campaign, Fundraiser, Donation, ProxyUser
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from .text import Donation_text, Fundraiser_text
+from .email_utils import send_email
 
 logger = logging.getLogger(__name__)
 
@@ -271,26 +271,19 @@ def signup(request, campaign_id):
             fundraiser.save()
 
             # send them an email that they have successfully signed up
-            try:
-                send_mail(
-                    Fundraiser_text.signup_email_subject,
-                    Fundraiser_text.signup_email_opening
-                    + request.build_absolute_uri(
-                        reverse(
-                            'team_fundraising:fundraiser', args=[fundraiser.id]
-                        )
+            send_email(
+                Fundraiser_text.signup_email_subject,
+                Fundraiser_text.signup_email_opening
+                + request.build_absolute_uri(
+                    reverse(
+                        'team_fundraising:fundraiser', args=[fundraiser.id]
                     )
-                    + "\n\nYour username is: " + user.username
-                    + Fundraiser_text.signup_email_closing,
-                    'fundraising@triplecrownforheart.ca',
-                    [user.email, ],
-                    auth_user=settings.EMAIL_HOST_USER,
-                    auth_password=settings.EMAIL_HOST_PASSWORD
                 )
-                logger.info(f"Signup email sent successfully to {user.email}")
-            except Exception as e:
-                logger.error(f"Failed to send signup email to {user.email}: {type(e).__name__}: {str(e)}")
-                logger.error(f"Email settings - HOST: {settings.EMAIL_HOST}, PORT: {settings.EMAIL_PORT}, USE_TLS: {settings.EMAIL_USE_TLS}")
+                + "\n\nYour username is: " + user.username
+                + Fundraiser_text.signup_email_closing,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email]
+            )
         else:  # not a valid fundraiser form
 
             messages.error(
@@ -387,7 +380,7 @@ class OneClickSignUp(View):
         )
 
         # send them an email that they have successfully signed up
-        send_mail(
+        send_email(
             Fundraiser_text.signup_email_subject,
             Fundraiser_text.signup_email_opening
             + request.build_absolute_uri(
@@ -397,10 +390,8 @@ class OneClickSignUp(View):
             )
             + "\n\nYour username is: " + user.username
             + Fundraiser_text.signup_email_closing,
-            'fundraising@triplecrownforheart.ca',
-            [user.email, ],
-            auth_user=settings.EMAIL_HOST_USER,
-            auth_password=settings.EMAIL_HOST_PASSWORD
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email]
         )
 
         # send them to the update fundraiser page

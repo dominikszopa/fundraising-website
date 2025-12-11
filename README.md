@@ -246,7 +246,49 @@ If you have an existing SQLite database with data you want to migrate to Postgre
 
 ### Email
 
-In order to send out emails when someone registers, makes a donation or receives a donation, you need to provide a mail server. A Gmail account can be used for this. Edit the .env file and add EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER and EMAIL_HOST_PASSWORD.
+The application sends emails when someone registers as a fundraiser, makes a donation, or receives a donation. Email delivery uses **AWS SES (Simple Email Service)** via the HTTP API.
+
+#### AWS SES Setup
+
+1. **Create an AWS account** at [aws.amazon.com](https://aws.amazon.com) if you don't have one
+
+2. **Set up SES in the AWS Console:**
+   - Navigate to Amazon SES service
+   - Choose your region (e.g., us-east-1)
+   - Verify your sender email address or domain:
+     - Go to "Verified identities" → "Create identity"
+     - Verify the email address you'll use as the sender
+     - Check your email and click the verification link
+
+3. **Request production access:**
+   - By default, SES starts in "sandbox mode" (can only send to verified addresses)
+   - Go to "Account dashboard" → "Request production access"
+   - Fill out the form describing your use case
+   - Approval typically takes 24 hours
+
+4. **Create IAM credentials:**
+   - Go to IAM → Users → Create user
+   - Give it a descriptive name (e.g., "fundraising-ses-user")
+   - Attach the `AmazonSESFullAccess` policy (or create a custom policy with `ses:SendEmail` permission)
+   - Create access key → Choose "Application running outside AWS"
+   - Save the Access Key ID and Secret Access Key
+
+5. **Configure environment variables:**
+
+   Edit your `.env` file and add:
+   ```
+   AWS_ACCESS_KEY_ID=your_access_key_here
+   AWS_SECRET_ACCESS_KEY=your_secret_key_here
+   AWS_SES_REGION=us-east-1
+   ```
+
+#### Development/Testing
+
+For local development and testing, emails will be **skipped automatically** if AWS credentials are not configured. You'll see debug messages in the console indicating emails were not sent. This allows you to develop and test without setting up AWS SES.
+
+#### Legacy SMTP (Optional)
+
+While the application now uses AWS SES by default, you can still use SMTP for local development if preferred. However, note that many cloud platforms (including Railway) block outbound SMTP connections on ports 25/587/465. The legacy SMTP settings in `.env.example` are commented out but can be used with local mail servers.
 
 ### PayPal
 
@@ -256,21 +298,90 @@ Django-paypal uses [Instant Payment Notification](https://django-paypal.readthed
 
 ## Deployment
 
-I'll add more details later or when someone else wants to deploy the app, but the general steps are:
+### Railway Deployment
 
-* Get a server and domain through providers like [Digital Ocean](https://www.digitalocean.com/) or [Heroku](https://www.heroku.com/)
+The application is deployed to [Railway](https://railway.app/) using GitHub Actions for CI/CD.
 
-* Follow steps 1-8 from [installing](#installing) above.
+#### Prerequisites
 
-* Add environment variables or edit the .env file for production settings.
+1. **Railway account** - Sign up at [railway.app](https://railway.app)
+2. **AWS SES configured** - See [Email Setup](#email) above
+3. **PayPal account** - For donation processing
 
-* Collect static files for production:
+#### Setup Steps
 
-  `python manage.py collectstatic`
+1. **Create a Railway project:**
+   - Go to Railway dashboard → New Project
+   - Deploy from GitHub repository
+   - Railway will automatically detect the Dockerfile
 
-* Set up nginx, Gunicorn and supervisor as detailed in the [simple is better than complex](https://simpleisbetterthancomplex.com/tutorial/2016/10/14/how-to-deploy-to-digital-ocean.html) article.
+2. **Configure environment variables in Railway:**
+   ```
+   DJANGO_SETTINGS_MODULE=fundraiser.settings.prod
+   SECRET_KEY=your_long_random_secret_key_here
+   DEBUG=False
 
-If you have difficulties, please feel free to contact the [#author](author).
+   # Database (Railway provides PostgreSQL)
+   DATABASE_NAME=railway
+   DATABASE_USER=postgres
+   DATABASE_PASSWORD=<from Railway PostgreSQL service>
+   DATABASE_HOST=<from Railway PostgreSQL service>
+   DATABASE_PORT=5432
+
+   # AWS SES for email
+   AWS_ACCESS_KEY_ID=your_aws_access_key
+   AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+   AWS_SES_REGION=us-east-1
+
+   # PayPal
+   PAYPAL_TEST=False
+   PAYPAL_ACCOUNT=your_paypal_business_email
+
+   # Allowed hosts (use your Railway domain)
+   ALLOWED_HOSTS=localhost,your-app.up.railway.app
+   CSRF_TRUSTED_ORIGINS=https://your-app.up.railway.app
+   ```
+
+3. **Add a PostgreSQL service:**
+   - In your Railway project → New → Database → PostgreSQL
+   - Railway will automatically set database environment variables
+   - Copy these values to your application's environment variables
+
+4. **Add a volume for media files:**
+   - In Railway project settings → Volumes → New Volume
+   - Mount path: `/app/media`
+   - This ensures uploaded photos persist across deployments
+
+5. **Deploy:**
+   - Push to your GitHub repository
+   - Railway will automatically build and deploy
+   - First deploy will run migrations automatically (via Dockerfile CMD)
+
+#### Important Notes
+
+- **SMTP Blocked:** Railway blocks outbound SMTP connections on ports 25/587/465. This is why the application uses AWS SES HTTP API instead.
+- **Static Files:** Static files are served by WhiteNoise (configured in settings)
+- **Media Files:** User-uploaded photos are stored in the Railway volume at `/app/media`
+- **Logs:** View logs with `railway logs` (requires Railway CLI)
+
+### Traditional Server Deployment
+
+For deployment to traditional servers (Digital Ocean, VPS, etc.):
+
+1. Get a server and domain through providers like [Digital Ocean](https://www.digitalocean.com/)
+
+2. Follow steps 1-8 from [installing](#installing) above
+
+3. Add environment variables or edit the .env file for production settings
+
+4. Collect static files for production:
+   ```bash
+   python manage.py collectstatic
+   ```
+
+5. Set up nginx, Gunicorn and supervisor as detailed in the [simple is better than complex](https://simpleisbetterthancomplex.com/tutorial/2016/10/14/how-to-deploy-to-digital-ocean.html) article
+
+If you have difficulties, please feel free to contact the [author](#authors).
 
 ## Support
 

@@ -23,6 +23,14 @@ def send_email(subject, text_content, from_email, to_emails, html_content=None):
     Returns:
         True if successful, False otherwise
     """
+    # Check if AWS credentials are configured
+    if not settings.AWS_ACCESS_KEY_ID or not settings.AWS_SECRET_ACCESS_KEY:
+        logger.debug(
+            f"AWS SES credentials not configured. "
+            f"Email to {to_emails} not sent (dev/test environment)"
+        )
+        return False
+
     # Create SES client
     ses_client = boto3.client(
         'ses',

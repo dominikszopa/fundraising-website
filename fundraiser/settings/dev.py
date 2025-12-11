@@ -44,12 +44,13 @@ MIDDLEWARE += [
 
 INTERNAL_IPS = ['127.0.0.1']
 
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
 
+
+# AWS SES settings (with defaults for dev/test environments)
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '')
+AWS_SES_REGION = os.getenv('AWS_SES_REGION', 'us-east-1')
+DEFAULT_FROM_EMAIL = 'fundraising@triplecrownforheart.ca'
 
 PAYPAL_TEST = read_boolean(os.getenv('PAYPAL_TEST'))
 PAYPAL_ACCOUNT = os.getenv('PAYPAL_ACCOUNT')

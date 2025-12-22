@@ -532,14 +532,14 @@ files = [
 
 [[package]]
 name = "sqlparse"
-version = "0.5.4"
+version = "0.5.5"
 description = "A non-validating SQL parser."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "sqlparse-0.5.4-py3-none-any.whl", hash = "sha256:99a9f0314977b76d776a0fcb8554de91b9bb8a18560631d6bc48721d07023dcb"},
-    {file = "sqlparse-0.5.4.tar.gz", hash = "sha256:4396a7d3cf1cd679c1be976cf3dc6e0a51d0111e87787e7a8d780e7d5a998f9e"},
+    {file = "sqlparse-0.5.5-py3-none-any.whl", hash = "sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba"},
+    {file = "sqlparse-0.5.5.tar.gz", hash = "sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e"},
 ]
 
 [package.extras]
@@ -580,4 +580,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "ac6e1cad54e8b89a974aa05485019ee5f3c47d4e7f13652965f50dd0007dcf0c"
+content-hash = "4ac6766a2900f1ffacfb5ed9f5e8eb682c15c672dac8932aa3b82179718cbb15"

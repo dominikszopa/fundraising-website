@@ -44,4 +44,14 @@ ENTRYPOINT ["/app/team_fundraising/entrypoint.sh"]
 
 # Default command to run the application
 # Railway requires binding to PORT env var, with increased timeout and workers
-CMD gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 fundraiser.wsgi:application
+CMD gunicorn --bind 0.0.0.0:$PORT \
+    --timeout 120 \
+    --workers 4 \
+    --worker-class gthread \
+    --threads 2 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile - \
+    --error-logfile - \
+    --log-level info \
+    fundraiser.wsgi:application

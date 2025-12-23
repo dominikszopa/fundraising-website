@@ -43,4 +43,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 ENTRYPOINT ["/app/team_fundraising/entrypoint.sh"]
 
 # Default command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "fundraiser.wsgi:application"]
+# Railway requires binding to PORT env var, with increased timeout and workers
+CMD gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 fundraiser.wsgi:application

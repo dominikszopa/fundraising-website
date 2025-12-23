@@ -22,8 +22,8 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 # WARNING: Set to False in production after testing
 DEBUG = read_boolean(os.getenv('DEBUG', 'False'))
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(",")
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(",") if os.getenv('ALLOWED_HOSTS') else []
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(",") if os.getenv('CSRF_TRUSTED_ORIGINS') else []
 
 # AWS SES email configuration
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')

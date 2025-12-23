@@ -29,6 +29,7 @@ pytz = "^2025.2"
 six = "^1.17.0"
 sqlparse = "^0.5.5"
 urllib3 = "^2.6.2"
+boto3 = "^1.42.16"
 
 [build-system]
 requires = ["poetry-core"]

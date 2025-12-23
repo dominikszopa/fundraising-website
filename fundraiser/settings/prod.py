@@ -16,6 +16,8 @@ STORAGES = {
 }
 
 # Template caching - cache compiled templates in production
+# Must disable APP_DIRS when defining custom loaders
+TEMPLATES[0]['APP_DIRS'] = False
 TEMPLATES[0]['OPTIONS']['loaders'] = [
     ('django.template.loaders.cached.Loader', [
         'django.template.loaders.filesystem.Loader',

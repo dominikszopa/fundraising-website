@@ -223,14 +223,14 @@ test = ["pytest", "pytest-django"]
 
 [[package]]
 name = "django"
-version = "5.2.8"
+version = "5.2.9"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django-5.2.8-py3-none-any.whl", hash = "sha256:37e687f7bd73ddf043e2b6b97cfe02fcbb11f2dbb3adccc6a2b18c6daa054d7f"},
-    {file = "django-5.2.8.tar.gz", hash = "sha256:23254866a5bb9a2cfa6004e8b809ec6246eba4b58a7589bc2772f1bcc8456c7f"},
+    {file = "django-5.2.9-py3-none-any.whl", hash = "sha256:3a4ea88a70370557ab1930b332fd2887a9f48654261cdffda663fef5976bb00a"},
+    {file = "django-5.2.9.tar.gz", hash = "sha256:16b5ccfc5e8c27e6c0561af551d2ea32852d7352c67d452ae3e76b4f6b2ca495"},
 ]
 
 [package.dependencies]
@@ -291,26 +291,22 @@ pytz = ">=2015.4"
 requests = ">=2.5.3"
 
 [[package]]
-name = "gunicorn"
-version = "23.0.0"
-description = "WSGI HTTP Server for UNIX"
+name = "django-recaptcha"
+version = "4.1.0"
+description = "Django recaptcha form field/widget app."
 optional = false
-python-versions = ">=3.7"
+python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "gunicorn-23.0.0-py3-none-any.whl", hash = "sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d"},
-    {file = "gunicorn-23.0.0.tar.gz", hash = "sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec"},
+    {file = "django_recaptcha-4.1.0-py3-none-any.whl", hash = "sha256:463aa65967e973de466b28ce8e8b6abb2faffb1ce0c7faa1bf0e5b041e0497cb"},
+    {file = "django_recaptcha-4.1.0.tar.gz", hash = "sha256:73097b958733f65b729d4e4630c51fc2bf147aca6f026017d18898dfc25cb4c5"},
 ]
 
 [package.dependencies]
-packaging = "*"
+django = "*"
 
 [package.extras]
-eventlet = ["eventlet (>=0.24.1,!=0.36.0)"]
-gevent = ["gevent (>=1.4.0)"]
-setproctitle = ["setproctitle"]
-testing = ["coverage", "eventlet", "gevent", "pytest", "pytest-cov"]
-tornado = ["tornado (>=0.2)"]
+testing = ["coveralls", "tox", "tox-gh-actions"]
 
 [[package]]
 name = "idna"
@@ -678,22 +674,7 @@ h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 
-[[package]]
-name = "whitenoise"
-version = "6.11.0"
-description = "Radically simplified static file serving for WSGI applications"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "whitenoise-6.11.0-py3-none-any.whl", hash = "sha256:b2aeb45950597236f53b5342b3121c5de69c8da0109362aee506ce88e022d258"},
-    {file = "whitenoise-6.11.0.tar.gz", hash = "sha256:0f5bfce6061ae6611cd9396a8231e088722e4fc67bc13a111be74c738d99375f"},
-]
-
-[package.extras]
-brotli = ["brotli"]
-
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "72d6b2fabd8b31943493f2f8285ecbdd644c3e38f523d499882d82865cac21bf"
+content-hash = "4ac6766a2900f1ffacfb5ed9f5e8eb682c15c672dac8932aa3b82179718cbb15"

@@ -164,7 +164,7 @@
     [ ] Make the paypal button more modern
     [ ] Add a refresh link to the returning message
     [ ] Write to a file or db what the payment and received was
-[ ] Add CAPTCHA for signup
+[x] Add CAPTCHA for signup
 [x] Create tests
 [x] Switch to PostgreSQL
     [x] Try pgloader

@@ -215,7 +215,33 @@ to join the campaign with one click.
     </div>
 {% endif %}
 
-    <button type="submit" class="btn btn-primary">Sign up</button>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label"></label>
+        <div class="col-sm-8">
+            {{ user_form.captcha }}
+            {% for error in user_form.captcha.errors %}
+            <div class="alert alert-danger">
+                {{ error|escape }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="signup-submit-btn" disabled>Sign up</button>
+
+    <script>
+        // reCAPTCHA callback functions
+        function recaptchaCallback() {
+            // Enable the submit button when reCAPTCHA is completed
+            document.getElementById('signup-submit-btn').disabled = false;
+        }
+
+        function recaptchaExpiredCallback() {
+            // Disable the submit button if reCAPTCHA expires
+            document.getElementById('signup-submit-btn').disabled = true;
+        }
+    </script>
+
     <script>
         var quill = new Quill('#quill-editor', {
             theme: 'snow',

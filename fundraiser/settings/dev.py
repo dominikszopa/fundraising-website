@@ -4,8 +4,19 @@ import os
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
+# Google reCAPTCHA settings for development
+# Use Google's official test keys (always pass validation - for testing)
+# In production, real keys must be provided via environment variables
+RECAPTCHA_PUBLIC_KEY = os.getenv(
+    'RECAPTCHA_PUBLIC_KEY',
+    '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+)
+RECAPTCHA_PRIVATE_KEY = os.getenv(
+    'RECAPTCHA_PRIVATE_KEY',
+    '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+)
+
 # Silence RECAPTCHA test key warning in development/CI
-# In production, real keys should be provided via environment variables
 SILENCED_SYSTEM_CHECKS = [
     'django_recaptcha.recaptcha_test_key_error',
 ]

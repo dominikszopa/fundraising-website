@@ -8,9 +8,12 @@ MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 STORAGES = {
     "default": {
+        # Media files (user uploads) use FileSystemStorage for saving
+        # but are served by WhiteNoise in production (configured in wsgi.py)
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
+        # Static files (CSS, JS, images) are served by WhiteNoise middleware
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }

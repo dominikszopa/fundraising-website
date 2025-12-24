@@ -59,14 +59,35 @@ Additional models:
 - Environment variables loaded from `.env` file via python-dotenv
 - Required env vars: `SECRET_KEY`, `DEBUG`
 - Database: `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`
-- Optional: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`
+- AWS SES (email): `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SES_REGION`
+  - Emails are automatically skipped in dev/test if AWS credentials are not configured
+  - Debug messages logged when emails are skipped (not warnings, to keep test output clean)
 - PayPal: `PAYPAL_TEST`, `PAYPAL_ACCOUNT`
 - Use `get_env_variable()` and `read_boolean()` helpers from `base.py`
+- Legacy SMTP settings (`EMAIL_HOST`, `EMAIL_PORT`, etc.) are deprecated but still in `.env.example` for reference
+
+### Email Sending
+- Email delivery uses AWS SES (Simple Email Service) via boto3 HTTP API
+- Centralized email helper in `team_fundraising/email_utils.py`
+- `send_email(subject, text_content, from_email, to_emails, html_content=None)` function
+  - Returns `True` on success, `False` on failure
+  - Automatically checks if AWS credentials are configured
+  - Skips sending and logs debug message if credentials missing (dev/test environments)
+  - Handles both text and HTML email content
+  - All error handling is centralized in this function
+- Called from:
+  - `views.py`: Fundraiser signup confirmation emails
+  - `paypal.py`: Donation thank you and notification emails
+- Railway deployment requires AWS SES (SMTP ports 25/587/465 are blocked)
 
 ### Image Handling
 - Fundraiser photos automatically generate thumbnail versions on save
 - Uses PIL (Pillow) to create 800x800 thumbnails
 - Original stored in `photo`, thumbnail in `photo_small`
+- Directories (`media/photos/` and `media/photos_small/`) are created automatically:
+  - On app startup in `apps.py` ready() method
+  - Before saving thumbnails in `Fundraiser.save()` method
+- Important for Railway: directories must be created at runtime (not in Dockerfile) because volumes overlay the filesystem
 
 ### URL Structure
 - Main campaign view: `/team_fundraising/` (redirects to latest active campaign)

@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.core.mail import send_mail
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import messages
@@ -10,10 +9,14 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
 from paypal.standard.forms import PayPalPaymentsForm
+import logging
 
 from .models import Campaign, Fundraiser, Donation, ProxyUser
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from .text import Donation_text, Fundraiser_text
+from .email_utils import send_email
+
+logger = logging.getLogger(__name__)
 
 
 def index_view(request, campaign_id):
@@ -268,7 +271,7 @@ def signup(request, campaign_id):
             fundraiser.save()
 
             # send them an email that they have successfully signed up
-            send_mail(
+            send_email(
                 Fundraiser_text.signup_email_subject,
                 Fundraiser_text.signup_email_opening
                 + request.build_absolute_uri(
@@ -278,10 +281,8 @@ def signup(request, campaign_id):
                 )
                 + "\n\nYour username is: " + user.username
                 + Fundraiser_text.signup_email_closing,
-                'fundraising@triplecrownforheart.ca',
-                [user.email, ],
-                auth_user=settings.EMAIL_HOST_USER,
-                auth_password=settings.EMAIL_HOST_PASSWORD
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email]
             )
         else:  # not a valid fundraiser form
 
@@ -379,7 +380,7 @@ class OneClickSignUp(View):
         )
 
         # send them an email that they have successfully signed up
-        send_mail(
+        send_email(
             Fundraiser_text.signup_email_subject,
             Fundraiser_text.signup_email_opening
             + request.build_absolute_uri(
@@ -389,10 +390,8 @@ class OneClickSignUp(View):
             )
             + "\n\nYour username is: " + user.username
             + Fundraiser_text.signup_email_closing,
-            'fundraising@triplecrownforheart.ca',
-            [user.email, ],
-            auth_user=settings.EMAIL_HOST_USER,
-            auth_password=settings.EMAIL_HOST_PASSWORD
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email]
         )
 
         # send them to the update fundraiser page

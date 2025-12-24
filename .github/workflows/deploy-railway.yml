@@ -1,0 +1,42 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+      - deploy-railway  # TODO: Remove after testing
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/django-tests.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    environment: production
+
+    env:
+      SVC_ID: django
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug - Check Railway CLI version
+        run: railway --version
+
+      - name: Debug - Verify token is set
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "ERROR: RAILWAY_TOKEN is not set"
+            exit 1
+          else
+            echo "RAILWAY_TOKEN is set (length: ${#RAILWAY_TOKEN})"
+          fi
+
+      - name: Deploy to Railway
+        run: railway up --service=${{ env.SVC_ID }}
+

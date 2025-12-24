@@ -15,11 +15,16 @@ the master settings file.
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
 # load environment variables from .env file if it exists
 load_dotenv()
+
+# Detect if we're running tests
+# Check if the first management command is 'test'
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 
 def get_env_variable(var_name):
@@ -109,6 +114,11 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
+        # Connection pooling - keep connections alive for 10 minutes
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'connect_timeout': 10,
+        },
     }
 }
 
@@ -161,5 +171,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Google reCAPTCHA settings
+# Must be set in environment variables or overridden in settings files
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '')

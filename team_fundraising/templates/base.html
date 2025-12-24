@@ -16,7 +16,11 @@
 
                 {% if user.is_authenticated %}
                     <a class="nav-item nav-link" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit</a>
-                    <a class="nav-item nav-link" href="{% url 'team_fundraising:logout' %}?next={% url 'team_fundraising:index' campaign.id %}">Logout</a>
+                    <form method="post" action="{% url 'team_fundraising:logout' %}" class="nav-item" style="margin: 0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{% url 'team_fundraising:index' campaign.id %}">
+                        <button type="submit" class="nav-link btn btn-link" style="padding: 0.5rem 1rem; border: none; background: none; color: rgba(0,0,0,.5); cursor: pointer;">Logout</button>
+                    </form>
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' campaign.id %}">Join</a>
                     <a class="nav-item nav-link" href="{% url 'team_fundraising:login' %}">Login</a>

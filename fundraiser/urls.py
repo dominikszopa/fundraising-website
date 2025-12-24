@@ -37,9 +37,14 @@ urlpatterns = [
     # Had to add accounts here as well, as internal functions call it without
     # a namespace
     path('accounts/', include('django.contrib.auth.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
+# Serve media files in development only
+# In production, media files are served by WhiteNoise (configured in wsgi.py)
 if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG and 'debug_toolbar' in settings.INSTALLED_APPS:
     import debug_toolbar
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),

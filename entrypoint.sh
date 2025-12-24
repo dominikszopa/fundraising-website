@@ -10,14 +10,18 @@ done
 
 echo "PostgreSQL is up - executing commands"
 
-# Apply database migrations
+# Apply database migrations FIRST
 poetry run python manage.py migrate
+
+# Collect static files AFTER migrations
+poetry run python manage.py collectstatic --noinput --clear
 
 # Create the superuser if it doesn't exist
 poetry run python manage.py createsuperuser --noinput --username admin --email foo@bar.com || true
 
-# Load the starting data
-poetry run python manage.py loaddata startingdata || true
+# REMOVED: loaddata causes duplicate data on every restart
+# Only load starting data manually when setting up a new environment
+# poetry run python manage.py loaddata startingdata || true
 
 echo "Initialization complete - starting server"
 

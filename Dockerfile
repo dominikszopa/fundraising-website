@@ -39,11 +39,19 @@ RUN pip install gunicorn
 # Copy the Nginx configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Set the entrypoint script
 ENTRYPOINT ["/app/team_fundraising/entrypoint.sh"]
 
 # Default command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "fundraiser.wsgi:application"]
+# Railway requires binding to PORT env var, with increased timeout and workers
+CMD gunicorn --bind 0.0.0.0:$PORT \
+    --timeout 120 \
+    --workers 4 \
+    --worker-class gthread \
+    --threads 2 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile - \
+    --error-logfile - \
+    --log-level info \
+    fundraiser.wsgi:application

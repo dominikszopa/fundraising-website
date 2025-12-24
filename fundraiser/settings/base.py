@@ -15,11 +15,16 @@ the master settings file.
 """
 
 import os
+import sys
 from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 
 # load environment variables from .env file if it exists
 load_dotenv()
+
+# Detect if we're running tests
+# Check if the first management command is 'test'
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 
 def get_env_variable(var_name):

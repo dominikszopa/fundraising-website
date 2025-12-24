@@ -1,6 +1,5 @@
 from .base import *
 import os
-import sys
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -23,7 +22,7 @@ STORAGES = {
     },
 }
 
-if 'test' in sys.argv:
+if TESTING:
     STORAGES["staticfiles"] = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     }
@@ -49,8 +48,6 @@ MIDDLEWARE += [
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
-
-
 
 # AWS SES settings (with defaults for dev/test environments)
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')

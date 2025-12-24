@@ -1,7 +1,7 @@
 """ The forms for the team_fundraiser app
 """
-import sys
 from django import forms
+from django.conf import settings
 from django.utils import timezone
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV2Checkbox
@@ -90,7 +90,7 @@ class SignUpForm(UserCreationForm):
         self.fields['username'].required = True
 
         # Remove captcha requirement in test mode
-        if 'test' in sys.argv:
+        if settings.TESTING:
             self.fields['captcha'].required = False
             # Make captcha validation always pass in test mode
             self.fields.pop('captcha', None)

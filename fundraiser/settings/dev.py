@@ -5,6 +5,12 @@ import sys
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
+# Silence RECAPTCHA test key warning in development/CI
+# In production, real keys should be provided via environment variables
+SILENCED_SYSTEM_CHECKS = [
+    'django_recaptcha.recaptcha_test_key_error',
+]
+
 # Whitenoise for serving static files
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 

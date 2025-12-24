@@ -166,5 +166,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Google reCAPTCHA settings
-RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY', '')
-RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '')
+# Use Google's test keys as defaults (always pass validation - for testing)
+RECAPTCHA_PUBLIC_KEY = os.getenv(
+    'RECAPTCHA_PUBLIC_KEY',
+    '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+)
+RECAPTCHA_PRIVATE_KEY = os.getenv(
+    'RECAPTCHA_PRIVATE_KEY',
+    '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'
+)

@@ -11,7 +11,7 @@
     }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <link href="{% static 'quill_override.css' %}" rel="stylesheet">
@@ -256,35 +256,35 @@ to join the campaign with one click.
                 ]
             }
         });
-        
+
         // Copy Quill content to the hidden textarea before form submission
         document.querySelector('form').addEventListener('submit', function() {
             document.getElementById('id_message').value = quill.root.innerHTML;
         });
     </script>
     <script>
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-            $("#id_password2").keyup(function (e) {
+            const password1Input = document.getElementById("id_password1");
+            const password2Input = document.getElementById("id_password2");
+            const usernameInput = document.getElementById("id_username");
+            const usernameSpace = document.getElementById("username_space");
 
-                checkPasswordsMatch(
-                    $("#id_password1"),
-                    $("#id_password2")
-                );
+            if (password2Input && password1Input) {
+                password2Input.addEventListener("keyup", function (e) {
+                    checkPasswordsMatch(password1Input, password2Input);
+                });
+            }
 
-            });
-
-            $("#id_username").keyup(function (e) {
-
-                if(checkUsername(
-                    $("#id_username")
-                )) {
-                    $("#username_space").css("color", "black");
-                } else {
-                    $("#username_space").css("color", "red");
-                }
-
-            });
+            if (usernameInput && usernameSpace) {
+                usernameInput.addEventListener("keyup", function (e) {
+                    if(checkUsername(usernameInput)) {
+                        usernameSpace.style.color = "black";
+                    } else {
+                        usernameSpace.style.color = "red";
+                    }
+                });
+            }
 
         });
     </script>

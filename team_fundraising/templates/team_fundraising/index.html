@@ -4,126 +4,139 @@
 
 {% block head %}
 <title>Triple Crown for Heart Fundraising</title>
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
 {% endblock head %}
 
 {% block content %}
 {% for message in messages %}
 
-  <div class="alert alert-primary" role="alert">
-      {{ message }}
-  </div>
+<div class="alert alert-primary" role="alert">
+  {{ message }}
+</div>
 
-  {% endfor %}
-  <div class="row">
-    <div class="col-lg-6">
-      <br/>
-      <h3>{{ campaign.name }}</h3>
-      {% if campaign.photo %}
-        <img src="{{ campaign.photo.url }}" width="100%">
-      {% endif %}
-      <div id="countdown-wrap">
-        <div id="goal-stat">
-          <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
-          <div id="goal">Goal: ${{ campaign.goal|floatformat:"0"|intcomma }}</div>
-        </div>
-        <div id="glass">
-          <div id="progress">
-          </div>
-        </div>
-        <div class="goal-stat">
-          <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
+{% endfor %}
+<div class="row">
+  <div class="col-lg-6">
+    <br/>
+    <h3>{{ campaign.name }}</h3>
+    {% if campaign.photo %}
+    <img src="{{ campaign.photo.url }}" width="100%">
+    {% endif %}
+    <div id="countdown-wrap">
+      <div id="goal-stat">
+        <div id="raised"><strong>${{ total_raised|floatformat:"0"|intcomma }}</strong></div>
+        <div id="goal">Goal: ${{ campaign.goal|floatformat:"0"|intcomma }}</div>
+      </div>
+      <div id="glass">
+        <div id="progress">
         </div>
       </div>
-      {{ campaign.campaign_message|safe }}
-      <br/><br/>
-      <div>
-        <h4>Recent Donations</h4>
-        {% for donation in recent_donations %}
-          {% if  donation.anonymous %}
-            Anonymous
-          {% else %}
-            {{ donation.name }}
-          {% endif %}
-          donated ${{ donation.amount|floatformat:"2"|intcomma }} to {{donation.fundraiser.name }}<br/>
-        {% endfor %}
+      <div class="goal-stat">
+        <span class="goal-number">{% widthratio total_raised campaign.goal 100 %}%</span>
       </div>
-      <script>
-        document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
-      </script>
     </div>
-    <div class="col-lg-6">
-      <br/>
-      {% if user.is_authenticated %}
-        <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit my profile</a>
+    {{ campaign.campaign_message|safe }}
+    <br/><br/>
+    <div>
+      <h4>Recent Donations</h4>
+      {% for donation in recent_donations %}
+      {% if  donation.anonymous %}
+      Anonymous
       {% else %}
-        <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' campaign.id %}">Create a fundraiser page</a>
-      {% endif %}      <br/>
+      {{ donation.name }}
+      {% endif %}
+      donated ${{ donation.amount|floatformat:"2"|intcomma }} to {{donation.fundraiser.name }}<br/>
+      {% endfor %}
+    </div>
+    <script>
+      document.getElementById("progress").style.width = "{% widthratio total_raised campaign.goal 100 %}%";
+    </script>
+  </div>
+  <div class="col-lg-6">
+    <br/>
+    {% if user.is_authenticated %}
+    <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit my profile</a>
+    {% else %}
+    <a class="btn btn-secondary secondary-button" href="{% url 'team_fundraising:signup' campaign.id %}">Create a fundraiser page</a>
+    {% endif %}      <br/>
 
-      <div>
+    <div>
       <!-- Search form --></form>
       <form class="form-inline">
-              <input id="search" class="form-control form-control-md ml-3 full-width"
-                type="text" placeholder="Search for a fundraiser" data-search />
+        <input id="search" class="form-control form-control-md ml-3 full-width"
+        type="text" placeholder="Search for a fundraiser" data-search />
       </form>
-      </div>
+    </div>
     <br/>
     <div class="d-flex flex-wrap justify-content-around">
 
-          {% for fundraiser in fundraisers %}
-              <div class="card mt-3 mr-1" style="width: 160px;" data-filter-item data-filter-name="{{ fundraiser.name|lower }}">
-                {% if fundraiser.photo_small %}
-                  <img class="card-img-top circle-image-small" src="{{ fundraiser.photo_small.url }}" alt="Card image cap" width="140" height="140">
-                {% elif fundraiser.photo %}
-                  <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
-                {% else %}
-                  <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="140" height="140">
-                {% endif %}
-                <div class="card-body">
-                  <p class="card-title">
-                    {{ fundraiser.name }}<br/>
-                    <small class="text-muted">
-                      {{ fundraiser.team }}
-                    </small>
-                  </p>
-                  </p>
-                  </p>
-                  <p class="card-text">
-                      ${{ fundraiser.total_raised|floatformat:"0"|intcomma }}
-                      of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
-                  <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
-                </div>
-              </div>
-          {% endfor %}
+      {% for fundraiser in fundraisers %}
+      <div class="card mt-3 mr-1" style="width: 160px;" data-filter-item data-filter-name="{{ fundraiser.name|lower }}">
+        {% if fundraiser.photo_small %}
+        <img class="card-img-top circle-image-small" src="{{ fundraiser.photo_small.url }}" alt="Card image cap" width="140" height="140">
+        {% elif fundraiser.photo %}
+        <img class="card-img-top circle-image-small" src="{{ fundraiser.photo.url }}" alt="Card image cap" width="140" height="140">
+        {% else %}
+        <img class="card-img-top circle-image-small" src="{% static "nophoto.png" %}" alt="Card image cap" width="140" height="140">
+        {% endif %}
+        <div class="card-body">
+          <p class="card-title">
+            {{ fundraiser.name }}<br/>
+            <small class="text-muted">
+              {{ fundraiser.team }}
+            </small>
+          </p>
+          </p>
+          </p>
+          <p class="card-text">
+            ${{ fundraiser.total_raised|floatformat:"0"|intcomma }}
+            of ${{ fundraiser.goal|floatformat:"0"|intcomma }}</p>
+          <a href="{% url 'team_fundraising:fundraiser' fundraiser.id %}" class="stretched-link"></a>
         </div>
-
-      <br/>
+      </div>
+      {% endfor %}
     </div>
+
+    <br/>
   </div>
+</div>
 
 <script>
-/*
-  https://codepen.io/alexerlandsson
 
-	How to use:
-	1)	Copy this jQuery to your project
-	2)	Add [data-search] to search input
-	3)	Add [data-filter-item] to the items that should be filtered
-	4)	Add [data-filter-name="SEARCH TERM"] to the filter-items
 
-*/
+  document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.querySelector('[data-search]');
 
-$('[data-search]').on('keyup', function() {
-	var searchVal = $(this).val();
-	var filterItems = $('[data-filter-item]');
+    if (searchInput) {
+      searchInput.addEventListener('keyup', function () {
+        var searchVal = this.value.toLowerCase();
+        var filterItems = document.querySelectorAll('[data-filter-item]');
 
-	if ( searchVal != '' ) {
-		filterItems.addClass('hidden');
-		$('[data-filter-item][data-filter-name*="' + searchVal.toLowerCase() + '"]').removeClass('hidden');
-	} else {
-		filterItems.removeClass('hidden');
-	}
-});
+        if (searchVal !== '') {
+          filterItems.forEach(function (item) {
+            item.classList.add('hidden');
+          });
+
+          // Select items that have the data-filter-name attribute containing the search value
+          // Note: This matches the jQuery behavior exactly
+          var matchingSelector = '[data-filter-item][data-filter-name*="' + searchVal + '"]';
+          try {
+            var matchingItems = document.querySelectorAll(matchingSelector);
+            matchingItems.forEach(function (item) {
+              item.classList.remove('hidden');
+            });
+          } catch (e) {
+            // unexpected characters in search might create invalid selector
+            console.error("Invalid search selector", e);
+          }
+        } else {
+          filterItems.forEach(function (item) {
+            item.classList.remove('hidden');
+          });
+        }
+      });
+    }
+  });
 </script>
 
 {% endblock %}

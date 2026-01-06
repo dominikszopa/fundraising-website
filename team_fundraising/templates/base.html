@@ -1,42 +1,42 @@
 {% extends "base_nonav.html" %}
 {% load static %}
-    {% block navbar %}
-        <!-- Image and text -->
-        <nav class="navbar navbar-expand navbar-light bg-light">
-            <a class="navbar-brand" href="#">
-                <img src="{% static "tc4h_logo.png" %}" width="40" height="40" class="d-inline-block align-top" alt="">
-            </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-        </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:index' campaign.id %}">Home</a>
-                <a class="nav-item nav-link" href="{% url 'team_fundraising:about' campaign.id %}">About</a>
+{% block navbar %}
+<!-- Image and text -->
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img src="{% static "tc4h_logo.png" %}" width="40" height="40" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="{% url 'team_fundraising:index' campaign.id %}">Home</a>
+            <a class="nav-item nav-link" href="{% url 'team_fundraising:about' campaign.id %}">About</a>
 
-                {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit</a>
-                    <form method="post" action="{% url 'team_fundraising:logout' %}" class="nav-item" style="margin: 0;">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{% url 'team_fundraising:index' campaign.id %}">
-                        <button type="submit" class="nav-link btn btn-link" style="padding: 0.5rem 1rem; border: none; background: none; color: rgba(0,0,0,.5); cursor: pointer;">Logout</button>
-                    </form>
-                {% else %}
-                    <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' campaign.id %}">Join</a>
-                    <a class="nav-item nav-link" href="{% url 'team_fundraising:login' %}">Login</a>
-                {% endif %}
-            </div>
-            </div>
-        </nav>
-    {% endblock navbar %}
-    {% block body %}
-        <div class="container">
-
-            {% block content %}
-            {% endblock content %}
-
+            {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'team_fundraising:update_fundraiser' campaign.id %}">Edit</a>
+            <form method="post" action="{% url 'team_fundraising:logout' %}" class="nav-item" style="margin: 0;">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'team_fundraising:index' campaign.id %}">
+                <button type="submit" class="nav-link btn btn-link" style="padding: 0.5rem 1rem; border: none; background: none; color: rgba(0,0,0,.5); cursor: pointer;">Logout</button>
+            </form>
+            {% else %}
+            <a class="nav-item nav-link" href="{% url 'team_fundraising:signup' campaign.id %}">Join</a>
+            <a class="nav-item nav-link" href="{% url 'team_fundraising:login' %}">Login</a>
+            {% endif %}
         </div>
-        <br/>
-        <br/>
+    </div>
+</nav>
+{% endblock navbar %}
+{% block body %}
+<div class="container">
 
-    {% endblock body %}
+    {% block content %}
+    {% endblock content %}
+
+</div>
+<br/>
+<br/>
+
+{% endblock body %}

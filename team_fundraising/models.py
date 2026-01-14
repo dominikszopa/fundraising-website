@@ -93,10 +93,11 @@ class Campaign(models.Model):
     def get_recent_donations(self, num_donations):
 
         # get z recent "paid" donations by newest date
+        # Uses select_related to avoid N+1 queries when accessing fundraiser names
         recent_donations = Donation.objects.filter(
             fundraiser__campaign__id=self.id,
             payment_status__in=["paid", ""]
-        ).order_by('-date')[:num_donations]
+        ).select_related('fundraiser').order_by('-date')[:num_donations]
 
         return recent_donations
 

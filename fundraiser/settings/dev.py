@@ -37,6 +37,12 @@ if TESTING:
     STORAGES["staticfiles"] = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     }
+    # Use dummy cache in tests to avoid caching interference
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # loaded from environment or .env file

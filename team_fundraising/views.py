@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+from django.views.decorators.cache import cache_page
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -19,6 +20,7 @@ from .email_utils import send_email
 logger = logging.getLogger(__name__)
 
 
+@cache_page(60)
 def index_view(request, campaign_id):
     # The home page, shows all fundraisers and total raised
 

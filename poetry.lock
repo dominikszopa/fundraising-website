@@ -310,14 +310,14 @@ testing = ["coveralls", "tox", "tox-gh-actions"]
 
 [[package]]
 name = "gunicorn"
-version = "25.0.0"
+version = "25.0.3"
 description = "WSGI HTTP Server for UNIX"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "gunicorn-25.0.0-py3-none-any.whl", hash = "sha256:b9b88f0ebc5a0fcd1e9e29a1f045f56f5402c6423ee3e3f675f679d0db5345d1"},
-    {file = "gunicorn-25.0.0.tar.gz", hash = "sha256:4b1ab820ffc316352da7146005a9e66044a131434b17a7d2a9fb0604f1268864"},
+    {file = "gunicorn-25.0.3-py3-none-any.whl", hash = "sha256:aca364c096c81ca11acd4cede0aaeea91ba76ca74e2c0d7f879154db9d890f35"},
+    {file = "gunicorn-25.0.3.tar.gz", hash = "sha256:b53a7fff1a07b825b962af320554de44ae77a26abfa373711ff3f83d57d3506d"},
 ]
 
 [package.dependencies]
@@ -715,4 +715,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "fbf73fcd1aa2cfc72c66501580b362cc7a0d767e1d0f5b9df6a1eebabc398fdf"
+content-hash = "03005d63307085593aeabaf1dc1a4cc71f323606cbd3d4ee715b0ead755680a0"

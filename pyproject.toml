@@ -31,7 +31,7 @@ sqlparse = "^0.5.5"
 urllib3 = "^2.6.3"
 whitenoise = "^6.11.0"
 gunicorn = "^25.1.0"
-boto3 = "^1.42.54"
+boto3 = "^1.42.59"
 
 [build-system]
 requires = ["poetry-core"]

@@ -7,7 +7,7 @@
  *
  * Requires the Django server to be running at BASE_URL with PLAYWRIGHT_TESTING=true.
  */
-import { chromium, FullConfig, request } from '@playwright/test';
+import { chromium, FullConfig } from '@playwright/test';
 import { execSync } from 'child_process';
 import { mkdirSync } from 'fs';
 import * as path from 'path';
@@ -22,17 +22,6 @@ export const TEST_USER_AUTH = path.join(AUTH_DIR, 'smoke_test_user.json');
 export const PW_USER_AUTH = path.join(AUTH_DIR, 'smoke_pw_user.json');
 export const ADMIN_AUTH = path.join(AUTH_DIR, 'smoke_admin.json');
 
-async function verifyServerRunning(baseURL: string) {
-  const ctx = await request.newContext({ baseURL });
-  try {
-    const resp = await ctx.get('/');
-    if (!resp.ok()) {
-      throw new Error(`Server at ${baseURL} returned HTTP ${resp.status()}. Is it running?`);
-    }
-  } finally {
-    await ctx.dispose();
-  }
-}
 
 function createTestData() {
   const script = `
@@ -135,9 +124,6 @@ async function saveAuthState(
 
 export default async function globalSetup(config: FullConfig) {
   const baseURL = config.projects[0]?.use?.baseURL ?? 'http://localhost:8000';
-
-  console.log(`\n[global-setup] Verifying server at ${baseURL}...`);
-  await verifyServerRunning(baseURL);
 
   console.log('[global-setup] Setting up test data...');
   createTestData();

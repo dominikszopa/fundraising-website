@@ -3,13 +3,11 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Playwright smoke test configuration.
  *
- * Before running tests, start the Django server with captcha disabled:
- *   PLAYWRIGHT_TESTING=true python3 manage.py runserver localhost:8000
- *
- * Run tests:
+ * The Django dev server is started automatically before tests and stopped after.
+ * Just run:
  *   npm run test:e2e
  *
- * To target a different environment:
+ * To target a different environment (server must be running manually):
  *   BASE_URL=https://staging.example.com npm run test:e2e
  */
 export default defineConfig({
@@ -42,4 +40,16 @@ export default defineConfig({
   ],
 
   globalSetup: './e2e/global-setup.ts',
+
+  // Start Django automatically; reuse a running server in dev, always fresh in CI
+  webServer: {
+    command: 'poetry run python3 manage.py runserver localhost:8000',
+    url: 'http://localhost:8000/',
+    reuseExistingServer: !process.env.CI,
+    timeout: 30_000,
+    env: {
+      ...process.env,
+      PLAYWRIGHT_TESTING: 'true',
+    },
+  },
 });

@@ -147,3 +147,10 @@ backup/
 
 # Docker override file (local configuration)
 docker-compose.override.yml
+
+# Node
+node_modules/
+
+# playwright
+playwright-report/
+test-results/

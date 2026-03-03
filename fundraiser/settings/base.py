@@ -24,7 +24,8 @@ load_dotenv()
 
 # Detect if we're running tests
 # Check if the first management command is 'test'
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+# Also check if playwright testing is running via environment variable
+TESTING = (len(sys.argv) > 1 and sys.argv[1] == 'test') or os.environ.get('PLAYWRIGHT_TESTING') == 'true'
 
 
 def get_env_variable(var_name):

@@ -43,6 +43,8 @@ if TESTING:
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
+    # Use in-memory email backend so password-reset tests don't hang on SMTP
+    EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # loaded from environment or .env file
@@ -53,18 +55,18 @@ DEBUG = read_boolean(get_env_variable('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
-# Django debug toolbar
-# https://django-debug-toolbar.readthedocs.io/en/0.11.0/installation.html
+# Django debug toolbar — disabled during tests (PLAYWRIGHT_TESTING or manage.py test)
+# to prevent the toolbar overlay from interfering with Playwright selectors and clicks.
+if not TESTING:
+    INSTALLED_APPS += [
+        'debug_toolbar',
+    ]
 
-INSTALLED_APPS += [
-    'debug_toolbar',
-]
+    MIDDLEWARE += [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
 
-MIDDLEWARE += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
-
-INTERNAL_IPS = ['127.0.0.1']
+    INTERNAL_IPS = ['127.0.0.1']
 
 # AWS SES settings (with defaults for dev/test environments)
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')

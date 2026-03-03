@@ -9,6 +9,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    rebase-strategy: "auto" # auto-rebase on conflict
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 25

@@ -14,7 +14,7 @@ packages = [
 python = "^3.12"
 requests = "^2.32.4"
 certifi = "^2026.2.25"
-chardet = "^6.0.0"
+chardet = "^7.0.1"
 crispy-bootstrap4 = "^2026.2"
 django = ">=5.2.9,<6.0.0"
 django-crispy-forms = "^2.6"

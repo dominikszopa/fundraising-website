@@ -3,15 +3,17 @@
 
 
 {% block content_title %}
-    <h1>Donation Report</h1>
+    <h1>Donation Report{% if year %} — {{ year }}{% endif %}</h1>
 {% endblock content_title %}
 
 {% block result_list %}
 
 {% if campaign_id %}
   <a href="{% url 'donation_report_csv' campaign_id %}">Download as csv</a>
+{% elif year %}
+  <a href="{% url 'donation_report_year_csv' year %}">Download as csv</a>
 {% else %}
-  Select a campaign to download a list of donors file
+  Select a campaign or year to download a CSV.
 {% endif %}
 <br/><br/>
 
@@ -88,6 +90,7 @@
       </tbody>
 
 </table>
+</div>
 {% endblock result_list %}
 
 {% block pagination %}{% endblock %}

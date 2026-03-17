@@ -24,7 +24,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }], ['list']],
 
   use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:8000',
+    baseURL: process.env.BASE_URL ?? 'http://127.0.0.1:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     launchOptions: {
@@ -37,19 +37,23 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'mobile-chrome',
+      use: { ...devices['Pixel 5'] },
+    },
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 13'] },
+    },
   ],
 
   globalSetup: './e2e/global-setup.ts',
 
   // Start Django automatically; reuse a running server in dev, always fresh in CI
   webServer: {
-    command: 'poetry run python3 manage.py runserver localhost:8000',
-    url: 'http://localhost:8000/',
+    command: 'bash e2e/start-server.sh',
+    url: 'http://127.0.0.1:8000/',
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
-    env: {
-      ...process.env,
-      PLAYWRIGHT_TESTING: 'true',
-    },
+    timeout: 60_000,
   },
 });

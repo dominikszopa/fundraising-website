@@ -8,8 +8,8 @@
  * Requires the Django server to be running at BASE_URL with PLAYWRIGHT_TESTING=true.
  */
 import { chromium, FullConfig } from '@playwright/test';
-import { execSync } from 'child_process';
-import { mkdirSync } from 'fs';
+import { execFileSync, spawnSync } from 'child_process';
+import { mkdirSync, statSync } from 'fs';
 import * as path from 'path';
 
 const AUTH_DIR = path.join(__dirname, 'auth');
@@ -22,6 +22,7 @@ export const TEST_USER_AUTH = path.join(AUTH_DIR, 'smoke_test_user.json');
 export const PW_USER_AUTH = path.join(AUTH_DIR, 'smoke_pw_user.json');
 export const ADMIN_AUTH = path.join(AUTH_DIR, 'smoke_admin.json');
 
+const AUTH_TIMEOUT = 10 * 60 * 1000; // 10 minutes cache
 
 function createTestData() {
   const script = `
@@ -93,14 +94,32 @@ User.objects.create_superuser('smoke_admin', 'admin@test.com', 'SmokeAdmin123!')
 print('Test data ready')
 `;
 
-  execSync('poetry run python3 manage.py shell', {
+  const env = { ...process.env, PLAYWRIGHT_TESTING: 'true' };
+
+  // Resolve the Python executable, avoiding `poetry run` overhead when possible.
+  // Priority: active venv python3 → poetry venv python3 → poetry run fallback.
+  let python: string;
+  if (spawnSync('python3', ['-c', 'import django'], { env }).status === 0) {
+    python = 'python3';
+  } else {
+    const venvPath = process.env.VIRTUAL_ENV
+      || spawnSync('poetry', ['env', 'info', '--path'], { encoding: 'utf8' }).stdout.trim();
+    python = venvPath ? path.join(venvPath, 'bin', 'python3') : '';
+  }
+
+  const [cmd, ...args] = python
+    ? [python, 'manage.py', 'shell']
+    : ['poetry', 'run', 'python3', 'manage.py', 'shell'];
+
+  execFileSync(cmd, args, {
     input: script,
     stdio: ['pipe', 'inherit', 'inherit'],
-    env: { ...process.env, PLAYWRIGHT_TESTING: 'true' },
+    env,
   });
 }
 
 async function saveAuthState(
+  browser: import('@playwright/test').Browser,
   baseURL: string,
   loginPath: string,
   username: string,
@@ -108,7 +127,7 @@ async function saveAuthState(
   waitForPath: string | RegExp,
   outFile: string,
 ) {
-  const browser = await chromium.launch();
+  // Use its own context so it can run in parallel with other logins
   const context = await browser.newContext({ baseURL });
   const page = await context.newPage();
 
@@ -119,46 +138,54 @@ async function saveAuthState(
   await page.waitForURL(waitForPath);
 
   await context.storageState({ path: outFile });
-  await browser.close();
+  await context.close();
 }
 
 export default async function globalSetup(config: FullConfig) {
-  const baseURL = config.projects[0]?.use?.baseURL ?? 'http://localhost:8000';
+  const baseURL = config.projects[0]?.use?.baseURL ?? 'http://127.0.0.1:8000';
+  const t0 = Date.now();
+  const ts = () => `+${((Date.now() - t0) / 1000).toFixed(1)}s`;
 
-  console.log('[global-setup] Setting up test data...');
-  createTestData();
+  // Skip setup if all auth files are fresh (dev only). Use try/catch so a
+  // missing file naturally falls through rather than needing existsSync first.
+  if (!process.env.CI && !process.env.FORCE_SETUP) {
+    try {
+      const oldestAge = Math.max(
+        ...[TEST_USER_AUTH, PW_USER_AUTH, ADMIN_AUTH].map(f => Date.now() - statSync(f).mtimeMs),
+      );
+      if (oldestAge < AUTH_TIMEOUT) {
+        console.log(`[global-setup] Reusing existing auth states (age: ${Math.round(oldestAge / 1000)}s). Use FORCE_SETUP=1 to override.\n`);
+        return;
+      }
+    } catch {
+      // One or more files missing — fall through to full setup
+    }
+  }
 
   mkdirSync(AUTH_DIR, { recursive: true });
 
-  console.log('[global-setup] Saving auth state for smoke_test_user...');
-  await saveAuthState(
-    baseURL,
-    '/team_fundraising/accounts/login/',
-    TEST_USER.username,
-    TEST_USER.password,
-    /update_fundraiser/,
-    TEST_USER_AUTH,
-  );
+  // Start browser launch before createTestData() blocks the event loop.
+  // The chromium subprocess is OS-level and starts immediately; by the time
+  // createTestData (~2.5s) finishes the browser is typically already ready.
+  const browserPromise = chromium.launch();
 
-  console.log('[global-setup] Saving auth state for smoke_pw_user...');
-  await saveAuthState(
-    baseURL,
-    '/team_fundraising/accounts/login/',
-    PW_USER.username,
-    PW_USER.password,
-    /update_fundraiser/,
-    PW_USER_AUTH,
-  );
+  console.log(`[global-setup ${ts()}] Setting up test data...`);
+  createTestData();
+  console.log(`[global-setup ${ts()}] Test data ready.`);
 
-  console.log('[global-setup] Saving auth state for smoke_admin (via /admin/login/)...');
-  await saveAuthState(
-    baseURL,
-    '/admin/login/',
-    ADMIN_USER.username,
-    ADMIN_USER.password,
-    /\/admin\/$/,
-    ADMIN_AUTH,
-  );
+  const browser = await browserPromise;
+  console.log(`[global-setup ${ts()}] Browser ready.`);
 
-  console.log('[global-setup] Done.\n');
+  // Perform logins in parallel to save time
+  await Promise.all([
+    saveAuthState(browser, baseURL, '/team_fundraising/accounts/login/', TEST_USER.username, TEST_USER.password, /update_fundraiser/, TEST_USER_AUTH),
+    saveAuthState(browser, baseURL, '/team_fundraising/accounts/login/', PW_USER.username, PW_USER.password, /update_fundraiser/, PW_USER_AUTH),
+    saveAuthState(browser, baseURL, '/admin/login/', ADMIN_USER.username, ADMIN_USER.password, /\/admin\/$/, ADMIN_AUTH),
+  ]);
+
+  console.log(`[global-setup ${ts()}] All auth states saved.`);
+
+  await browser.close();
+
+  console.log(`[global-setup ${ts()}] Done.\n`);
 }

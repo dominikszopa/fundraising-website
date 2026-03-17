@@ -372,6 +372,18 @@ test.describe('6. Password Management', () => {
 
     await expect(page).toHaveURL(/\/update_fundraiser/);
     await expect(page.locator('.alert-primary')).toContainText('Your password has been updated');
+
+    // Restore the original password so subsequent browser projects can reuse
+    // PW_USER_AUTH. Django cycles the session key on every password change
+    // (update_session_auth_hash), so we must also refresh the saved auth state
+    // after restoring, otherwise later projects load a stale session cookie.
+    await page.goto('/team_fundraising/accounts/change_password/');
+    await page.fill('#id_old_password', 'SmokePwNew456!');
+    await page.fill('#id_new_password1', PW_USER.password);
+    await page.fill('#id_new_password2', PW_USER.password);
+    await page.click('input[value="Change Password"]');
+    await expect(page).toHaveURL(/\/update_fundraiser/);
+    await page.context().storageState({ path: PW_USER_AUTH });
   });
 });
 

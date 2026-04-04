@@ -12,7 +12,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.12"
-requests = "^2.33.0"
+requests = "^2.33.1"
 certifi = "^2026.2.25"
 chardet = "^7.4.0"
 crispy-bootstrap4 = "^2026.2"

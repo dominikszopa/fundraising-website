@@ -289,14 +289,14 @@ django = ">=5.2"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "6.2.0"
+version = "6.3.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_debug_toolbar-6.2.0-py3-none-any.whl", hash = "sha256:1575461954e6befa720e999dec13fe4f1cc8baf40b6c3ac2aec5f340c0f9c85f"},
-    {file = "django_debug_toolbar-6.2.0.tar.gz", hash = "sha256:dc1c174d8fb0ea01435e02d9ceef735cf62daf37c1a6a5692d33b4127327679b"},
+    {file = "django_debug_toolbar-6.3.0-py3-none-any.whl", hash = "sha256:a199ce3d0f884739a9096835ad417479fede05f3b3c4824bc8b354721ba8f629"},
+    {file = "django_debug_toolbar-6.3.0.tar.gz", hash = "sha256:f830a86fe02e17f625a22cfbed24a5bd1500762e201ec959c50efb0f9327282b"},
 ]
 
 [package.dependencies]
@@ -746,4 +746,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "fc169d2b65a2b3e27bdde9af8d08ffdd8d3dbed1bb1b3eeb38e634d5040f6d6d"
+content-hash = "340efafabe8294d8ba641a07cc2c996b7b9b1a9374b37f412f7f17d95ea719e9"

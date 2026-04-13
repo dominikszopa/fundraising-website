@@ -428,10 +428,10 @@ def update_fundraiser(request, campaign_id=None):
 
         except ObjectDoesNotExist:
 
-            # if not, get a fundraiser for any campaign
+            # if not, fall back to their most recent fundraiser
             fundraiser = Fundraiser.objects.filter(
                 user=request.user.id,
-            ).first()
+            ).order_by('-campaign__id').first()
 
     if request.method == 'POST':
 

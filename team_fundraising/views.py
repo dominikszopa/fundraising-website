@@ -361,6 +361,15 @@ class OneClickSignUp(View):
 
         previous_fundraiser = user.get_latest_fundraiser()
 
+        # Only carry the photo over if the original file still exists on
+        # disk; otherwise Fundraiser.save() can't regenerate the thumbnail.
+        prev_photo = previous_fundraiser.photo
+        photo = (
+            prev_photo
+            if prev_photo and prev_photo.storage.exists(prev_photo.name)
+            else None
+        )
+
         # Create a new fundraiser using previous information and
         # defaults for the campaign
         new_fundraiser = Fundraiser(
@@ -369,9 +378,11 @@ class OneClickSignUp(View):
             name=previous_fundraiser.name,
             team=previous_fundraiser.team,
             goal=campaign.default_fundraiser_amount,
-            photo=previous_fundraiser.photo,
+            photo=photo,
             message=previous_fundraiser.message,
         )
+        if photo is None and previous_fundraiser.photo_small:
+            new_fundraiser.photo_small.name = previous_fundraiser.photo_small.name
 
         new_fundraiser.save()
 

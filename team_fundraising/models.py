@@ -133,19 +133,24 @@ class Fundraiser(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # Generate and save the lower-resolution version of the photo
-        if self.photo:
-            with Image.open(self.photo) as img:
-                img.thumbnail((800, 800))
-                photo_dir, photo_filename = os.path.split(self.photo.name)
-                new_photo_path = os.path.join('photos_small', photo_filename)
+        # Generate and save the lower-resolution version of the photo.
+        # Skip thumbnail regeneration if the original file is missing on disk
+        # (can happen for legacy rows whose originals were lost) so we don't
+        # 500 the whole save.
+        if self.photo and self.photo.storage.exists(self.photo.name):
+            try:
+                with Image.open(self.photo) as img:
+                    img.thumbnail((800, 800))
+                    photo_dir, photo_filename = os.path.split(self.photo.name)
+                    new_photo_path = os.path.join('photos_small', photo_filename)
 
-                # Ensure the photos_small directory exists
-                full_dir = os.path.join(settings.MEDIA_ROOT, 'photos_small')
-                os.makedirs(full_dir, exist_ok=True)
+                    full_dir = os.path.join(settings.MEDIA_ROOT, 'photos_small')
+                    os.makedirs(full_dir, exist_ok=True)
 
-                img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
-                self.photo_small.name = new_photo_path
+                    img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
+                    self.photo_small.name = new_photo_path
+            except (FileNotFoundError, OSError):
+                pass
 
         super().save(*args, **kwargs)
 

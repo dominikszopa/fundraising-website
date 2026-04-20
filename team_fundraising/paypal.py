@@ -2,8 +2,7 @@ from paypal.standard.models import ST_PP_COMPLETED
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from .models import Donation
-from .text import Donation_text
-from .email_utils import send_email
+from .email_utils import send_donation_emails
 
 
 def process_paypal(sender, **kwargs):
@@ -33,43 +32,11 @@ def process_paypal(sender, **kwargs):
 
         donation = get_object_or_404(Donation, pk=ipn_obj.custom)
 
-        # TODO: write these to the db or a file so we have some traceability
-        # print(f"{ipn_obj.mc_gross}  {ipn_obj.mc_currency}")
-
         donation.payment_method = 'paypal'
         donation.payment_status = 'paid'
         donation.save()
 
-        thank_you_email_text = (Donation_text.confirmation_email_opening
-                                + '${:,.2f}'.format(donation.amount) + ' to '
-                                + donation.fundraiser.name
-                                + Donation_text.confirmation_email_closing_text)
-
-        thank_you_email_html = (Donation_text.confirmation_email_opening
-                                + '${:,.2f}'.format(donation.amount) + ' to '
-                                + donation.fundraiser.name
-                                + Donation_text.confirmation_email_closing_html)
-
-        # send the thank you email
-        send_email(
-            Donation_text.confirmation_email_subject,
-            thank_you_email_text,
-            settings.DEFAULT_FROM_EMAIL,
-            [donation.email],
-            html_content=thank_you_email_html
-        )
-
-        # send the notification email to the fundraiser
-        send_email(
-            Donation_text.notification_email_subject,
-            Donation_text.notification_email_opening
-            + '${:,.2f}'.format(donation.amount) + ' from '
-            + donation.name + " <" + donation.email + ">"
-            + ' with the message:\n\n"' + donation.message + '"'
-            + Donation_text.notification_email_closing,
-            settings.DEFAULT_FROM_EMAIL,
-            [donation.fundraiser.user.email]
-        )
+        send_donation_emails(donation)
 
     else:
         print('not completed')

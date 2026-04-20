@@ -14,6 +14,17 @@ urlpatterns = [
         name='fundraiser'
     ),
     path('donation/<int:fundraiser_id>/', views.new_donation, name="donation"),
+    path(
+        'donation/<int:fundraiser_id>/create-order/',
+        views.create_donation_order,
+        name="create_order",
+    ),
+    path(
+        'donation/<int:donation_id>/capture/',
+        views.capture_donation_order,
+        name="capture_order",
+    ),
+    path('paypal-webhook/', views.paypal_webhook, name="paypal_webhook"),
     path('paypal_donation/<int:fundraiser_id>/', Paypal_donation.as_view()),
     path(
         'accounts/update_fundraiser/',

@@ -300,3 +300,29 @@ class TestPayPalWebhook(PayPalViewsTestBase):
         )
 
         self.assertEqual(response.status_code, 404)
+
+
+@override_settings(PAYPAL_CLIENT_ID='test-client-id')
+class TestDonationTemplateFeatureFlag(PayPalViewsTestBase):
+    """Ensures the feature flag picks the right template."""
+
+    @override_settings(PAYPAL_ADVANCED_CHECKOUT=False)
+    def test_legacy_template_when_flag_off(self):
+        response = self.client.get(
+            reverse('team_fundraising:donation', args=[self.fundraiser.id]),
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'team_fundraising/donation.html')
+
+    @override_settings(PAYPAL_ADVANCED_CHECKOUT=True)
+    def test_advanced_template_when_flag_on(self):
+        response = self.client.get(
+            reverse('team_fundraising:donation', args=[self.fundraiser.id]),
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response, 'team_fundraising/donation_advanced.html',
+        )
+        # Sanity: client id and SDK script are in the rendered page.
+        self.assertContains(response, 'paypal.com/sdk/js')
+        self.assertContains(response, 'test-client-id')

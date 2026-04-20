@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block head %}
+<title>Donate to {{ fundraiser.name }}</title>
+<style>
+  /* Container only needs height — PayPal's iframe brings its own
+     border and input styling. Adding our own border produced a
+     visible double-field effect. */
+  .paypal-card-field {
+    min-height: 45px;
+    margin-bottom: 12px;
+  }
+  #advanced-checkout-error {
+    display: none;
+    margin-top: 12px;
+  }
+  .donation-section {
+    margin-bottom: 1.5rem;
+  }
+  .donation-section .card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+</style>
+{% endblock head %}
+{% block content %}
+<br/>
+<h3>Donate to {{ fundraiser.name }}'s fundraising</h3>
+<br/>
+
+<form id="donation-form" onsubmit="return false;">
+    {% csrf_token %}
+
+    <div id="form-errors"></div>
+
+    <div class="card donation-section">
+        <div class="card-header">1. Donation Amount</div>
+        <div class="card-body">
+            <div id="div_id_amount" class="form-group mb-0">
+                <div><input type="radio" class="radio" name="amount" value="10"> <label>$10</label></div>
+                <div><input type="radio" class="radio" name="amount" value="25"> <label>$25</label></div>
+                <div><input type="radio" class="radio" name="amount" value="50"> <label>$50</label></div>
+                <div><input type="radio" class="radio" name="amount" value="100"> <label>$100</label></div>
+                <div>
+                    <input type="radio" class="radio" id="amount-other" name="amount" value="other">
+                    <label for="amount-other" class="col-form-label">Other:</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" min="0" step="0.01" class="form-control"
+                               name="other_amount" size="10"
+                               onclick="document.getElementById('amount-other').checked = true;">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    Donations are allocated to our
+                    <a href="https://triplecrownforheart.ca/the-cause">charities</a>
+                    where funds are of immediate priority.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card donation-section">
+        <div class="card-header">2. Your Information</div>
+        <div class="card-body">
+            <div>{{ form.name|as_crispy_field }}</div>
+            <div class="form-group">
+                <div id="div_id_anonymous" class="form-check">
+                    <label for="id_anonymous" class="form-check-label">
+                        <input type="checkbox" name="anonymous" class="checkboxinput form-check-input" id="id_anonymous">
+                        Anonymous (your name will not appear on the site)
+                    </label>
+                </div>
+            </div>
+            <div>{{ form.email|as_crispy_field }}</div>
+            <div id="div_id_message" class="form-group mb-0">
+                <label for="id_message" class="col-form-label">
+                    Message (This will appear along with your donation)
+                </label>
+                <textarea name="message" cols="40" rows="3"
+                          class="textarea form-control" id="id_message"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card donation-section">
+        <div class="card-header">3. Payment</div>
+        <div class="card-body">
+            <div id="card-fields-container">
+                <label>Cardholder name</label>
+                <div id="card-name-field-container" class="paypal-card-field"></div>
+                <label>Card number</label>
+                <div id="card-number-field-container" class="paypal-card-field"></div>
+                <div class="row">
+                    <div class="col">
+                        <label>Expiry (MM/YY)</label>
+                        <div id="card-expiry-field-container" class="paypal-card-field"></div>
+                    </div>
+                    <div class="col">
+                        <label>CVV</label>
+                        <div id="card-cvv-field-container" class="paypal-card-field"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card donation-section">
+        <div class="card-header">4. Tax Receipt (Optional)</div>
+        <div class="card-body">
+            <div class="mb-3">
+                Fill in the following to receive a tax receipt for donations over $20:
+            </div>
+            <div>{{ form.tax_name|as_crispy_field }}</div>
+            <div>{{ form.address|as_crispy_field }}</div>
+            <div>{{ form.city|as_crispy_field }}</div>
+            <div>{{ form.province|as_crispy_field }}</div>
+            <div>{{ form.country|as_crispy_field }}</div>
+            <div>{{ form.postal_code|as_crispy_field }}</div>
+        </div>
+    </div>
+</form>
+
+<button type="button" id="card-submit-button" class="btn btn-primary btn-lg btn-block">
+    Donate with card
+</button>
+
+<div id="advanced-checkout-error" class="alert alert-danger"></div>
+
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=CAD&components=card-fields&intent=capture"></script>
+<script>
+(function () {
+  const CREATE_ORDER_URL = "{% url 'team_fundraising:create_order' fundraiser.id %}";
+  const FUNDRAISER_URL = "{% url 'team_fundraising:fundraiser' fundraiser.id %}";
+
+  let currentDonationID = null;
+
+  function csrfToken() {
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+    return match ? match[1] : '';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('advanced-checkout-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function clearError() {
+    const el = document.getElementById('advanced-checkout-error');
+    el.textContent = '';
+    el.style.display = 'none';
+  }
+
+  function validateClientSide() {
+    const form = document.getElementById('donation-form');
+    const fd = new FormData(form);
+    const amount = fd.get('amount');
+    const otherAmount = fd.get('other_amount');
+    if (!amount || (amount === 'other' && !otherAmount)) {
+      return 'Please choose or enter a donation amount.';
+    }
+    if (!fd.get('name')) return 'Please enter your name.';
+    if (!fd.get('email')) return 'Please enter your email.';
+    return null;
+  }
+
+  async function createOrder() {
+    clearError();
+    const validationError = validateClientSide();
+    if (validationError) {
+      showError(validationError);
+      throw new Error(validationError);
+    }
+
+    const form = document.getElementById('donation-form');
+    const fd = new FormData(form);
+
+    const response = await fetch(CREATE_ORDER_URL, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken() },
+      body: fd,
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      const msg = result.error || 'Could not start payment.';
+      showError(msg);
+      throw new Error(msg);
+    }
+
+    currentDonationID = result.donationID;
+    return result.orderID;
+  }
+
+  async function onApprove(data) {
+    const captureUrl = '/team_fundraising/donation/'
+      + currentDonationID + '/capture/';
+    const response = await fetch(captureUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken(),
+      },
+      body: JSON.stringify({ orderID: data.orderID }),
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      showError(result.error || 'Payment could not be completed.');
+      return;
+    }
+
+    window.location.href = FUNDRAISER_URL;
+  }
+
+  function onError(err) {
+    console.error('PayPal error:', err);
+    showError('An error occurred during payment. Please try again.');
+  }
+
+  const cardFields = paypal.CardFields({
+    createOrder: createOrder,
+    onApprove: onApprove,
+    onError: onError,
+  });
+
+  if (cardFields.isEligible()) {
+    cardFields.NameField().render('#card-name-field-container');
+    cardFields.NumberField().render('#card-number-field-container');
+    cardFields.ExpiryField().render('#card-expiry-field-container');
+    cardFields.CVVField().render('#card-cvv-field-container');
+
+    document.getElementById('card-submit-button').addEventListener(
+      'click',
+      () => {
+        clearError();
+        const err = validateClientSide();
+        if (err) { showError(err); return; }
+        cardFields.submit().catch((e) => {
+          console.error('Card submit error:', e);
+          showError('Card could not be processed. Please check the details.');
+        });
+      },
+    );
+  } else {
+    document.getElementById('card-fields-container').style.display = 'none';
+    document.getElementById('card-submit-button').style.display = 'none';
+  }
+})();
+</script>
+{% endblock content %}

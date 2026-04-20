@@ -147,3 +147,6 @@ backup/
 
 # Docker override file (local configuration)
 docker-compose.override.yml
+
+# Node modules
+node_modules/

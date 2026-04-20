@@ -91,6 +91,20 @@ def new_donation(request, fundraiser_id):
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
     campaign = Campaign.objects.filter(fundraiser=fundraiser_id).first()
 
+    # New flow: the Advanced Checkout template drives submission from JS,
+    # so we never receive a POST here when the flag is on.
+    if settings.PAYPAL_ADVANCED_CHECKOUT:
+        return render(
+            request,
+            'team_fundraising/donation_advanced.html',
+            {
+                'form': DonationForm(),
+                'campaign': campaign,
+                'fundraiser': fundraiser,
+                'paypal_client_id': settings.PAYPAL_CLIENT_ID,
+            },
+        )
+
     if request.method == "POST":
 
         form = DonationForm(request.POST)
@@ -325,6 +339,9 @@ def capture_donation_order(request, donation_id):
         return JsonResponse({'error': 'Amount mismatch'}, status=400)
 
     _mark_donation_paid(donation.id)
+
+    # Flash message picked up on the fundraiser page the JS redirects to.
+    messages.add_message(request, messages.SUCCESS, Donation_text.thank_you)
 
     return JsonResponse({'status': 'success', 'donationID': donation.id})
 

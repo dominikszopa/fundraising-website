@@ -144,6 +144,8 @@ def verify_webhook(headers, body: bytes) -> bool:
         body: raw request body bytes as received from PayPal.
 
     Returns True only when PayPal responds with ``verification_status=SUCCESS``.
+    Any error (bad credentials, network failure, malformed body, unset
+    webhook id) returns False so callers can respond with a plain 400.
     """
     if not settings.PAYPAL_WEBHOOK_ID:
         logger.error('PAYPAL_WEBHOOK_ID is not configured; refusing to verify.')
@@ -165,12 +167,23 @@ def verify_webhook(headers, body: bytes) -> bool:
         'webhook_event': event,
     }
 
-    response = requests.post(
-        f'{_api_base()}/v1/notifications/verify-webhook-signature',
-        json=payload,
-        headers=_auth_headers(),
-        timeout=_HTTP_TIMEOUT_SECONDS,
-    )
+    try:
+        auth_headers = _auth_headers()
+    except PayPalAPIError as exc:
+        logger.error('PayPal webhook verify could not obtain token: %s', exc)
+        return False
+
+    try:
+        response = requests.post(
+            f'{_api_base()}/v1/notifications/verify-webhook-signature',
+            json=payload,
+            headers=auth_headers,
+            timeout=_HTTP_TIMEOUT_SECONDS,
+        )
+    except requests.RequestException as exc:
+        logger.error('PayPal verify_webhook network error: %s', exc)
+        return False
+
     if response.status_code != 200:
         logger.error(
             'PayPal verify_webhook failed: %s %s',
@@ -178,4 +191,15 @@ def verify_webhook(headers, body: bytes) -> bool:
         )
         return False
 
-    return response.json().get('verification_status') == 'SUCCESS'
+    result = response.json()
+    if result.get('verification_status') != 'SUCCESS':
+        # PayPal accepted the request but said the signature doesn't match.
+        # Usually means PAYPAL_WEBHOOK_ID doesn't match the webhook that
+        # sent this event, or the event was sent from a different env.
+        logger.error(
+            'PayPal verify_webhook returned FAILURE (webhook_id=%s): %s',
+            settings.PAYPAL_WEBHOOK_ID, result,
+        )
+        return False
+
+    return True

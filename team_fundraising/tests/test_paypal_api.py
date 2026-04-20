@@ -154,3 +154,15 @@ class TestPayPalAPI(TestCase):
     def test_verify_webhook_rejects_unparseable_body(self, mock_post):
         self.assertFalse(paypal_api.verify_webhook({}, b'not-json'))
         mock_post.assert_not_called()
+
+    @patch('team_fundraising.paypal_api.requests.post')
+    def test_verify_webhook_returns_false_when_token_fetch_fails(
+        self, mock_post,
+    ):
+        # Token endpoint returns 401 — verify_webhook must return False
+        # rather than propagating PayPalAPIError (which would 500 the view).
+        mock_post.return_value = self._mock_response(
+            401, {'error': 'invalid_client'}
+        )
+        body = json.dumps({'event_type': 'PAYMENT.CAPTURE.COMPLETED'}).encode()
+        self.assertFalse(paypal_api.verify_webhook({}, body))

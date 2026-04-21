@@ -174,3 +174,20 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Must be set in environment variables or overridden in settings files
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY', '')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY', '')
+
+# PayPal Advanced Checkout (Orders v2 REST API) settings
+# PAYPAL_TEST (read in dev.py / prod.py) selects sandbox vs live base URL.
+# Credentials are optional here so dev/test envs without PayPal configured
+# still boot; paypal_api.py raises if they are missing at call time.
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID', '')
+PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET', '')
+PAYPAL_WEBHOOK_ID = os.getenv('PAYPAL_WEBHOOK_ID', '')
+PAYPAL_API_BASE = (
+    'https://api-m.sandbox.paypal.com'
+    if read_boolean(os.getenv('PAYPAL_TEST'))
+    else 'https://api-m.paypal.com'
+)
+# Feature flag: when True, the donation flow uses Advanced Checkout
+# (inline card fields + Smart Buttons). When False, legacy Payments
+# Standard + IPN is used. Defaults off until PR 3 lands and is verified.
+PAYPAL_ADVANCED_CHECKOUT = read_boolean(os.getenv('PAYPAL_ADVANCED_CHECKOUT', 'False'))

@@ -1,7 +1,13 @@
+import json
+import logging
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -10,12 +16,12 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views import View
 from paypal.standard.forms import PayPalPaymentsForm
-import logging
 
+from . import paypal_api
 from .models import Campaign, Fundraiser, Donation, ProxyUser
 from .forms import DonationForm, UserForm, FundraiserForm, SignUpForm
 from .text import Donation_text, Fundraiser_text
-from .email_utils import send_email
+from .email_utils import send_email, send_donation_emails
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +90,20 @@ def new_donation(request, fundraiser_id):
 
     fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
     campaign = Campaign.objects.filter(fundraiser=fundraiser_id).first()
+
+    # New flow: the Advanced Checkout template drives submission from JS,
+    # so we never receive a POST here when the flag is on.
+    if settings.PAYPAL_ADVANCED_CHECKOUT:
+        return render(
+            request,
+            'team_fundraising/donation_advanced.html',
+            {
+                'form': DonationForm(),
+                'campaign': campaign,
+                'fundraiser': fundraiser,
+                'paypal_client_id': settings.PAYPAL_CLIENT_ID,
+            },
+        )
 
     if request.method == "POST":
 
@@ -200,6 +220,184 @@ class Paypal_donation(View):
             }
 
         return render(request, self.template_name, context)
+
+
+def _parse_json_body(request):
+    """Return the decoded JSON body or None if it's not valid JSON."""
+    try:
+        return json.loads(request.body)
+    except (TypeError, ValueError):
+        return None
+
+
+@require_POST
+def create_donation_order(request, fundraiser_id):
+    """Create a pending Donation and a PayPal order, return the order id.
+
+    Called by the Advanced Checkout JS before the user confirms payment.
+    Accepts form-encoded or JSON bodies so the frontend can post either.
+    """
+    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
+
+    if request.content_type == 'application/json':
+        data = _parse_json_body(request)
+        if data is None:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        data = request.POST
+
+    form = DonationForm(data)
+    if not form.is_valid():
+        return JsonResponse(
+            {'error': 'Invalid form', 'fields': form.errors},
+            status=400,
+        )
+
+    donation = Donation.objects.create(
+        fundraiser=fundraiser,
+        name=form.cleaned_data['name'],
+        amount=float(form.cleaned_data['amount']),
+        email=form.cleaned_data['email'],
+        anonymous=form.cleaned_data['anonymous'],
+        message=form.cleaned_data['message'],
+        tax_name=form.cleaned_data['tax_name'],
+        address=form.cleaned_data['address'],
+        city=form.cleaned_data['city'],
+        province=form.cleaned_data['province'],
+        country=form.cleaned_data['country'],
+        postal_code=form.cleaned_data['postal_code'],
+        payment_method='paypal',
+        payment_status='pending',
+    )
+
+    try:
+        order = paypal_api.create_order(donation)
+    except paypal_api.PayPalAPIError:
+        logger.exception('PayPal create_order failed for donation %s', donation.id)
+        return JsonResponse(
+            {'error': 'Could not initiate payment. Please try again.'},
+            status=502,
+        )
+
+    return JsonResponse({'orderID': order['id'], 'donationID': donation.id})
+
+
+@require_POST
+def capture_donation_order(request, donation_id):
+    """Capture a PayPal order, verify its amount, and mark the donation paid.
+
+    Uses an atomic UPDATE to guarantee emails are sent at most once, even
+    if the webhook arrives before or after this call returns.
+    """
+    donation = get_object_or_404(Donation, pk=donation_id)
+
+    data = _parse_json_body(request)
+    if data is None:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    order_id = data.get('orderID')
+    if not order_id:
+        return JsonResponse({'error': 'orderID required'}, status=400)
+
+    try:
+        capture = paypal_api.capture_order(order_id)
+    except paypal_api.PayPalAPIError:
+        logger.exception('PayPal capture_order failed for donation %s', donation.id)
+        return JsonResponse(
+            {'error': 'Could not complete payment.'},
+            status=502,
+        )
+
+    if capture.get('status') != 'COMPLETED':
+        logger.error(
+            'PayPal capture status %s for donation %s',
+            capture.get('status'), donation.id,
+        )
+        return JsonResponse({'error': 'Capture not completed'}, status=400)
+
+    try:
+        captured = (
+            capture['purchase_units'][0]['payments']['captures'][0]['amount']
+        )
+        captured_amount = float(captured['value'])
+        captured_currency = captured['currency_code']
+    except (KeyError, IndexError, TypeError, ValueError):
+        logger.exception(
+            'Unexpected capture payload shape for donation %s', donation.id,
+        )
+        return JsonResponse({'error': 'Invalid capture response'}, status=502)
+
+    # Guard against client-side amount tampering: PayPal's captured amount
+    # is the authoritative figure, compared against what we stored.
+    if (captured_currency != 'CAD'
+            or abs(captured_amount - float(donation.amount)) > 0.01):
+        logger.error(
+            'Capture amount/currency mismatch for donation %s: '
+            '%s %s vs expected %s CAD',
+            donation.id, captured_amount, captured_currency, donation.amount,
+        )
+        return JsonResponse({'error': 'Amount mismatch'}, status=400)
+
+    _mark_donation_paid(donation.id)
+
+    # Flash message picked up on the fundraiser page the JS redirects to.
+    messages.add_message(request, messages.SUCCESS, Donation_text.thank_you)
+
+    return JsonResponse({'status': 'success', 'donationID': donation.id})
+
+
+@csrf_exempt
+@require_POST
+def paypal_webhook(request):
+    """Idempotent backstop for capture state — runs if the user closed the
+    tab before ``capture_donation_order`` finished, or if PayPal retries.
+
+    Verifies the signature with PayPal before trusting any field in the body.
+    """
+    if not paypal_api.verify_webhook(request.headers, request.body):
+        logger.error('PayPal webhook signature verification failed')
+        return HttpResponse(status=400)
+
+    event = _parse_json_body(request)
+    if event is None:
+        return HttpResponse(status=400)
+
+    if event.get('event_type') != 'PAYMENT.CAPTURE.COMPLETED':
+        # Other event types are acknowledged but not acted on.
+        return HttpResponse(status=200)
+
+    custom_id = (event.get('resource') or {}).get('custom_id')
+    if not custom_id:
+        logger.error('PayPal webhook missing custom_id')
+        return HttpResponse(status=400)
+
+    try:
+        donation_id = int(custom_id)
+    except (TypeError, ValueError):
+        logger.error('PayPal webhook bad custom_id: %s', custom_id)
+        return HttpResponse(status=400)
+
+    if not Donation.objects.filter(pk=donation_id).exists():
+        logger.error('PayPal webhook for unknown donation: %s', donation_id)
+        return HttpResponse(status=404)
+
+    _mark_donation_paid(donation_id)
+    return HttpResponse(status=200)
+
+
+def _mark_donation_paid(donation_id):
+    """Flip a donation from pending to paid and send emails once.
+
+    Uses a conditional UPDATE so concurrent capture+webhook calls can't
+    both trigger email sends.
+    """
+    rows = Donation.objects.filter(
+        pk=donation_id, payment_status='pending',
+    ).update(payment_status='paid')
+
+    if rows:
+        donation = Donation.objects.get(pk=donation_id)
+        send_donation_emails(donation)
 
 
 def signup(request, campaign_id):

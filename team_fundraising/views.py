@@ -94,6 +94,15 @@ def new_donation(request, fundraiser_id):
     # New flow: the Advanced Checkout template drives submission from JS,
     # so we never receive a POST here when the flag is on.
     if settings.PAYPAL_ADVANCED_CHECKOUT:
+        # Card Fields require data-client-token on the SDK script tag.
+        # On failure we render with an empty token rather than 500ing the
+        # page; the form still loads, just without working card fields.
+        try:
+            client_token = paypal_api.generate_client_token()
+        except paypal_api.PayPalAPIError:
+            logger.exception('Could not mint PayPal client token')
+            client_token = ''
+
         return render(
             request,
             'team_fundraising/donation_advanced.html',
@@ -102,6 +111,7 @@ def new_donation(request, fundraiser_id):
                 'campaign': campaign,
                 'fundraiser': fundraiser,
                 'paypal_client_id': settings.PAYPAL_CLIENT_ID,
+                'client_token': client_token,
             },
         )
 

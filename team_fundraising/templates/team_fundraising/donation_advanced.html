@@ -130,7 +130,7 @@
 
 <div id="advanced-checkout-error" class="alert alert-danger"></div>
 
-<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=CAD&components=card-fields&intent=capture"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=CAD&components=card-fields&intent=capture" data-client-token="{{ client_token }}"></script>
 <script>
 (function () {
   const CREATE_ORDER_URL = "{% url 'team_fundraising:create_order' fundraiser.id %}";

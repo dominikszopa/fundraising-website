@@ -88,6 +88,40 @@ class TestPayPalAPI(TestCase):
             paypal_api.get_access_token()
 
     @patch('team_fundraising.paypal_api.requests.post')
+    def test_generate_client_token_returns_token(self, mock_post):
+        mock_post.side_effect = [
+            self._mock_response(200, {'access_token': 't', 'expires_in': 3600}),
+            self._mock_response(200, {'client_token': 'CT-1'}),
+        ]
+
+        token = paypal_api.generate_client_token()
+
+        self.assertEqual(token, 'CT-1')
+        token_call = mock_post.call_args_list[1]
+        self.assertIn('/v1/identity/generate-token', token_call.args[0])
+        self.assertEqual(
+            token_call.kwargs['headers']['Authorization'], 'Bearer t',
+        )
+
+    @patch('team_fundraising.paypal_api.requests.post')
+    def test_generate_client_token_raises_on_http_error(self, mock_post):
+        mock_post.side_effect = [
+            self._mock_response(200, {'access_token': 't', 'expires_in': 3600}),
+            self._mock_response(500, {'error': 'boom'}),
+        ]
+        with self.assertRaises(paypal_api.PayPalAPIError):
+            paypal_api.generate_client_token()
+
+    @patch('team_fundraising.paypal_api.requests.post')
+    def test_generate_client_token_raises_when_token_missing(self, mock_post):
+        mock_post.side_effect = [
+            self._mock_response(200, {'access_token': 't', 'expires_in': 3600}),
+            self._mock_response(200, {}),
+        ]
+        with self.assertRaises(paypal_api.PayPalAPIError):
+            paypal_api.generate_client_token()
+
+    @patch('team_fundraising.paypal_api.requests.post')
     def test_create_order_sends_expected_payload(self, mock_post):
         # First call is token fetch, second is the order.
         mock_post.side_effect = [

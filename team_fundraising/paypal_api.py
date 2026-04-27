@@ -81,6 +81,35 @@ def _auth_headers() -> dict:
     }
 
 
+def generate_client_token() -> str:
+    """Return a short-lived client token for the JS SDK.
+
+    The PayPal Card Fields component will not render (``isEligible()`` returns
+    false) unless the SDK script tag has ``data-client-token`` set to a token
+    minted from this endpoint.
+    """
+    response = requests.post(
+        f'{_api_base()}/v1/identity/generate-token',
+        json={},
+        headers=_auth_headers(),
+        timeout=_HTTP_TIMEOUT_SECONDS,
+    )
+    if response.status_code not in (200, 201):
+        logger.error(
+            'PayPal generate_client_token failed: %s %s',
+            response.status_code, response.text,
+        )
+        raise PayPalAPIError(
+            f'Failed to generate PayPal client token ({response.status_code})'
+        )
+    payload = response.json()
+    token = payload.get('client_token')
+    if not token:
+        logger.error('PayPal generate_client_token missing client_token: %s', payload)
+        raise PayPalAPIError('PayPal client token response missing client_token')
+    return token
+
+
 def create_order(donation) -> dict:
     """Create a PayPal order for ``donation`` and return the order payload.
 

@@ -3,13 +3,6 @@
 {% block head %}
 <title>Donate to {{ fundraiser.name }}</title>
 <style>
-  /* Container only needs height — PayPal's iframe brings its own
-     border and input styling. Adding our own border produced a
-     visible double-field effect. */
-  .paypal-card-field {
-    min-height: 45px;
-    margin-bottom: 12px;
-  }
   #advanced-checkout-error {
     display: none;
     margin-top: 12px;
@@ -89,22 +82,11 @@
     <div class="card donation-section">
         <div class="card-header">3. Payment</div>
         <div class="card-body">
-            <div id="card-fields-container">
-                <label>Cardholder name</label>
-                <div id="card-name-field-container" class="paypal-card-field"></div>
-                <label>Card number</label>
-                <div id="card-number-field-container" class="paypal-card-field"></div>
-                <div class="row">
-                    <div class="col">
-                        <label>Expiry (MM/YY)</label>
-                        <div id="card-expiry-field-container" class="paypal-card-field"></div>
-                    </div>
-                    <div class="col">
-                        <label>CVV</label>
-                        <div id="card-cvv-field-container" class="paypal-card-field"></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                Click the button below to pay by debit or credit card.
+                A secure PayPal-hosted form will open in a new window.
             </div>
+            <div id="paypal-card-button-container"></div>
         </div>
     </div>
 
@@ -124,13 +106,9 @@
     </div>
 </form>
 
-<button type="button" id="card-submit-button" class="btn btn-primary btn-lg btn-block">
-    Donate with card
-</button>
-
 <div id="advanced-checkout-error" class="alert alert-danger"></div>
 
-<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=CAD&components=card-fields&intent=capture" data-client-token="{{ client_token }}"></script>
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=CAD&components=buttons&intent=capture&disable-funding=paypal,credit,paylater"></script>
 <script>
 (function () {
   const CREATE_ORDER_URL = "{% url 'team_fundraising:create_order' fundraiser.id %}";
@@ -169,13 +147,6 @@
   }
 
   async function createOrder() {
-    clearError();
-    const validationError = validateClientSide();
-    if (validationError) {
-      showError(validationError);
-      throw new Error(validationError);
-    }
-
     const form = document.getElementById('donation-form');
     const fd = new FormData(form);
 
@@ -222,33 +193,29 @@
     showError('An error occurred during payment. Please try again.');
   }
 
-  const cardFields = paypal.CardFields({
+  const cardButton = paypal.Buttons({
+    fundingSource: paypal.FUNDING.CARD,
+    style: { layout: 'vertical', shape: 'rect' },
+    onClick: function (data, actions) {
+      clearError();
+      const err = validateClientSide();
+      if (err) {
+        showError(err);
+        return actions.reject();
+      }
+      return actions.resolve();
+    },
     createOrder: createOrder,
     onApprove: onApprove,
     onError: onError,
   });
 
-  if (cardFields.isEligible()) {
-    cardFields.NameField().render('#card-name-field-container');
-    cardFields.NumberField().render('#card-number-field-container');
-    cardFields.ExpiryField().render('#card-expiry-field-container');
-    cardFields.CVVField().render('#card-cvv-field-container');
-
-    document.getElementById('card-submit-button').addEventListener(
-      'click',
-      () => {
-        clearError();
-        const err = validateClientSide();
-        if (err) { showError(err); return; }
-        cardFields.submit().catch((e) => {
-          console.error('Card submit error:', e);
-          showError('Card could not be processed. Please check the details.');
-        });
-      },
-    );
+  if (cardButton.isEligible()) {
+    cardButton.render('#paypal-card-button-container');
   } else {
-    document.getElementById('card-fields-container').style.display = 'none';
-    document.getElementById('card-submit-button').style.display = 'none';
+    showError(
+      'Card payments are not available right now. Please try again later.'
+    );
   }
 })();
 </script>

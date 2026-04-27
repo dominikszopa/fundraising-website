@@ -315,9 +315,7 @@ class TestDonationTemplateFeatureFlag(PayPalViewsTestBase):
         self.assertTemplateUsed(response, 'team_fundraising/donation.html')
 
     @override_settings(PAYPAL_ADVANCED_CHECKOUT=True)
-    @patch('team_fundraising.views.paypal_api.generate_client_token')
-    def test_advanced_template_when_flag_on(self, mock_token):
-        mock_token.return_value = 'CT-XYZ'
+    def test_advanced_template_when_flag_on(self):
         response = self.client.get(
             reverse('team_fundraising:donation', args=[self.fundraiser.id]),
         )
@@ -325,22 +323,8 @@ class TestDonationTemplateFeatureFlag(PayPalViewsTestBase):
         self.assertTemplateUsed(
             response, 'team_fundraising/donation_advanced.html',
         )
-        # Sanity: client id, SDK script, and client token are rendered.
+        # Sanity: SDK script with buttons component and client id are rendered.
         self.assertContains(response, 'paypal.com/sdk/js')
         self.assertContains(response, 'test-client-id')
-        self.assertContains(response, 'data-client-token="CT-XYZ"')
-
-    @override_settings(PAYPAL_ADVANCED_CHECKOUT=True)
-    @patch('team_fundraising.views.paypal_api.generate_client_token')
-    def test_advanced_template_renders_when_client_token_fails(self, mock_token):
-        from .. import paypal_api
-        mock_token.side_effect = paypal_api.PayPalAPIError('boom')
-
-        response = self.client.get(
-            reverse('team_fundraising:donation', args=[self.fundraiser.id]),
-        )
-
-        # Page still renders so a token-fetch outage doesn't 500 the donation
-        # page; card fields will simply not be eligible.
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'data-client-token=""')
+        self.assertContains(response, 'components=buttons')
+        self.assertContains(response, 'paypal-card-button-container')

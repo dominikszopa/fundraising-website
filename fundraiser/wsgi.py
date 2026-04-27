@@ -24,5 +24,6 @@ application = WhiteNoise(
     application,
     root=settings.MEDIA_ROOT,
     prefix=settings.MEDIA_URL.strip('/'),
-    max_age=3600  # 1 hour cache for media files (vs 1 year for static)
+    max_age=3600,  # 1 hour cache for media files (vs 1 year for static)
+    autorefresh=True,  # re-scan disk on each request so new uploads are served without a restart
 )

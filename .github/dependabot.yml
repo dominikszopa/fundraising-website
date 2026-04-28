@@ -15,4 +15,4 @@ updates:
     open-pull-requests-limit: 25
     ignore:
       - dependency-name: "django"
-        versions: [">=6.0.0", "<7.0.0"]
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

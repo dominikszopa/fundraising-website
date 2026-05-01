@@ -85,11 +85,12 @@
                 }
             });
             
-            // Set initial content. Older messages were saved as plain text with
-            // \n line breaks; load those via setText so the breaks are preserved.
+            // Set initial content. Use Quill's HTML parser so <br/> and other
+            // tags are normalized into Quill's internal format; fall back to
+            // setText for plain-text messages so legacy \n breaks are preserved.
             var initialContent = messageTextarea.value;
             if (/<[a-z][\s\S]*>/i.test(initialContent)) {
-                quill.root.innerHTML = initialContent;
+                quill.clipboard.dangerouslyPasteHTML(initialContent);
             } else {
                 quill.setText(initialContent);
             }

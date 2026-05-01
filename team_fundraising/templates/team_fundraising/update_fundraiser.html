@@ -85,14 +85,20 @@
                 }
             });
             
-            // Set initial content
-            quill.root.innerHTML = messageTextarea.value;
+            // Set initial content. Older messages were saved as plain text with
+            // \n line breaks; load those via setText so the breaks are preserved.
+            var initialContent = messageTextarea.value;
+            if (/<[a-z][\s\S]*>/i.test(initialContent)) {
+                quill.root.innerHTML = initialContent;
+            } else {
+                quill.setText(initialContent);
+            }
             
             // Hide the original textarea
             messageTextarea.style.display = 'none';
             
             // Update the textarea before form submission
-            document.querySelector('form').addEventListener('submit', function() {
+            messageTextarea.closest('form').addEventListener('submit', function() {
                 messageTextarea.value = quill.root.innerHTML;
             });
         }

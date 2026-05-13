@@ -468,6 +468,28 @@ def signup(request, campaign_id):
 
             # tie this user to the fundraiser and save the model again
             fundraiser.user = user
+
+            # Carry over the photo from a previous fundraiser if the user
+            # didn't upload one (matches OneClickSignUp behaviour).
+            if not fundraiser.photo:
+                previous_fundraiser = ProxyUser.objects.get(
+                    pk=user.id
+                ).get_latest_fundraiser()
+                if (
+                    previous_fundraiser is not None
+                    and previous_fundraiser.id != fundraiser.id
+                ):
+                    prev_photo = previous_fundraiser.photo
+                    if (
+                        prev_photo
+                        and prev_photo.storage.exists(prev_photo.name)
+                    ):
+                        fundraiser.photo = prev_photo
+                    elif previous_fundraiser.photo_small:
+                        fundraiser.photo_small.name = (
+                            previous_fundraiser.photo_small.name
+                        )
+
             fundraiser.save()
 
             # send them an email that they have successfully signed up
@@ -525,6 +547,8 @@ def signup(request, campaign_id):
 
         campaign = get_object_or_404(Campaign, pk=campaign_id)
 
+        fundraiser_initial = {'goal': campaign.default_fundraiser_amount}
+
         if (request.user.is_authenticated):
 
             # pre-populate some values if signing up for another campaign
@@ -532,12 +556,18 @@ def signup(request, campaign_id):
                 'username': request.user.username,
                 'email': request.user.email,
                 })
+
+            previous_fundraiser = ProxyUser.objects.get(
+                pk=request.user.id
+            ).get_latest_fundraiser()
+            if previous_fundraiser is not None:
+                fundraiser_initial['name'] = previous_fundraiser.name
+                fundraiser_initial['team'] = previous_fundraiser.team
+                fundraiser_initial['message'] = previous_fundraiser.message
         else:
             user_form = SignUpForm()
 
-        fundraiser_form = FundraiserForm(
-            initial={'goal': campaign.default_fundraiser_amount}
-        )
+        fundraiser_form = FundraiserForm(initial=fundraiser_initial)
 
     return render(request, 'registration/signup.html', {
         'campaign': campaign,

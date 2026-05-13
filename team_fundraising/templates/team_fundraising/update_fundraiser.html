@@ -33,9 +33,7 @@
       {% else %}
 
           Please join the new campaign:
-          <a href="{% url 'team_fundraising:signup' active_campaign.id %}">
             {{ active_campaign.name }}
-          </a>
 
       {% endif %}
       <br>
@@ -69,7 +67,7 @@
             var quillDiv = document.createElement('div');
             quillDiv.id = 'quill-editor';
             messageTextarea.parentNode.insertBefore(quillDiv, messageTextarea);
-            
+
             // Initialize Quill with existing content
             var quill = new Quill('#quill-editor', {
                 theme: 'snow',
@@ -84,7 +82,7 @@
                     ]
                 }
             });
-            
+
             // Set initial content. Use Quill's HTML parser so <br/> and other
             // tags are normalized into Quill's internal format; fall back to
             // setText for plain-text messages so legacy \n breaks are preserved.
@@ -94,10 +92,10 @@
             } else {
                 quill.setText(initialContent);
             }
-            
+
             // Hide the original textarea
             messageTextarea.style.display = 'none';
-            
+
             // Update the textarea before form submission
             messageTextarea.closest('form').addEventListener('submit', function() {
                 messageTextarea.value = quill.root.innerHTML;

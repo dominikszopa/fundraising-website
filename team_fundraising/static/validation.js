@@ -64,15 +64,21 @@ function checkUsername(usernameInput) {
 
 function checkSignupForm() {
 /**
- * Checks the signup form for errors
+ * Checks the signup form for errors.
+ * Password fields are not present when the user is already logged in,
+ * so only validate them if they exist on the page.
  */
 
     var username = document.getElementById("id_username");
     var password1 = document.getElementById("id_password1");
     var password2 = document.getElementById("id_password2");
 
-    var usernameValid = checkUsername(username);
-    var passwordsMatch = checkPasswordsMatch(password1, password2);
+    var usernameValid = username && !username.readOnly
+        ? checkUsername(username)
+        : true;
+    var passwordsMatch = (password1 && password2)
+        ? checkPasswordsMatch(password1, password2)
+        : true;
 
     if(usernameValid && passwordsMatch) {
          console.log("valid form");

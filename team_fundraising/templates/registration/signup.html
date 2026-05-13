@@ -30,9 +30,7 @@
       This campaign is no longer active.
 
         Please join the new campaign:
-        <a href="{% url 'team_fundraising:signup' campaign.get_latest_active_campaign.id %}">
         {{ campaign.get_latest_active_campaign.name }}
-        </a>
 
 
     </div>
@@ -132,8 +130,7 @@ to join the campaign with one click.
     <div class="form-group row">
         <label class="col-sm-4 col-form-label" for="{{ fundraiser_form.message.auto_id}}">{{ fundraiser_form.message.label }}:</label>
         <div class="col-sm-8">
-            <div id="quill-editor">{{ campaign.default_fundraiser_message|safe }}</div>
-            <textarea name="message" style="display:none" id="id_message"></textarea>
+            <textarea name="message" id="id_message">{{ fundraiser_form.message.value|default:campaign.default_fundraiser_message }}</textarea>
         </div>
     </div>
 
@@ -166,6 +163,7 @@ to join the campaign with one click.
         <label class="col-sm-4 col-form-label" for="{{ user_form.username.auto_id}}">{{ user_form.username.label }}:</label>
         <div class="col-sm-8">
             <input type="text" name="username" maxlength="150" class="form-control" required="" id="id_username"
+                value="{{ user_form.username.value|default_if_none:'' }}"
                 {% if user.is_authenticated %} readonly {% endif %}
             >
             {% if not user.is_authenticated %}
@@ -243,24 +241,44 @@ to join the campaign with one click.
     </script>
 
     <script>
-        var quill = new Quill('#quill-editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    ['blockquote'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                    [{ 'color': [] }, { 'background': [] }],
-                    ['clean']
-                ]
-            }
-        });
+        var messageTextarea = document.getElementById('id_message');
+        if (messageTextarea) {
+            // Insert a Quill editor div before the textarea
+            var quillDiv = document.createElement('div');
+            quillDiv.id = 'quill-editor';
+            messageTextarea.parentNode.insertBefore(quillDiv, messageTextarea);
 
-        // Copy Quill content to the hidden textarea before form submission
-        document.querySelector('form').addEventListener('submit', function() {
-            document.getElementById('id_message').value = quill.root.innerHTML;
-        });
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Load initial content. Use Quill's HTML parser so <br/> and other
+            // tags are normalized; fall back to setText for plain-text content
+            // so legacy \n breaks are preserved.
+            var initialContent = messageTextarea.value;
+            if (/<[a-z][\s\S]*>/i.test(initialContent)) {
+                quill.clipboard.dangerouslyPasteHTML(initialContent);
+            } else {
+                quill.setText(initialContent);
+            }
+
+            messageTextarea.style.display = 'none';
+
+            // Copy Quill content to the textarea before submit
+            messageTextarea.closest('form').addEventListener('submit', function() {
+                messageTextarea.value = quill.root.innerHTML;
+            });
+        }
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

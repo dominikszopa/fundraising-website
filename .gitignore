@@ -10,7 +10,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
-static
+/static/
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -150,3 +150,12 @@ docker-compose.override.yml
 
 # Node modules
 node_modules/
+
+# Playwright
+/.playwright-mcp/
+/playwright-report/
+/test-results/
+
+# Database dumps / local data
+*.dump
+/data/

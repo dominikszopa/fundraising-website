@@ -170,6 +170,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+EMAIL_BACKEND = 'team_fundraising.email_backend.SESEmailBackend'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

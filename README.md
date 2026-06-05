@@ -248,6 +248,8 @@ If you have an existing SQLite database with data you want to migrate to Postgre
 
 The application sends emails when someone registers as a fundraiser, makes a donation, or receives a donation. Email delivery uses **AWS SES (Simple Email Service)** via the HTTP API.
 
+Django's built-in emails (such as password reset) are also routed through AWS SES via a custom email backend (`SESEmailBackend`, set as `EMAIL_BACKEND` in `settings/base.py`), so all outgoing mail uses the same SES path rather than SMTP.
+
 #### AWS SES Setup
 
 1. **Create an AWS account** at [aws.amazon.com](https://aws.amazon.com) if you don't have one

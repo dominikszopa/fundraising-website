@@ -210,6 +210,39 @@ class TestFundraiserPhoto(TestCase):
                     self.assertEqual(img.size, (80, 80))
                     self.assertEqual(img.convert('RGB').getpixel((0, 0)), (0, 255, 0))
 
+    def test_rotate_photo_rotates_thumbnail_when_original_missing(self):
+        """
+        Legacy rows can have a thumbnail but a lost original. Rotation should
+        still turn the thumbnail (what users see) rather than silently no-op.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(120, 80),
+                )
+
+                # Simulate the real production scenario: the original file is
+                # gone from disk but the field still references it and the
+                # thumbnail survives.
+                os.remove(os.path.join(settings.MEDIA_ROOT, fundraiser.photo.name))
+
+                self.assertTrue(fundraiser.photo_small.name)
+                self.assertFalse(
+                    fundraiser.photo.storage.exists(fundraiser.photo.name)
+                )
+                thumb = os.path.join(settings.MEDIA_ROOT, fundraiser.photo_small.name)
+                with Image.open(thumb) as img:
+                    self.assertEqual(img.size, (120, 80))
+
+                fundraiser.rotate_photo(90)
+                fundraiser.save()
+
+                with Image.open(thumb) as img:
+                    self.assertEqual(img.size, (80, 120))
+
     def test_rotate_photo_ignores_invalid_degrees(self):
         """ A non-90-multiple rotation is a no-op and leaves the photo intact """
         with tempfile.TemporaryDirectory() as media_root:

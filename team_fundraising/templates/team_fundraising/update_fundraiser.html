@@ -102,6 +102,113 @@
             });
         }
     </script>
+
+    {% if campaign.active %}
+    <script>
+        // Add a live preview and rotate controls under the "Photo" heading.
+        // Rotation is previewed instantly with a CSS transform; the chosen
+        // angle is submitted in a hidden field and applied server-side to the
+        // stored photo (overwriting it in place, no extra versions kept).
+        (function () {
+            var photoInput = document.getElementById('id_photo');
+            if (!photoInput) {
+                return;
+            }
+
+            var rotation = 0;
+
+            // Hidden field carrying the requested rotation (0/90/180/270).
+            var rotateField = document.createElement('input');
+            rotateField.type = 'hidden';
+            rotateField.name = 'rotate';
+            rotateField.value = '0';
+
+            // Wrapper for the preview and rotate buttons.
+            var wrapper = document.createElement('div');
+            wrapper.style.marginBottom = '0.75rem';
+
+            // Fixed-size square stage. The image is capped to fit inside it,
+            // so rotating a landscape photo 90 degrees stays within the
+            // reserved space and never overlaps the surrounding fields.
+            var stage = document.createElement('div');
+            stage.style.width = '210px';
+            stage.style.height = '210px';
+            stage.style.display = 'none';
+            stage.style.alignItems = 'center';
+            stage.style.justifyContent = 'center';
+            stage.style.marginBottom = '0.5rem';
+
+            var preview = document.createElement('img');
+            preview.style.maxWidth = '200px';
+            preview.style.maxHeight = '200px';
+            preview.style.transition = 'transform 0.15s ease';
+            {% if fundraiser.photo_small %}
+            preview.src = '{{ fundraiser.photo_small.url }}?v={{ fundraiser.photo_cache_token }}';
+            stage.style.display = 'flex';
+            {% elif fundraiser.photo %}
+            preview.src = '{{ fundraiser.photo.url }}?v={{ fundraiser.photo_cache_token }}';
+            stage.style.display = 'flex';
+            {% endif %}
+            stage.appendChild(preview);
+
+            var leftBtn = document.createElement('button');
+            leftBtn.type = 'button';
+            leftBtn.className = 'btn btn-secondary btn-sm';
+            leftBtn.textContent = '↺ Rotate left';
+
+            var rightBtn = document.createElement('button');
+            rightBtn.type = 'button';
+            rightBtn.className = 'btn btn-secondary btn-sm';
+            rightBtn.style.marginLeft = '0.5rem';
+            rightBtn.textContent = 'Rotate right ↻';
+
+            function applyRotation() {
+                rotation = ((rotation % 360) + 360) % 360;
+                preview.style.transform = 'rotate(' + rotation + 'deg)';
+                rotateField.value = String(rotation);
+            }
+
+            leftBtn.addEventListener('click', function () {
+                rotation -= 90;
+                applyRotation();
+            });
+            rightBtn.addEventListener('click', function () {
+                rotation += 90;
+                applyRotation();
+            });
+
+            // When a new file is chosen, preview it locally and reset rotation.
+            photoInput.addEventListener('change', function () {
+                rotation = 0;
+                applyRotation();
+                var file = photoInput.files && photoInput.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        stage.style.display = 'flex';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            wrapper.appendChild(stage);
+            wrapper.appendChild(leftBtn);
+            wrapper.appendChild(rightBtn);
+            wrapper.appendChild(rotateField);
+
+            // Insert the controls just after the "Photo" label, above the
+            // file input.
+            var formGroup = photoInput.closest('.form-group');
+            var label = formGroup ? formGroup.querySelector('label') : null;
+            if (label) {
+                label.parentNode.insertBefore(wrapper, label.nextSibling);
+            } else {
+                photoInput.parentNode.insertBefore(wrapper, photoInput);
+            }
+        })();
+    </script>
+    {% endif %}
 </form>
 
 {% endblock content %}

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Max, Q, F, FloatField, Case, When
 from django.db.models.functions import Coalesce
 from django.conf import settings
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 class Campaign(models.Model):
@@ -133,26 +133,85 @@ class Fundraiser(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # Generate and save the lower-resolution version of the photo.
+        # Persist the record (and any freshly uploaded photo) first, then
+        # regenerate the thumbnail from the now-committed original. Doing this
+        # after super().save() is important: on a new upload the file isn't in
+        # storage yet when save() begins, so generating the thumbnail earlier
+        # would skip it (leaving a stale photo_small on a replaced photo) and
+        # risk consuming the upload stream before it is written.
+        super().save(*args, **kwargs)
+
         # Skip thumbnail regeneration if the original file is missing on disk
         # (can happen for legacy rows whose originals were lost) so we don't
         # 500 the whole save.
         if self.photo and self.photo.storage.exists(self.photo.name):
-            try:
-                with Image.open(self.photo) as img:
-                    img.thumbnail((800, 800))
-                    photo_dir, photo_filename = os.path.split(self.photo.name)
-                    new_photo_path = os.path.join('photos_small', photo_filename)
+            self._generate_thumbnail()
+            super().save(update_fields=['photo_small'])
 
-                    full_dir = os.path.join(settings.MEDIA_ROOT, 'photos_small')
-                    os.makedirs(full_dir, exist_ok=True)
+    def _generate_thumbnail(self):
+        """
+        Create the lower-resolution version of the photo in photos_small/.
 
-                    img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
-                    self.photo_small.name = new_photo_path
-            except (FileNotFoundError, OSError):
-                pass
+        Applies the photo's EXIF orientation so images taken on phones (which
+        store the rotation as metadata rather than rotating the pixels) appear
+        upright. Failures are swallowed so a missing or unreadable original
+        does not 500 the surrounding save.
+        """
+        try:
+            with Image.open(self.photo) as img:
+                img = ImageOps.exif_transpose(img)
+                img.thumbnail((800, 800))
+                photo_dir, photo_filename = os.path.split(self.photo.name)
+                new_photo_path = os.path.join('photos_small', photo_filename)
 
-        super().save(*args, **kwargs)
+                full_dir = os.path.join(settings.MEDIA_ROOT, 'photos_small')
+                os.makedirs(full_dir, exist_ok=True)
+
+                img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
+                self.photo_small.name = new_photo_path
+        except (FileNotFoundError, OSError):
+            pass
+
+    def rotate_photo(self, degrees):
+        """
+        Rotate the stored original photo clockwise by ``degrees`` (one of
+        90, 180, 270) in place, overwriting the same file so we never
+        accumulate extra versions. Callers should ``save()`` afterwards to
+        regenerate the thumbnail from the rotated original.
+        """
+        if degrees not in (90, 180, 270):
+            return
+
+        if not (self.photo and self.photo.storage.exists(self.photo.name)):
+            return
+
+        path = os.path.join(settings.MEDIA_ROOT, self.photo.name)
+        try:
+            with Image.open(path) as img:
+                # Bake in any EXIF orientation first so the manual rotation is
+                # applied relative to what the user actually sees.
+                img = ImageOps.exif_transpose(img)
+                # PIL rotates counter-clockwise; negate to rotate clockwise.
+                # expand=True keeps the full image for 90/270 turns.
+                rotated = img.rotate(-degrees, expand=True)
+                rotated.save(path)
+        except (FileNotFoundError, OSError):
+            pass
+
+    @property
+    def photo_cache_token(self):
+        """
+        A cache-busting token (the photo file's last-modified time) appended
+        to image URLs so a rotated/replaced photo, which keeps the same
+        filename, is refetched by the browser instead of served stale.
+        """
+        f = self.photo_small or self.photo
+        try:
+            if f:
+                return int(f.storage.get_modified_time(f.name).timestamp())
+        except (FileNotFoundError, OSError, NotImplementedError):
+            pass
+        return 0
 
     def total_raised(self):
         """

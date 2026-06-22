@@ -174,18 +174,31 @@ class Fundraiser(models.Model):
 
     def rotate_photo(self, degrees):
         """
-        Rotate the stored original photo clockwise by ``degrees`` (one of
-        90, 180, 270) in place, overwriting the same file so we never
-        accumulate extra versions. Callers should ``save()`` afterwards to
-        regenerate the thumbnail from the rotated original.
+        Rotate the stored photo clockwise by ``degrees`` (one of 90, 180, 270)
+        in place, overwriting the same file(s) so we never accumulate extra
+        versions.
+
+        When the original is present we rotate it and let ``save()`` regenerate
+        the thumbnail from it. For legacy rows whose original was lost but whose
+        thumbnail survives, we rotate the thumbnail directly so the displayed
+        image still turns (``save()`` skips thumbnail regeneration when the
+        original is missing). Callers should ``save()`` afterwards.
         """
         if degrees not in (90, 180, 270):
             return
 
-        if not (self.photo and self.photo.storage.exists(self.photo.name)):
-            return
+        if self.photo and self.photo.storage.exists(self.photo.name):
+            # Rotate the original; the thumbnail is rebuilt from it on save().
+            self._rotate_file_in_place(self.photo.name, degrees)
+        elif (self.photo_small
+                and self.photo_small.storage.exists(self.photo_small.name)):
+            # Original is gone, but the thumbnail (what users actually see)
+            # is here, so rotate that.
+            self._rotate_file_in_place(self.photo_small.name, degrees)
 
-        path = os.path.join(settings.MEDIA_ROOT, self.photo.name)
+    def _rotate_file_in_place(self, name, degrees):
+        """ Rotate the media file at ``name`` clockwise by ``degrees`` """
+        path = os.path.join(settings.MEDIA_ROOT, name)
         try:
             with Image.open(path) as img:
                 # Bake in any EXIF orientation first so the manual rotation is
@@ -193,8 +206,7 @@ class Fundraiser(models.Model):
                 img = ImageOps.exif_transpose(img)
                 # PIL rotates counter-clockwise; negate to rotate clockwise.
                 # expand=True keeps the full image for 90/270 turns.
-                rotated = img.rotate(-degrees, expand=True)
-                rotated.save(path)
+                img.rotate(-degrees, expand=True).save(path)
         except (FileNotFoundError, OSError):
             pass
 

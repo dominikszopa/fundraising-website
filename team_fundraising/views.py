@@ -686,6 +686,18 @@ def update_fundraiser(request, campaign_id=None):
             user_form.save()
             fundraiser_form.save()
 
+            # Apply any rotation the user requested via the preview controls.
+            # The form (and any new upload) is saved first, so rotation always
+            # applies to the current photo and overwrites it in place.
+            try:
+                rotate = int(request.POST.get('rotate', 0))
+            except (TypeError, ValueError):
+                rotate = 0
+
+            if rotate in (90, 180, 270):
+                fundraiser_form.instance.rotate_photo(rotate)
+                fundraiser_form.instance.save()
+
             messages.success(request, 'Your information was updated')
 
             return redirect(
@@ -705,6 +717,7 @@ def update_fundraiser(request, campaign_id=None):
         request, 'team_fundraising/update_fundraiser.html',
         {
             'campaign': fundraiser.campaign,
+            'fundraiser': fundraiser,
             'user_form': user_form,
             'fundraiser_form': fundraiser_form,
             'active_campaign': active_campaign,

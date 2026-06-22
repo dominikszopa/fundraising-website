@@ -118,6 +118,10 @@ class FundraiserForm(forms.ModelForm):
         widgets = {
             'campaign': forms.HiddenInput(),
             'message': forms.Textarea(attrs={'rows': 3, 'cols': 20}),
+            # Plain file input (not ClearableFileInput) so the redundant
+            # "Currently: ... Clear" line is not shown; the live preview
+            # below the label takes its place.
+            'photo': forms.FileInput(),
         }
 
     def __init__(self, *args, **kwargs):

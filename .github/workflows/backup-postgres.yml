@@ -1,0 +1,78 @@
+name: Backup PostgreSQL to S3
+
+# Daily off-site backup of the production PostgreSQL database to a private S3
+# bucket. Runs on a schedule and can also be triggered manually for testing.
+
+on:
+  schedule:
+    # 09:00 UTC daily (~01:00-02:00 America/Vancouver). Cron is always UTC.
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    # Gate the DB/AWS secrets behind the protected production environment,
+    # consistent with deploy-railway.yml.
+    environment: production
+
+    env:
+      # Full connection string to the Railway Postgres instance.
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # Dedicated, least-privilege IAM user scoped to PutObject on the bucket.
+      AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.BACKUP_AWS_REGION }}
+      BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+      # Must match the Railway Postgres MAJOR version: an older pg_dump refuses
+      # to dump a newer server. Confirm with `SELECT version();` and update.
+      PG_MAJOR: '15'
+
+    steps:
+      - name: Verify required secrets are set
+        run: |
+          missing=0
+          for var in DATABASE_URL AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY \
+                     AWS_DEFAULT_REGION BACKUP_S3_BUCKET; do
+            if [ -z "${!var}" ]; then
+              echo "ERROR: required secret $var is not set"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+
+      - name: Install matching PostgreSQL client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+            | sudo tee /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc > /dev/null
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
+            https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y "postgresql-client-${PG_MAJOR}"
+          pg_dump --version
+
+      - name: Dump database and upload to S3
+        run: |
+          set -euo pipefail
+          timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          dumpfile="fundraising-${timestamp}.dump"
+
+          # Custom format (-Fc): compressed and restorable with pg_restore.
+          pg_dump "$DATABASE_URL" -Fc --no-owner --no-privileges -f "$dumpfile"
+
+          # Guard against a silent/empty dump masquerading as success.
+          size="$(stat -c%s "$dumpfile")"
+          echo "Dump size: ${size} bytes"
+          if [ "$size" -lt 1024 ]; then
+            echo "ERROR: dump is suspiciously small (${size} bytes)"
+            exit 1
+          fi
+
+          aws s3 cp "$dumpfile" "s3://${BACKUP_S3_BUCKET}/postgres/${dumpfile}" \
+            --storage-class STANDARD_IA
+          echo "Uploaded s3://${BACKUP_S3_BUCKET}/postgres/${dumpfile}"

@@ -29,7 +29,7 @@ jobs:
       BACKUP_S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
       # Must match the Railway Postgres MAJOR version: an older pg_dump refuses
       # to dump a newer server. Confirm with `SELECT version();` and update.
-      PG_MAJOR: '15'
+      PG_MAJOR: '17'
 
     steps:
       - name: Verify required secrets are set
@@ -54,7 +54,11 @@ jobs:
             | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
           sudo apt-get update
           sudo apt-get install -y "postgresql-client-${PG_MAJOR}"
-          pg_dump --version
+          # Call the version-specific binary directly. The runner preinstalls an
+          # older client and Debian's pg_wrapper dispatches /usr/bin/pg_dump to
+          # the HIGHEST installed major, so relying on PATH can pick the wrong
+          # version. The explicit path makes PG_MAJOR authoritative.
+          "/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" --version
 
       - name: Dump database and upload to S3
         run: |
@@ -63,7 +67,9 @@ jobs:
           dumpfile="fundraising-${timestamp}.dump"
 
           # Custom format (-Fc): compressed and restorable with pg_restore.
-          pg_dump "$DATABASE_URL" -Fc --no-owner --no-privileges -f "$dumpfile"
+          # Use the version-specific binary (see note in the install step).
+          "/usr/lib/postgresql/${PG_MAJOR}/bin/pg_dump" \
+            "$DATABASE_URL" -Fc --no-owner --no-privileges -f "$dumpfile"
 
           # Guard against a silent/empty dump masquerading as success.
           size="$(stat -c%s "$dumpfile")"

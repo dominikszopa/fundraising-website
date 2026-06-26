@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'paypal.standard.ipn',
     'django_recaptcha',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -167,6 +168,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 FILE_UPLOAD_PERMISSIONS = 0o644
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# AWS S3 media storage (django-storages).
+# When AWS_STORAGE_BUCKET_NAME is set, prod.py switches the default file
+# storage to S3 for user-uploaded media (fundraiser photos). Left empty by
+# default so dev/test environments keep using local filesystem storage and
+# nothing breaks before the bucket is provisioned.
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

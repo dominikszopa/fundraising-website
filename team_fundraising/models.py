@@ -4,13 +4,14 @@ This module contains the models for the team_fundraising app, including a
 parent Campaign, with individual Fundraisers, and Donations that can be raised
 by the Fundraisers, or applied to the general Campaign.
 """
+import io
 import os
 from django.utils import timezone
+from django.core.files.base import ContentFile
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Max, Q, F, FloatField, Case, When
 from django.db.models.functions import Coalesce
-from django.conf import settings
 from PIL import Image, ImageOps
 
 
@@ -148,27 +149,48 @@ class Fundraiser(models.Model):
             self._generate_thumbnail()
             super().save(update_fields=['photo_small'])
 
+    @staticmethod
+    def _pil_format_for(name):
+        """
+        Map a file name's extension to the PIL format string used when saving
+        to an in-memory buffer (e.g. '.jpg' -> 'JPEG'). Falls back to PNG.
+
+        When writing to a real path PIL infers the format from the extension,
+        but writing to a BytesIO (required for the storage API / S3) needs the
+        format passed explicitly.
+        """
+        ext = os.path.splitext(name)[1].lower()
+        return Image.registered_extensions().get(ext, 'PNG')
+
     def _generate_thumbnail(self):
         """
         Create the lower-resolution version of the photo in photos_small/.
 
         Applies the photo's EXIF orientation so images taken on phones (which
         store the rotation as metadata rather than rotating the pixels) appear
-        upright. Failures are swallowed so a missing or unreadable original
-        does not 500 the surrounding save.
+        upright. Writes through the storage backend (local filesystem or S3)
+        so it works regardless of where media lives. Failures are swallowed so
+        a missing or unreadable original does not 500 the surrounding save.
         """
         try:
             with Image.open(self.photo) as img:
                 img = ImageOps.exif_transpose(img)
                 img.thumbnail((800, 800))
-                photo_dir, photo_filename = os.path.split(self.photo.name)
+                photo_filename = os.path.basename(self.photo.name)
                 new_photo_path = os.path.join('photos_small', photo_filename)
 
-                full_dir = os.path.join(settings.MEDIA_ROOT, 'photos_small')
-                os.makedirs(full_dir, exist_ok=True)
+                buffer = io.BytesIO()
+                img.save(buffer, format=self._pil_format_for(photo_filename))
+                buffer.seek(0)
 
-                img.save(os.path.join(settings.MEDIA_ROOT, new_photo_path))
-                self.photo_small.name = new_photo_path
+            # Overwrite any existing thumbnail at this key so a replaced photo
+            # does not leave a stale (or suffixed) thumbnail behind.
+            storage = self.photo_small.storage
+            if storage.exists(new_photo_path):
+                storage.delete(new_photo_path)
+            self.photo_small.name = storage.save(
+                new_photo_path, ContentFile(buffer.getvalue())
+            )
         except (FileNotFoundError, OSError):
             pass
 
@@ -197,16 +219,29 @@ class Fundraiser(models.Model):
             self._rotate_file_in_place(self.photo_small.name, degrees)
 
     def _rotate_file_in_place(self, name, degrees):
-        """ Rotate the media file at ``name`` clockwise by ``degrees`` """
-        path = os.path.join(settings.MEDIA_ROOT, name)
+        """
+        Rotate the media file at ``name`` clockwise by ``degrees``, overwriting
+        the same storage key. Reads and writes through the storage backend
+        (local filesystem or S3); since object stores cannot edit in place, the
+        key is deleted and re-saved under the same name (file_overwrite keeps
+        it stable on S3).
+        """
+        storage = self.photo.storage
         try:
-            with Image.open(path) as img:
-                # Bake in any EXIF orientation first so the manual rotation is
-                # applied relative to what the user actually sees.
-                img = ImageOps.exif_transpose(img)
-                # PIL rotates counter-clockwise; negate to rotate clockwise.
-                # expand=True keeps the full image for 90/270 turns.
-                img.rotate(-degrees, expand=True).save(path)
+            with storage.open(name) as f:
+                with Image.open(f) as img:
+                    # Bake in any EXIF orientation first so the manual rotation
+                    # is applied relative to what the user actually sees.
+                    img = ImageOps.exif_transpose(img)
+                    # PIL rotates counter-clockwise; negate to rotate clockwise.
+                    # expand=True keeps the full image for 90/270 turns.
+                    rotated = img.rotate(-degrees, expand=True)
+                    buffer = io.BytesIO()
+                    rotated.save(buffer, format=self._pil_format_for(name))
+                    buffer.seek(0)
+
+            storage.delete(name)
+            storage.save(name, ContentFile(buffer.getvalue()))
         except (FileNotFoundError, OSError):
             pass
 

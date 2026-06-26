@@ -335,6 +335,11 @@ The application is deployed to [Railway](https://railway.app/) using GitHub Acti
    AWS_SECRET_ACCESS_KEY=your_aws_secret_key
    AWS_SES_REGION=us-east-1
 
+   # S3 media storage for fundraiser photos (see "Media Storage on S3" below).
+   # Leave AWS_STORAGE_BUCKET_NAME unset to keep using the local Railway volume.
+   AWS_STORAGE_BUCKET_NAME=your-media-bucket
+   AWS_S3_REGION_NAME=us-east-1
+
    # PayPal
    PAYPAL_TEST=False
    PAYPAL_ACCOUNT=your_paypal_business_email
@@ -349,10 +354,13 @@ The application is deployed to [Railway](https://railway.app/) using GitHub Acti
    - Railway will automatically set database environment variables
    - Copy these values to your application's environment variables
 
-4. **Add a volume for media files:**
-   - In Railway project settings → Volumes → New Volume
-   - Mount path: `/app/media`
-   - This ensures uploaded photos persist across deployments
+4. **Media storage:**
+   - **Recommended:** store fundraiser photos in S3 — see
+     [Media Storage on S3](#media-storage-on-s3) below. This survives redeploys
+     and removes the need for a volume.
+   - **Alternative (local volume):** in Railway project settings → Volumes →
+     New Volume, mount path `/app/media`. Only needed when
+     `AWS_STORAGE_BUCKET_NAME` is left unset.
 
 5. **Deploy:**
    - Push to your GitHub repository
@@ -363,8 +371,84 @@ The application is deployed to [Railway](https://railway.app/) using GitHub Acti
 
 - **SMTP Blocked:** Railway blocks outbound SMTP connections on ports 25/587/465. This is why the application uses AWS SES HTTP API instead.
 - **Static Files:** Static files are served by WhiteNoise (configured in settings)
-- **Media Files:** User-uploaded photos are stored in the Railway volume at `/app/media`
+- **Media Files:** User-uploaded photos are stored in S3 when `AWS_STORAGE_BUCKET_NAME` is set (see [Media Storage on S3](#media-storage-on-s3)); otherwise they fall back to the local Railway volume at `/app/media`
 - **Logs:** View logs with `railway logs` (requires Railway CLI)
+
+### Media Storage on S3
+
+User-uploaded fundraiser photos can be stored in Amazon S3 via
+[django-storages](https://django-storages.readthedocs.io/) instead of the local
+Railway volume, so photos survive redeploys and the app can scale horizontally.
+This is enabled automatically in production (`prod.py`) whenever
+`AWS_STORAGE_BUCKET_NAME` is set; when unset, media falls back to the local
+filesystem and WhiteNoise.
+
+#### One-time AWS setup
+
+1. **Create a media bucket** (separate from the backups bucket). Objects are
+   written under the `media/` prefix.
+2. **Allow public read** on `media/*` via a bucket policy (photos are served
+   directly from S3 with unsigned URLs, matching the previous public `/media/`
+   behaviour), and adjust Block Public Access accordingly. Enable default
+   SSE-S3 encryption.
+3. **Grant the app's IAM identity** `s3:PutObject`, `s3:GetObject`, and
+   `s3:DeleteObject` on the bucket (a dedicated media IAM user is fine).
+4. **Set the environment variables** `AWS_STORAGE_BUCKET_NAME` and
+   `AWS_S3_REGION_NAME` (S3 reuses `AWS_ACCESS_KEY_ID` /
+   `AWS_SECRET_ACCESS_KEY`).
+
+#### Migrating existing photos
+
+After enabling S3, copy the photos already on the Railway volume into the bucket
+with the management command (idempotent — safe to re-run; supports `--dry-run`):
+
+```bash
+python3 manage.py migrate_media_to_s3
+```
+
+Once verified, the Railway media volume can be removed.
+
+### Database Backups
+
+A scheduled GitHub Actions workflow
+(`.github/workflows/backup-postgres.yml`) takes a daily `pg_dump` of the
+production database and uploads it to a **private** S3 bucket. It also supports
+manual runs via *Actions → Backup PostgreSQL to S3 → Run workflow*.
+
+#### One-time AWS setup
+
+1. **Create a private backups bucket** (Block Public Access ON, default
+   encryption ON, versioning ON).
+2. **Add a lifecycle rule** to expire `postgres/` objects after your retention
+   window (e.g. 30 days).
+3. **Create a dedicated, least-privilege IAM user** with only `s3:PutObject`
+   (and `s3:ListBucket`) on that bucket — do **not** reuse the SES key.
+
+#### Required GitHub repository secrets
+
+Add these under *Settings → Environments → production*:
+
+| Secret | Description |
+|--------|-------------|
+| `DATABASE_URL` | Full Postgres connection string from Railway |
+| `BACKUP_AWS_ACCESS_KEY_ID` | Backup IAM user access key |
+| `BACKUP_AWS_SECRET_ACCESS_KEY` | Backup IAM user secret key |
+| `BACKUP_AWS_REGION` | Backups bucket region (e.g. `us-east-1`) |
+| `BACKUP_S3_BUCKET` | Backups bucket name |
+
+> The workflow's `PG_MAJOR` env var must match the Railway PostgreSQL **major**
+> version (an older `pg_dump` refuses to dump a newer server). Confirm with
+> `SELECT version();` and update `PG_MAJOR` in the workflow if needed.
+
+#### Restoring a backup
+
+```bash
+aws s3 cp s3://<backups-bucket>/postgres/fundraising-<timestamp>.dump .
+pg_restore --clean --no-owner -d "$DATABASE_URL" fundraising-<timestamp>.dump
+```
+
+Use `pg_restore --list fundraising-<timestamp>.dump` to inspect a dump without
+restoring it.
 
 ### Traditional Server Deployment
 

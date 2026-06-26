@@ -9,7 +9,8 @@ MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STORAGES = {
     "default": {
         # Media files (user uploads) use FileSystemStorage for saving
-        # but are served by WhiteNoise in production (configured in wsgi.py)
+        # but are served by WhiteNoise in production (configured in wsgi.py).
+        # Overridden below to S3 when AWS_STORAGE_BUCKET_NAME is configured.
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
@@ -17,6 +18,28 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# When an S3 bucket is configured, store user-uploaded media (fundraiser
+# photos) in S3 via django-storages instead of the local Railway volume.
+# django-storages reuses the existing AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
+# credentials. Objects are written under the "media/" prefix and served as
+# public, unsigned URLs (matching today's public /media/ behaviour); the
+# bucket policy grants public read on media/*.
+if AWS_STORAGE_BUCKET_NAME:
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+            "location": "media",
+            # Public URLs without signature query strings (long-term cacheable).
+            "querystring_auth": False,
+            # rotate_photo()/thumbnail regeneration overwrite the same key.
+            "file_overwrite": True,
+            # Public access is granted by bucket policy, not per-object ACLs.
+            "default_acl": None,
+        },
+    }
 
 # Template caching - cache compiled templates in production
 # Must disable APP_DIRS when defining custom loaders

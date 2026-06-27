@@ -256,7 +256,12 @@ class Fundraiser(models.Model):
         try:
             if f:
                 return int(f.storage.get_modified_time(f.name).timestamp())
-        except (FileNotFoundError, OSError, NotImplementedError):
+        except Exception:
+            # This token is purely a cosmetic cache-buster, so any failure to
+            # read the modified time must degrade to 0 rather than 500 the page.
+            # Catch broadly on purpose: remote storage backends (e.g. S3 via
+            # django-storages) raise backend-specific errors such as
+            # botocore ClientError(404) that are not OSError subclasses.
             pass
         return 0
 

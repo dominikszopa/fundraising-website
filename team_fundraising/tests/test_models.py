@@ -1,6 +1,7 @@
 import io
 import os
 import tempfile
+from unittest import mock
 
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -172,6 +173,42 @@ class TestFundraiserPhoto(TestCase):
                 with Image.open(path) as img:
                     self.assertEqual(img.size, (60, 100))
 
+    def test_rotate_photo_regenerates_thumbnail_from_rotated_original(self):
+        """
+        After rotating, the regenerated thumbnail must reflect the rotation
+        too -- not just the original. rotate_photo() rewrites the original on
+        disk via the storage API, so thumbnail regeneration must read the
+        fresh bytes rather than the FieldFile's cached pre-rotation handle.
+        Pages display the thumbnail, so a stale thumbnail makes the displayed
+        photo disagree with the rotation the user previewed.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                # Landscape thumbnail before rotation.
+                thumb = os.path.join(
+                    settings.MEDIA_ROOT, fundraiser.photo_small.name
+                )
+                with Image.open(thumb) as img:
+                    self.assertEqual(img.size, (100, 60))
+
+                fundraiser.rotate_photo(90)
+                fundraiser.save()
+
+                # The thumbnail must now be portrait, matching the rotated
+                # original, rather than the stale landscape upload.
+                thumb = os.path.join(
+                    settings.MEDIA_ROOT, fundraiser.photo_small.name
+                )
+                with Image.open(thumb) as img:
+                    self.assertEqual(img.size, (60, 100))
+
     def test_thumbnail_generated_on_upload(self):
         """ Uploading a photo generates a matching photo_small thumbnail """
         with tempfile.TemporaryDirectory() as media_root:
@@ -259,6 +296,56 @@ class TestFundraiserPhoto(TestCase):
 
                 with Image.open(path) as img:
                     self.assertEqual(img.size, (100, 60))
+
+    def test_rotate_photo_survives_non_oserror_storage_failure(self):
+        """
+        A storage backend error that is not an OSError (e.g. botocore
+        ClientError from S3) must be swallowed so rotation degrades gracefully
+        instead of 500-ing the edit request.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                class FakeClientError(Exception):
+                    """ Stand-in for a non-OSError backend error """
+
+                storage = fundraiser.photo.storage
+                with mock.patch.object(
+                    storage, 'open', side_effect=FakeClientError('boom')
+                ):
+                    # Must not raise even though the backend blew up.
+                    fundraiser.rotate_photo(90)
+
+    def test_thumbnail_survives_non_oserror_storage_failure(self):
+        """
+        Thumbnail regeneration must swallow a non-OSError backend error so a
+        flaky storage call does not 500 the surrounding save().
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                class FakeClientError(Exception):
+                    """ Stand-in for a non-OSError backend error """
+
+                storage = fundraiser.photo_small.storage
+                with mock.patch.object(
+                    storage, 'save', side_effect=FakeClientError('boom')
+                ):
+                    # Re-running save() regenerates the thumbnail; the backend
+                    # error must not propagate out of save().
+                    fundraiser.save()
 
 
 class TestDonation(TestModels):

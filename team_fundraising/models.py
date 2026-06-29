@@ -5,6 +5,7 @@ parent Campaign, with individual Fundraisers, and Donations that can be raised
 by the Fundraisers, or applied to the general Campaign.
 """
 import io
+import logging
 import os
 from django.utils import timezone
 from django.core.files.base import ContentFile
@@ -13,6 +14,8 @@ from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Max, Q, F, FloatField, Case, When
 from django.db.models.functions import Coalesce
 from PIL import Image, ImageOps
+
+logger = logging.getLogger(__name__)
 
 
 class Campaign(models.Model):
@@ -171,17 +174,29 @@ class Fundraiser(models.Model):
         upright. Writes through the storage backend (local filesystem or S3)
         so it works regardless of where media lives. Failures are swallowed so
         a missing or unreadable original does not 500 the surrounding save.
+
+        The original is read fresh from storage by name rather than through
+        the cached ``self.photo`` FieldFile: rotate_photo() rewrites the file
+        in place via the storage API, so the FieldFile's cached handle can
+        still hold the pre-rotation bytes (and stale EXIF orientation), which
+        would otherwise produce a thumbnail that ignores the rotation.
         """
         try:
-            with Image.open(self.photo) as img:
-                img = ImageOps.exif_transpose(img)
-                img.thumbnail((800, 800))
-                photo_filename = os.path.basename(self.photo.name)
-                new_photo_path = os.path.join('photos_small', photo_filename)
+            storage = self.photo.storage
+            with storage.open(self.photo.name) as fh:
+                with Image.open(fh) as img:
+                    img = ImageOps.exif_transpose(img)
+                    img.thumbnail((800, 800))
+                    photo_filename = os.path.basename(self.photo.name)
+                    new_photo_path = os.path.join(
+                        'photos_small', photo_filename
+                    )
 
-                buffer = io.BytesIO()
-                img.save(buffer, format=self._pil_format_for(photo_filename))
-                buffer.seek(0)
+                    buffer = io.BytesIO()
+                    img.save(
+                        buffer, format=self._pil_format_for(photo_filename)
+                    )
+                    buffer.seek(0)
 
             # Overwrite any existing thumbnail at this key so a replaced photo
             # does not leave a stale (or suffixed) thumbnail behind.
@@ -191,8 +206,15 @@ class Fundraiser(models.Model):
             self.photo_small.name = storage.save(
                 new_photo_path, ContentFile(buffer.getvalue())
             )
-        except (FileNotFoundError, OSError):
-            pass
+        except Exception:
+            # Thumbnail generation is best-effort: a missing/unreadable
+            # original or a storage backend error (e.g. botocore ClientError
+            # from S3, which is not an OSError) must not 500 the surrounding
+            # save. Log and leave the existing thumbnail in place.
+            logger.warning(
+                "Thumbnail generation failed for %r", self.photo.name,
+                exc_info=True,
+            )
 
     def rotate_photo(self, degrees):
         """
@@ -242,8 +264,14 @@ class Fundraiser(models.Model):
 
             storage.delete(name)
             storage.save(name, ContentFile(buffer.getvalue()))
-        except (FileNotFoundError, OSError):
-            pass
+        except Exception:
+            # Rotation is best-effort: a missing/unreadable file or a storage
+            # backend error (e.g. botocore ClientError from S3, which is not an
+            # OSError) must not 500 the edit request. Log and leave the photo
+            # unchanged.
+            logger.warning(
+                "Photo rotation failed for %r", name, exc_info=True,
+            )
 
     @property
     def photo_cache_token(self):

@@ -159,3 +159,6 @@ node_modules/
 # Database dumps / local data
 *.dump
 /data/
+
+# Database dumps (contain production data)
+backups/

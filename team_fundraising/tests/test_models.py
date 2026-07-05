@@ -322,6 +322,129 @@ class TestFundraiserPhoto(TestCase):
                     # Must not raise even though the backend blew up.
                     fundraiser.rotate_photo(90)
 
+    def test_photo_cache_token_zero_for_legacy_row(self):
+        """ A row that predates photo_updated (null) yields token 0 """
+        fundraiser = Fundraiser.objects.create(
+            campaign=self.campaign,
+            name='No Photo Fundraiser',
+            goal=100,
+        )
+        self.assertIsNone(fundraiser.photo_updated)
+        self.assertEqual(fundraiser.photo_cache_token, 0)
+
+    def test_photo_upload_sets_photo_updated_and_token(self):
+        """ Uploading a photo stamps photo_updated and yields a real token """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                fundraiser.refresh_from_db()
+                self.assertIsNotNone(fundraiser.photo_updated)
+                self.assertGreater(fundraiser.photo_cache_token, 0)
+
+    def test_rotate_photo_changes_cache_token(self):
+        """ Rotating a photo changes the cache-busting token """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                token_before = fundraiser.photo_cache_token
+
+                fundraiser.rotate_photo(90)
+                fundraiser.save()
+
+                fundraiser.refresh_from_db()
+                self.assertNotEqual(
+                    fundraiser.photo_cache_token, token_before
+                )
+
+    def test_rotate_thumbnail_only_changes_cache_token(self):
+        """
+        The legacy branch (original missing, thumbnail rotated in place)
+        must also change the token, or browsers keep showing the
+        pre-rotation image from cache.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(120, 80),
+                )
+                os.remove(
+                    os.path.join(settings.MEDIA_ROOT, fundraiser.photo.name)
+                )
+                token_before = fundraiser.photo_cache_token
+
+                fundraiser.rotate_photo(90)
+                fundraiser.save()
+
+                fundraiser.refresh_from_db()
+                self.assertNotEqual(
+                    fundraiser.photo_cache_token, token_before
+                )
+
+    def test_photo_cache_token_never_touches_storage(self):
+        """
+        Regression guard: the token must be computed without any storage
+        call. On S3 a get_modified_time() is a blocking HEAD request per
+        fundraiser, which made the campaign page take ~5 seconds.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+
+                storage = fundraiser.photo.storage
+                with mock.patch.object(
+                    storage, 'get_modified_time',
+                    side_effect=AssertionError('storage hit at render time'),
+                ):
+                    self.assertGreater(fundraiser.photo_cache_token, 0)
+
+    def test_photo_updated_not_bumped_on_thumbnail_failure(self):
+        """
+        A failed thumbnail regeneration leaves photo_updated alone: the
+        visible content did not change, so the token must not change.
+        """
+        with tempfile.TemporaryDirectory() as media_root:
+            with override_settings(MEDIA_ROOT=media_root):
+                fundraiser = Fundraiser.objects.create(
+                    campaign=self.campaign,
+                    name='Photo Fundraiser',
+                    goal=100,
+                    photo=self._make_image_upload(100, 60),
+                )
+                token_before = fundraiser.photo_cache_token
+                self.assertGreater(token_before, 0)
+
+                class FakeClientError(Exception):
+                    """ Stand-in for a non-OSError backend error """
+
+                storage = fundraiser.photo_small.storage
+                with mock.patch.object(
+                    storage, 'save', side_effect=FakeClientError('boom')
+                ):
+                    fundraiser.save()
+
+                fundraiser.refresh_from_db()
+                self.assertEqual(fundraiser.photo_cache_token, token_before)
+
     def test_thumbnail_survives_non_oserror_storage_failure(self):
         """
         Thumbnail regeneration must swallow a non-OSError backend error so a

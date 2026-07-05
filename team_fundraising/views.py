@@ -64,8 +64,9 @@ def fundraiser_view(request, fundraiser_id):
 
     template = 'team_fundraising/fundraiser.html'
 
-    fundraiser = get_object_or_404(Fundraiser, pk=fundraiser_id)
-    campaign = get_object_or_404(Campaign, pk=fundraiser.campaign_id)
+    fundraiser = get_object_or_404(
+        Fundraiser.objects.select_related('campaign'), pk=fundraiser_id)
+    campaign = fundraiser.campaign
 
     fundraiser.total_raised = fundraiser.total_raised()
 

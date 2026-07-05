@@ -41,6 +41,20 @@ if AWS_STORAGE_BUCKET_NAME:
         },
     }
 
+# Shared cache: with multiple gunicorn workers and --max-requests recycling,
+# the default per-process LocMemCache makes @cache_page(60) mostly cold. Redis
+# gives one warm entry shared across workers and restarts. Falls back to
+# LocMem (degraded but functional) when REDIS_URL is not configured.
+REDIS_URL = os.getenv('REDIS_URL')
+if REDIS_URL:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+            'KEY_PREFIX': 'fundraiser',
+        }
+    }
+
 # Template caching - cache compiled templates in production
 # Must disable APP_DIRS when defining custom loaders
 TEMPLATES[0]['APP_DIRS'] = False

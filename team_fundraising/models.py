@@ -131,6 +131,7 @@ class Fundraiser(models.Model):
     goal = models.IntegerField(default=0, blank=True)
     photo = models.ImageField(upload_to='photos/', blank=True)
     photo_small = models.ImageField(upload_to='photos_small/', blank=True)
+    photo_updated = models.DateTimeField(null=True, blank=True, editable=False)
     message = models.TextField(blank=True)
 
     def __str__(self):
@@ -150,7 +151,7 @@ class Fundraiser(models.Model):
         # 500 the whole save.
         if self.photo and self.photo.storage.exists(self.photo.name):
             self._generate_thumbnail()
-            super().save(update_fields=['photo_small'])
+            super().save(update_fields=['photo_small', 'photo_updated'])
 
     @staticmethod
     def _pil_format_for(name):
@@ -206,6 +207,7 @@ class Fundraiser(models.Model):
             self.photo_small.name = storage.save(
                 new_photo_path, ContentFile(buffer.getvalue())
             )
+            self.photo_updated = timezone.now()
         except Exception:
             # Thumbnail generation is best-effort: a missing/unreadable
             # original or a storage backend error (e.g. botocore ClientError
@@ -264,6 +266,7 @@ class Fundraiser(models.Model):
 
             storage.delete(name)
             storage.save(name, ContentFile(buffer.getvalue()))
+            self.photo_updated = timezone.now()
         except Exception:
             # Rotation is best-effort: a missing/unreadable file or a storage
             # backend error (e.g. botocore ClientError from S3, which is not an
@@ -276,21 +279,16 @@ class Fundraiser(models.Model):
     @property
     def photo_cache_token(self):
         """
-        A cache-busting token (the photo file's last-modified time) appended
-        to image URLs so a rotated/replaced photo, which keeps the same
-        filename, is refetched by the browser instead of served stale.
+        A cache-busting token appended to image URLs so a rotated/replaced
+        photo, which keeps the same filename, is refetched by the browser
+        instead of served stale. Backed by the photo_updated column and never
+        touches the storage backend: on S3 a get_modified_time() is a blocking
+        HEAD request per render, which made the campaign page take seconds.
         """
-        f = self.photo_small or self.photo
-        try:
-            if f:
-                return int(f.storage.get_modified_time(f.name).timestamp())
-        except Exception:
-            # This token is purely a cosmetic cache-buster, so any failure to
-            # read the modified time must degrade to 0 rather than 500 the page.
-            # Catch broadly on purpose: remote storage backends (e.g. S3 via
-            # django-storages) raise backend-specific errors such as
-            # botocore ClientError(404) that are not OSError subclasses.
-            pass
+        if self.photo_updated:
+            # Microsecond resolution so two changes within the same second
+            # (e.g. rotate + immediate re-save) still produce distinct tokens.
+            return int(self.photo_updated.timestamp() * 1_000_000)
         return 0
 
     def total_raised(self):

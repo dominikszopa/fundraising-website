@@ -17,18 +17,18 @@ tests = ["mypy (>=1.14.0)", "pytest", "pytest-asyncio"]
 
 [[package]]
 name = "boto3"
-version = "1.43.80"
+version = "1.43.86"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "boto3-1.43.80-py3-none-any.whl", hash = "sha256:26afe3b950ca1cc722c7fa5544991c222919c98355f82300a55b6315a2c4995e"},
-    {file = "boto3-1.43.80.tar.gz", hash = "sha256:384d522e2ce722266afceea8ab3e618e16695b358ebe32b45e0a2109fcd53a28"},
+    {file = "boto3-1.43.86-py3-none-any.whl", hash = "sha256:94543a5ce482df8bb6a0bf8a944bf5ccf6625889b1df0d7886dfc3311ebd4169"},
+    {file = "boto3-1.43.86.tar.gz", hash = "sha256:aca7b5d7f31a90ad37bec773552ec9bfb57e0029c9aa0f0f4d51d5bf9607b1c4"},
 ]
 
 [package.dependencies]
-botocore = ">=1.43.80,<1.44.0"
+botocore = ">=1.43.86,<1.44.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.19.0,<0.20.0"
 
@@ -37,14 +37,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.43.83"
+version = "1.43.89"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "botocore-1.43.83-py3-none-any.whl", hash = "sha256:bf75a6cf587c22d968e43e79fe122c39f82deafbe9c3422bc5d3e80b6210fc98"},
-    {file = "botocore-1.43.83.tar.gz", hash = "sha256:d9389b3b74400c34219965a2fb858c1d48744718865ee0496fd03bd5b21b943f"},
+    {file = "botocore-1.43.89-py3-none-any.whl", hash = "sha256:d7211220c815427fe71225acc6909e4ab5dfab3b03770e72fd16cf9eb86b3d1a"},
+    {file = "botocore-1.43.89.tar.gz", hash = "sha256:f0574942970742657b0e0716cf08c2dfe6bef8e6de5fbb7081c3424e262b4cca"},
 ]
 
 [package.dependencies]
